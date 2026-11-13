@@ -1,0 +1,303 @@
+@import 'tailwindcss';
+
+/* ==========================================================================
+   Astra Intelligence — design tokens
+   Dark-first. Surfaces step up from the page canvas; ink steps down from
+   primary text. Chart colours are a validated categorical palette
+   (CVD-checked against the panel surface #0a0f1d) — see src/demos/shared/chartTheme.ts.
+   ========================================================================== */
+@theme {
+  --font-sans: 'Geist Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'Geist Mono Variable', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  /* Surfaces */
+  --color-canvas: #05070e;
+  --color-base: #070b16;
+  --color-panel: #0a0f1d;
+  --color-raised: #0f1628;
+  --color-hover: #141d33;
+  --color-line: #1a2440;
+  --color-line-strong: #26314d;
+
+  /* Ink */
+  --color-fg: #e8edf7;
+  --color-fg-2: #a5b3cc;
+  --color-fg-3: #8090ad;
+  --color-fg-4: #64748f;
+
+  /* Brand */
+  --color-brand: #4f86ff;
+  --color-brand-strong: #2f66e8;
+  --color-brand-soft: #9dbcff;
+  --color-astra-violet: #8b74ff;
+  --color-astra-violet-soft: #c4b5fd;
+  --color-astra-cyan: #22d3ee;
+  --color-astra-cyan-soft: #67e8f9;
+
+  /* Validated categorical chart palette (dark) */
+  --color-series-1: #4180f2;
+  --color-series-2: #d95926;
+  --color-series-3: #199e70;
+  --color-series-4: #c98500;
+  --color-series-5: #d55181;
+  --color-series-6: #008300;
+  --color-series-7: #9085e9;
+  --color-series-8: #e66767;
+  --color-deemph: #5b6886;
+
+  /* Status (reserved meaning — always paired with icon + label) */
+  --color-good: #0ca30c;
+  --color-warning: #fab219;
+  --color-serious: #ec835a;
+  --color-critical: #d03b3b;
+
+  --radius-xl2: 1.25rem;
+
+  --animate-flow: flow-dash 2.4s linear infinite;
+  --animate-flow-slow: flow-dash 6s linear infinite;
+  --animate-float: float 7s ease-in-out infinite;
+  --animate-float-delayed: float 8s ease-in-out 1.5s infinite;
+  --animate-pulse-ring: pulse-ring 2.8s cubic-bezier(0.2, 0.6, 0.4, 1) infinite;
+  --animate-scan: scan 2.2s ease-in-out infinite;
+  --animate-shimmer: shimmer 2.2s linear infinite;
+  --animate-blink: blink 1.2s ease-in-out infinite;
+  --animate-spin-slow: spin 18s linear infinite;
+  --animate-marquee: marquee 40s linear infinite;
+
+  @keyframes flow-dash {
+    to {
+      stroke-dashoffset: -40;
+    }
+  }
+  @keyframes float {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-8px);
+    }
+  }
+  @keyframes pulse-ring {
+    0% {
+      transform: scale(0.85);
+      opacity: 0.55;
+    }
+    80%,
+    100% {
+      transform: scale(1.9);
+      opacity: 0;
+    }
+  }
+  @keyframes scan {
+    0% {
+      top: 0%;
+    }
+    50% {
+      top: calc(100% - 2px);
+    }
+    100% {
+      top: 0%;
+    }
+  }
+  @keyframes shimmer {
+    from {
+      background-position: -200% 0;
+    }
+    to {
+      background-position: 200% 0;
+    }
+  }
+  @keyframes blink {
+    0%,
+    100% {
+      opacity: 0.25;
+    }
+    50% {
+      opacity: 1;
+    }
+  }
+  @keyframes marquee {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
+    }
+  }
+}
+
+/* ==========================================================================
+   Base
+   ========================================================================== */
+@layer base {
+  html {
+    color-scheme: dark;
+    background-color: var(--color-canvas);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    background-color: var(--color-canvas);
+    color: var(--color-fg);
+    font-family: var(--font-sans);
+    min-height: 100dvh;
+    overflow-x: hidden;
+  }
+
+  ::selection {
+    background: rgb(79 134 255 / 0.35);
+    color: #fff;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-astra-cyan);
+    outline-offset: 2px;
+  }
+
+  /* Thin, quiet scrollbars */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: #26314d transparent;
+  }
+  *::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  *::-webkit-scrollbar-thumb {
+    background: #26314d;
+    border-radius: 999px;
+    border: 3px solid transparent;
+    background-clip: padding-box;
+  }
+  *::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  input[type='number']::-webkit-inner-spin-button,
+  input[type='number']::-webkit-outer-spin-button {
+    opacity: 0.4;
+  }
+
+  input[type='date']::-webkit-calendar-picker-indicator,
+  input[type='month']::-webkit-calendar-picker-indicator {
+    filter: invert(0.75);
+    cursor: pointer;
+  }
+
+  button:not(:disabled),
+  [role='button']:not([aria-disabled='true']) {
+    cursor: pointer;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
+  }
+}
+
+/* ==========================================================================
+   Utilities
+   ========================================================================== */
+@utility glass {
+  background: rgb(12 18 34 / 0.62);
+  backdrop-filter: blur(18px) saturate(140%);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
+  border: 1px solid rgb(148 163 184 / 0.12);
+}
+
+@utility glass-strong {
+  background: rgb(10 15 29 / 0.82);
+  backdrop-filter: blur(20px) saturate(150%);
+  -webkit-backdrop-filter: blur(20px) saturate(150%);
+  border: 1px solid rgb(148 163 184 / 0.14);
+}
+
+@utility text-gradient {
+  background-image: linear-gradient(100deg, #ffffff 0%, #c9d8ff 38%, #a99bff 72%, #7fe3f5 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+@utility text-gradient-brand {
+  background-image: linear-gradient(95deg, #7aa6ff 0%, #a68fff 55%, #5fdcf2 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+@utility bg-grid {
+  background-image:
+    linear-gradient(to right, rgb(148 163 184 / 0.06) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(148 163 184 / 0.06) 1px, transparent 1px);
+  background-size: 56px 56px;
+}
+
+@utility bg-dots {
+  background-image: radial-gradient(rgb(148 163 184 / 0.16) 1px, transparent 1px);
+  background-size: 18px 18px;
+}
+
+@utility mask-fade-b {
+  mask-image: linear-gradient(to bottom, black 55%, transparent);
+  -webkit-mask-image: linear-gradient(to bottom, black 55%, transparent);
+}
+
+@utility mask-fade-x {
+  mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+  -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+}
+
+@utility mask-radial {
+  mask-image: radial-gradient(ellipse 70% 60% at 50% 35%, black 30%, transparent 75%);
+  -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 35%, black 30%, transparent 75%);
+}
+
+@utility scrollbar-none {
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@utility skeleton {
+  background: linear-gradient(90deg, #111a2e 0%, #1a2440 50%, #111a2e 100%);
+  background-size: 200% 100%;
+  animation: var(--animate-shimmer);
+}
+
+/* Paper-like surface for rendered sample documents (OCR demo) */
+@utility paper {
+  background: #fbfaf7;
+  color: #1c1f26;
+  box-shadow:
+    0 1px 0 rgb(255 255 255 / 0.6) inset,
+    0 24px 48px -16px rgb(0 0 0 / 0.65),
+    0 2px 6px rgb(0 0 0 / 0.35);
+}
+
+/* ==========================================================================
+   Motion safety
+   ========================================================================== */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Print: keep reports legible */
+@media print {
+  body {
+    background: #fff;
+    color: #000;
+  }
+}
