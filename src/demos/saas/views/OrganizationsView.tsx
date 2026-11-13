@@ -91,7 +91,7 @@ export function OrganizationsView({ state, tenant: active, switchTenant, addTena
         onCreate={(t) => {
           addTenant(t)
           setCreateOpen(false)
-          toast({ title: `${t.name} created`, description: 'Workspace provisioned (simulated) and set as the active organization.' })
+          toast({ title: `${t.name} created`, description: 'Workspace provisioned and set as the active organization.' })
         }}
       />
     </div>
@@ -216,7 +216,7 @@ function CreateOrganizationModal({
       open={open}
       onClose={onClose}
       title="Create organization"
-      description="Provision a new isolated tenant workspace (simulated)."
+      description="Provision a new isolated tenant workspace."
       footer={
         <>
           <Button variant="ghost" size="sm" onClick={onClose}>

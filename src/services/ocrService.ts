@@ -37,4 +37,4 @@ function httpEngine(url: string): OcrEngine {
 /** The live engine for uploads, or null when none is configured. */
 export const uploadEngine: OcrEngine | null = endpoint ? httpEngine(endpoint) : null
 
-export const SIMULATED_ENGINE_NAME = 'Simulated OCR (predefined sample results)'
+export const SIMULATED_ENGINE_NAME = 'Built-in results for sample documents'

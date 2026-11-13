@@ -110,7 +110,6 @@ export function Footer() {
           <p>
             © {YEAR} {SITE.name}. All rights reserved.
           </p>
-          <p>Product demonstrations use sample data and simulated operations.</p>
         </div>
       </div>
     </footer>

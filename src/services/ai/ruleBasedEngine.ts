@@ -530,8 +530,8 @@ function handlePending(ctx: ConversationContext, e: Entities, text: string, top:
         routedIntent: pending.intent,
         messages: [
           pending.slot === 'confirmReturn'
-            ? { text: `Done — return request **${ref}** is created for ${o.id} (simulated). Pickup is scheduled for tomorrow between 10 AM and 6 PM, and you'll get an SMS confirmation.`, quickReplies: ['Thanks!'] }
-            : { text: `Done — **${o.id}** is cancelled (simulated, ref ${ref}). A refund of **${formatINR(o.total)}** has been initiated to your ${o.payment} and usually reflects within 2–3 business days.`, quickReplies: ['Thanks!'] },
+            ? { text: `Done — return request **${ref}** is created for ${o.id}. Pickup is scheduled for tomorrow between 10 AM and 6 PM, and you'll get an SMS confirmation.`, quickReplies: ['Thanks!'] }
+            : { text: `Done — **${o.id}** is cancelled (ref ${ref}). A refund of **${formatINR(o.total)}** has been initiated to your ${o.payment} and usually reflects within 2–3 business days.`, quickReplies: ['Thanks!'] },
         ],
       }
     }
@@ -596,7 +596,7 @@ function handlePending(ctx: ConversationContext, e: Entities, text: string, top:
     routedIntent: 'bulk_inquiry',
     messages: [
       {
-        text: `Thank you! I've shared your requirements with our corporate sales team. Lead score **${ctx.lead.score}/100 (${ctx.lead.tier})**. ${a.email ? `An account manager will email **${a.email}**` : 'An account manager will reach out'} within one business day (simulated).`,
+        text: `Thank you! I've shared your requirements with our corporate sales team. Lead score **${ctx.lead.score}/100 (${ctx.lead.tier})**. ${a.email ? `An account manager will email **${a.email}**` : 'An account manager will reach out'} within one business day.`,
         card: { type: 'lead' },
       },
     ],

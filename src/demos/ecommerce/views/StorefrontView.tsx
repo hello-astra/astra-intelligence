@@ -1,6 +1,5 @@
 import { useState } from 'react'
-import { ArrowRight, CheckCircle2, FlaskConical, Minus, PackageCheck, Plus, RefreshCw, ShoppingCart, Star, Tag, Trash2, TriangleAlert } from 'lucide-react'
-import { Badge } from '@/components/ui/Badge'
+import { ArrowRight, CheckCircle2, Minus, PackageCheck, Plus, RefreshCw, ShoppingCart, Star, Tag, Trash2, TriangleAlert } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
 import { Field, Input, Select } from '@/components/ui/Form'
 import { Panel } from '@/components/ui/Panel'
@@ -90,9 +89,6 @@ export function StorefrontView({ state, setState, openOrder, goTo }: CommerceVie
           <h2 className="text-lg font-semibold text-fg">{STORE_NAME} storefront</h2>
           <p className="text-xs text-fg-3">What customers see. Orders placed here flow straight into Orders, Inventory and Sales.</p>
         </div>
-        <Badge tone="amber" icon={<FlaskConical className="size-3" />}>
-          Simulated checkout — no payment is processed
-        </Badge>
       </div>
 
       <div className="grid gap-4 xl:grid-cols-[1fr_340px]">
@@ -156,7 +152,7 @@ export function StorefrontView({ state, setState, openOrder, goTo }: CommerceVie
                 <p className="text-sm font-semibold">Order {result.order.id} placed</p>
               </div>
               <p className="mt-1 text-xs text-fg-3">
-                {formatINR(result.order.total)} · {result.order.method} · payment {result.order.payment === 'paid' ? 'captured (simulated)' : 'due on delivery'}
+                {formatINR(result.order.total)} · {result.order.method} · payment {result.order.payment === 'paid' ? 'captured' : 'due on delivery'}
               </p>
               <div className="mt-4 rounded-lg border border-line bg-sunken p-3">
                 <p className="flex items-center gap-1.5 text-[11px] font-semibold tracking-wide text-fg-3 uppercase">
@@ -273,7 +269,6 @@ export function StorefrontView({ state, setState, openOrder, goTo }: CommerceVie
                   <Button className="w-full" onClick={checkout} loading={placing} leftIcon={!placing ? <ShoppingCart className="size-4" /> : undefined}>
                     {placing ? 'Placing order…' : `Place order · ${formatINR(totals.total)}`}
                   </Button>
-                  <p className="text-center text-[11px] text-fg-4">Simulated payment — no real transaction takes place.</p>
                 </div>
               )}
             </Panel>

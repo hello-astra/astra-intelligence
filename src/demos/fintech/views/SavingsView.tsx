@@ -1,7 +1,6 @@
 import { useState, type FormEvent } from 'react'
-import { FlaskConical, Plus, Target } from 'lucide-react'
+import { Plus, Target } from 'lucide-react'
 import { Bar, BarChart, CartesianGrid, Cell, ReferenceLine, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
-import { Badge } from '@/components/ui/Badge'
 import { Button } from '@/components/ui/Button'
 import { Field, Input } from '@/components/ui/Form'
 import { Meter } from '@/components/ui/Meter'
@@ -47,7 +46,7 @@ export function SavingsView({ state, setState }: LedgerCtx) {
     const goal = state.goals.find((g) => g.id === id)
     setState((s) => ({ ...s, goals: s.goals.map((g) => (g.id === id ? { ...g, saved: g.saved + value } : g)) }))
     setAmounts((a) => ({ ...a, [id]: '' }))
-    toast({ title: `${formatINR(value)} moved to “${goal?.name}”`, description: 'Simulated transfer — no money moved.' })
+    toast({ title: `${formatINR(value)} moved to “${goal?.name}”` })
   }
 
   return (
@@ -58,9 +57,6 @@ export function SavingsView({ state, setState }: LedgerCtx) {
           <p className="text-xs text-fg-3">Reserves and goals funded from operating surplus.</p>
         </div>
         <div className="flex items-center gap-2">
-          <Badge tone="amber" icon={<FlaskConical className="size-3" />}>
-            Transfers are simulated
-          </Badge>
           <Button size="sm" leftIcon={<Plus className="size-3.5" />} onClick={() => setNewGoal(true)}>
             New goal
           </Button>

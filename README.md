@@ -168,16 +168,30 @@ Point them at your own backend, which holds provider keys.
 
 | Variable                | Used by                     | When empty                                                                 |
 | ----------------------- | --------------------------- | -------------------------------------------------------------------------- |
-| `VITE_CONTACT_ENDPOINT` | Contact form                | Enquiry is kept in the visitor's browser; the form says nothing was sent and offers a pre-filled email |
+| `VITE_CONTACT_ENDPOINT` | Contact form                | Uses the built-in `/api/contact` mail function (see below)                 |
 | `VITE_BOOKING_URL`      | "Book a Consultation" CTAs  | Opens the contact form with "consultation" pre-selected                    |
 | `VITE_CHAT_API_URL`     | AI chatbot demo             | Built-in rule-based engine                                                 |
 | `VITE_OCR_API_URL`      | OCR demo (uploads)          | Sample documents use predefined results; uploads go to manual entry        |
 
 Restart `npm run dev` (or rebuild) after changing these values.
 
-### Contact form: `VITE_CONTACT_ENDPOINT`
+### Contact form email
 
-`src/services/contactService.ts` sends a `POST` with a JSON body:
+The form posts to `/api/contact` ([api/contact.ts](api/contact.ts)), a serverless function that
+emails the enquiry to the business inbox through Gmail SMTP. It needs two **server-side**
+variables (no `VITE_` prefix, so they never reach the browser):
+
+| Variable             | Value                                                                  |
+| -------------------- | ---------------------------------------------------------------------- |
+| `GMAIL_USER`         | `hello.astraintelligence@gmail.com`                                    |
+| `GMAIL_APP_PASSWORD` | A Google [app password](https://myaccount.google.com/apppasswords) (requires 2-Step Verification) |
+| `CONTACT_TO`         | Optional — a different inbox to receive enquiries                      |
+
+Set them in **Vercel → Project → Settings → Environment Variables** and redeploy; for local
+testing put them in `.env.local` (`npm run dev` serves the same function). The visitor's
+address is set as Reply-To, so replying in Gmail answers them directly.
+
+To use a different backend instead, set `VITE_CONTACT_ENDPOINT`; it receives a `POST` with a JSON body:
 
 ```json
 {
@@ -241,10 +255,8 @@ review and export work unchanged.
 
 ## Before launch
 
-- [ ] Replace the placeholder email and social profile URLs in `src/data/constants/site.ts`.
-      They are **not** real accounts yet.
-- [ ] Set `VITE_CONTACT_ENDPOINT`. Until then, enquiries stay in the visitor's browser and
-      the form asks them to email instead.
+- [ ] Set `GMAIL_USER` and `GMAIL_APP_PASSWORD` in the hosting environment so the contact form
+      can send email.
 - [ ] Set `VITE_BOOKING_URL` if you use a scheduling tool.
 - [ ] Review the About and approach copy (`src/data/constants/company.ts`, `approach.ts`).
 - [ ] Optional: add an Open Graph image (`og:image` in `index.html`), analytics, and a privacy policy page.

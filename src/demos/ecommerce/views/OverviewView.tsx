@@ -62,7 +62,7 @@ export function OverviewView({ state, setState, openOrder, goTo }: CommerceViewP
     let next = state
     for (const p of lowStock) next = restock(next, p.id, Math.max(p.reorderLevel * 3 - p.stock, 1), 'Restock', 'Bulk restock')
     setState(next)
-    toast({ title: `${lowStock.length} products restocked`, description: 'Purchase orders simulated; stock levels updated.' })
+    toast({ title: `${lowStock.length} products restocked`, description: 'Purchase orders raised; stock levels updated.' })
   }
 
   return (

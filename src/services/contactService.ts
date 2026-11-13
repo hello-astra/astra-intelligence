@@ -1,5 +1,4 @@
 import { SITE } from '@/data/constants/site'
-import { storage } from './storage'
 
 export interface Enquiry {
   fullName: string
@@ -15,16 +14,13 @@ export interface Enquiry {
   sourcePage: string
 }
 
-export type SubmitResult =
-  /** Delivered to the configured endpoint. */
-  | { status: 'sent'; reference: string }
-  /** No endpoint configured: saved in this browser only (demo mode). */
-  | { status: 'stored'; reference: string }
+export interface SubmitResult {
+  status: 'sent'
+  reference: string
+}
 
-const OUTBOX_KEY = storage.key('enquiries', 'outbox')
-const ENDPOINT = import.meta.env.VITE_CONTACT_ENDPOINT?.trim() || ''
-
-export const contactMode: 'live' | 'demo' = ENDPOINT ? 'live' : 'demo'
+/** The site's own mail function (api/contact.ts) unless another endpoint is configured. */
+const ENDPOINT = import.meta.env.VITE_CONTACT_ENDPOINT?.trim() || '/api/contact'
 
 function makeReference(): string {
   const stamp = Date.now().toString(36).toUpperCase().slice(-6)
@@ -33,34 +29,30 @@ function makeReference(): string {
 }
 
 /**
- * Submits an enquiry.
+ * Sends an enquiry to the business inbox.
  *
- * - With VITE_CONTACT_ENDPOINT set, POSTs JSON to that URL (your API, an n8n
- *   webhook, a form service, …) and throws on any non-2xx response.
- * - Without it, the enquiry is kept in a local outbox (never silently dropped)
- *   and the UI explains that nothing was sent and offers an email fallback.
+ * POSTs JSON to /api/contact (or VITE_CONTACT_ENDPOINT) and throws on any failure, so the
+ * form can keep the visitor's details and offer the pre-filled email instead — an enquiry
+ * is never reported as sent unless the server confirmed it.
  */
-export async function submitEnquiry(enquiry: Enquiry): Promise<SubmitResult> {
+export async function submitEnquiry(enquiry: Enquiry, honeypot = ''): Promise<SubmitResult> {
   const reference = makeReference()
-
-  if (ENDPOINT) {
-    const response = await fetch(ENDPOINT, {
+  let response: Response
+  try {
+    response = await fetch(ENDPOINT, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-      body: JSON.stringify({ ...enquiry, reference }),
-      signal: AbortSignal.timeout(15000),
+      body: JSON.stringify({ ...enquiry, reference, website: honeypot }),
+      signal: AbortSignal.timeout(20000),
     })
-    if (!response.ok) {
-      throw new Error(`The enquiry service responded with status ${response.status}.`)
-    }
-    return { status: 'sent', reference }
+  } catch {
+    throw new Error('We could not reach the enquiry service. Please check your connection.')
   }
-
-  // Demo mode — simulate network latency, then persist locally.
-  await new Promise((resolve) => window.setTimeout(resolve, 900))
-  const outbox = storage.get<(Enquiry & { reference: string })[]>(OUTBOX_KEY) ?? []
-  storage.set(OUTBOX_KEY, [...outbox, { ...enquiry, reference }].slice(-25))
-  return { status: 'stored', reference }
+  if (!response.ok) {
+    const detail = (await response.json().catch(() => null)) as { error?: string } | null
+    throw new Error(detail?.error ?? 'The enquiry service is not available right now.')
+  }
+  return { status: 'sent', reference }
 }
 
 /** Pre-filled mailto: link so a visitor can send the same enquiry by email. */

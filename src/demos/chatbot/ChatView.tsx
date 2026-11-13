@@ -209,7 +209,7 @@ export function ChatView({ state, select, send, typingId, newConversation, escal
           </div>
           <p className="mt-1.5 flex items-center gap-1.5 text-[10.5px] text-fg-4">
             <Cpu className="size-3" aria-hidden /> {chatProvider.label}
-            {chatProvider.kind === 'rule-based' ? ' · simulated AI, answers only from the sample knowledge base' : ' · connected LLM backend'}
+            {chatProvider.kind === 'rule-based' ? ' · answers only from the knowledge base' : ' · connected LLM backend'}
           </p>
         </form>
       </section>
@@ -381,7 +381,7 @@ function InsightsPanel({
           </dl>
           {lead.stage === 'qualified' && (
             <Button size="xs" variant="secondary" className="mt-3 w-full" leftIcon={<UserPlus className="size-3" />} onClick={() => createLead(c.id)}>
-              Push to CRM (simulated)
+              Push to CRM
             </Button>
           )}
         </Section>

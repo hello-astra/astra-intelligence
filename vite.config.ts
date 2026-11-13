@@ -1,15 +1,47 @@
 import { fileURLToPath, URL } from 'node:url'
 import tailwindcss from '@tailwindcss/vite'
 import react from '@vitejs/plugin-react'
-import { defineConfig } from 'vite'
+import { defineConfig, loadEnv, type Plugin } from 'vite'
 
 /** Recharts and its runtime dependencies — only demos load these. */
 const CHART_LIBS =
   /[\\/]node_modules[\\/](recharts|d3-[^\\/]+|victory-vendor|decimal\.js-light|es-toolkit|@reduxjs|immer|redux|redux-thunk|reselect|react-redux|eventemitter3|internmap|tiny-invariant|clsx|react-is|use-sync-external-store)[\\/]/
 
+/**
+ * Serves api/contact.ts during `npm run dev` / `npm run preview`, so the contact form works
+ * locally exactly as it does on Vercel. Server-only variables (GMAIL_USER, GMAIL_APP_PASSWORD,
+ * CONTACT_TO) are read from .env.local and never reach the client bundle.
+ */
+function contactApi(): Plugin {
+  type Handler = (req: unknown, res: unknown) => Promise<void>
+  const route = '/api/contact'
+  return {
+    name: 'astra-contact-api',
+    config(_, { mode }) {
+      const env = loadEnv(mode, process.cwd(), '')
+      for (const key of ['GMAIL_USER', 'GMAIL_APP_PASSWORD', 'CONTACT_TO']) {
+        if (env[key] && !process.env[key]) process.env[key] = env[key]
+      }
+    },
+    configureServer(server) {
+      server.middlewares.use(route, (req, res, next) => {
+        server
+          .ssrLoadModule('/api/contact.ts')
+          .then((mod) => (mod.default as Handler)(req, res))
+          .catch(next)
+      })
+    },
+    configurePreviewServer(server) {
+      server.middlewares.use(route, (req, res, next) => {
+        import('./api/contact.ts').then((mod) => (mod.default as unknown as Handler)(req, res)).catch(next)
+      })
+    },
+  }
+}
+
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [react(), tailwindcss()],
+  plugins: [react(), tailwindcss(), contactApi()],
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),

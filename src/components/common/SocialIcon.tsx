@@ -1,5 +1,5 @@
 import githubSvg from 'simple-icons/icons/github.svg?raw'
-import xSvg from 'simple-icons/icons/x.svg?raw'
+import redditSvg from 'simple-icons/icons/reddit.svg?raw'
 import instagramSvg from 'simple-icons/icons/instagram.svg?raw'
 import type { SocialId } from '@/data/constants/site'
 
@@ -11,7 +11,7 @@ const LINKEDIN_PATH =
 
 const PATHS: Record<SocialId, string> = {
   linkedin: LINKEDIN_PATH,
-  x: pathOf(xSvg),
+  reddit: pathOf(redditSvg),
   github: pathOf(githubSvg),
   instagram: pathOf(instagramSvg),
 }

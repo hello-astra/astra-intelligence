@@ -1,10 +1,9 @@
 import { startTransition, useEffect, useOptimistic, useRef, useState, type CSSProperties, type ReactNode } from 'react'
-import { FlaskConical, Info, MousePointerClick, RotateCcw, ShieldCheck } from 'lucide-react'
+import { Info, MousePointerClick, RotateCcw } from 'lucide-react'
 import { TechChip } from '@/components/common/TechChip'
 import { ThemeToggle } from '@/components/common/ThemeToggle'
 import { Button } from '@/components/ui/Button'
 import { Modal } from '@/components/ui/Modal'
-import { Tooltip } from '@/components/ui/Tooltip'
 import { useToast } from '@/components/ui/toast-context'
 import type { Solution } from '@/types/content'
 import { cn } from '@/utils/cn'
@@ -23,31 +22,6 @@ interface DemoShellProps<V extends string> {
   children: ReactNode
   /** Remove content padding (for full-bleed layouts such as chat). */
   flush?: boolean
-}
-
-export function DemoEnvironmentBadge({ compact, onClick }: { compact?: boolean; onClick?: () => void }) {
-  const className =
-    'inline-flex items-center gap-1.5 rounded-full bg-amber-400/10 px-2 py-1 text-[11px] font-medium whitespace-nowrap text-amber-200 ring-1 ring-amber-400/30 ring-inset'
-  const content = (
-    <>
-      <FlaskConical className="size-3" aria-hidden />
-      {compact ? 'Demo' : 'Demo Environment'}
-    </>
-  )
-  return (
-    <Tooltip
-      side="bottom"
-      content="Demo Environment: sample data and simulated operations. Your changes are saved only in this browser. Select for details."
-    >
-      {onClick ? (
-        <button type="button" onClick={onClick} className={cn(className, 'transition-colors hover:bg-amber-400/15')}>
-          {content}
-        </button>
-      ) : (
-        <span className={className}>{content}</span>
-      )}
-    </Tooltip>
-  )
 }
 
 export function DemoShell<V extends string>({
@@ -120,7 +94,6 @@ export function DemoShell<V extends string>({
         </div>
         <div className="order-3 flex w-full min-w-0 items-center gap-2 sm:order-none sm:w-auto sm:flex-1 sm:justify-end">{toolbar}</div>
         <div className="ml-auto flex items-center gap-1.5 sm:ml-0">
-          <DemoEnvironmentBadge onClick={() => setInfoOpen(true)} />
           <ThemePicker />
           <ThemeToggle size="sm" />
           <Button variant="ghost" size="sm" onClick={() => setInfoOpen(true)} aria-label="About this demo" className="px-2">
@@ -169,12 +142,6 @@ export function DemoShell<V extends string>({
               )
             })}
           </ul>
-          <div className="mt-auto hidden border-t border-line p-3 lg:block">
-            <p className="flex items-start gap-1.5 text-[11px] leading-relaxed text-fg-4">
-              <ShieldCheck className="mt-px size-3.5 shrink-0" aria-hidden />
-              Sample data. Changes stay in this browser.
-            </p>
-          </div>
         </nav>
 
         {/* Content */}
@@ -201,17 +168,6 @@ export function DemoShell<V extends string>({
                   {t}
                 </li>
               ))}
-            </ul>
-          </section>
-          <section className="rounded-xl border border-amber-400/20 bg-amber-400/[0.06] p-4">
-            <h3 className="flex items-center gap-1.5 text-xs font-semibold tracking-wide text-amber-200 uppercase">
-              <FlaskConical className="size-3.5" aria-hidden /> What is simulated
-            </h3>
-            <ul className="mt-2.5 list-disc space-y-1.5 pl-5 text-[13px] text-fg-2 marker:text-amber-300/60">
-              {solution.demo.simulated.map((s) => (
-                <li key={s}>{s}</li>
-              ))}
-              <li>All data is sample data, stored only in this browser (localStorage).</li>
             </ul>
           </section>
           <section>

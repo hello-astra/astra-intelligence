@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react'
-import { CheckCheck, Download, FlaskConical, Sparkles, Trash2, Wand2, X } from 'lucide-react'
+import { CheckCheck, Download, Sparkles, Trash2, Wand2, X } from 'lucide-react'
 import { Badge } from '@/components/ui/Badge'
 import { Button } from '@/components/ui/Button'
 import { Meter } from '@/components/ui/Meter'
@@ -111,9 +111,6 @@ export function CategorizeView({ state, setState }: LedgerCtx) {
           <h2 className="text-lg font-semibold text-fg">AI expense categorization</h2>
           <p className="text-xs text-fg-3">Import statement lines, let the model suggest categories with confidence, then review and post.</p>
         </div>
-        <Badge tone="amber" icon={<FlaskConical className="size-3" />}>
-          Simulated AI — rule-based classifier stands in for a trained model
-        </Badge>
       </div>
 
       <Panel

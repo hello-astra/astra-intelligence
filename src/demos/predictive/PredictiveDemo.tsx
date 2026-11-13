@@ -111,9 +111,6 @@ export default function PredictiveDemo() {
       {view === 'anomalies' && <AnomaliesView {...ctx} />}
       {view === 'models' && <ModelsView {...ctx} />}
       {view === 'data' && <DataView {...ctx} />}
-      <p className="mt-4 text-[11px] text-fg-4">
-        Historical series are synthetic sample data. Forecasts come from statistical models fitted in your browser; scenario effects are explicit assumptions.
-      </p>
     </DemoShell>
   )
 }

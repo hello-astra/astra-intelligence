@@ -1,22 +1,16 @@
-/**
- * Site-wide brand and contact configuration.
- *
- * ⚠️ BEFORE LAUNCH: the email address and social profile URLs below are
- * placeholders. Replace them with Astra Intelligence's real details.
- */
+/** Site-wide brand and contact configuration. */
 export const SITE = {
   name: 'Astra Intelligence',
   shortName: 'Astra',
   tagline: 'Technology Beyond Boundaries.',
   description:
     'Astra Intelligence is a technology-driven service organization specializing in Artificial Intelligence, Custom Software Development, Business Automation, Data Analytics and Intelligent Enterprise Solutions.',
-  /** Placeholder — replace with the real business inbox. */
-  email: 'hello@astraintelligence.com',
+  email: 'hello.astraintelligence@gmail.com',
   social: [
-    { id: 'linkedin', label: 'LinkedIn', href: 'https://www.linkedin.com/company/astra-intelligence' },
-    { id: 'x', label: 'X (Twitter)', href: 'https://x.com/astraintel' },
-    { id: 'github', label: 'GitHub', href: 'https://github.com/astra-intelligence' },
-    { id: 'instagram', label: 'Instagram', href: 'https://www.instagram.com/astra.intelligence' },
+    { id: 'linkedin', label: 'LinkedIn', href: 'https://www.linkedin.com/in/astra-intelligence-02738a44b' },
+    { id: 'reddit', label: 'Reddit', href: 'https://www.reddit.com/user/astraintelligence' },
+    { id: 'github', label: 'GitHub', href: 'https://github.com/hello-astra' },
+    { id: 'instagram', label: 'Instagram', href: 'https://www.instagram.com/astra_intelligence_' },
   ] as const,
 } as const
 

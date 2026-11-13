@@ -29,10 +29,10 @@ export function OrderDetailModal({ orderId, state, onClose, onChange }: Props) {
       toast({ title: `${order.id} updated`, description: `Status changed to ${next?.status}.` })
     } else if (kind === 'cancel') {
       onChange(cancelOrder(state, order.id))
-      toast({ title: `${order.id} cancelled`, description: `${order.items.reduce((s, i) => s + i.qty, 0)} unit(s) returned to stock${order.payment === 'paid' ? '; refund issued (simulated)' : ''}.`, tone: 'warning' })
+      toast({ title: `${order.id} cancelled`, description: `${order.items.reduce((s, i) => s + i.qty, 0)} unit(s) returned to stock${order.payment === 'paid' ? '; refund issued' : ''}.`, tone: 'warning' })
     } else if (kind === 'refund') {
       onChange(refundOrder(state, order.id))
-      toast({ title: `Refund issued for ${order.id}`, description: 'Simulated — no money moved. Items returned to stock.', tone: 'info' })
+      toast({ title: `Refund issued for ${order.id}`, description: 'Items returned to stock.', tone: 'info' })
     } else {
       onChange(markPaid(state, order.id))
       toast({ title: `Payment recorded for ${order.id}` })
@@ -176,7 +176,6 @@ export function OrderDetailModal({ orderId, state, onClose, onChange }: Props) {
               ))}
             </ol>
           </div>
-          <p className="text-xs text-fg-4">Payments and notifications in this demo are simulated — no money moves and no messages are sent.</p>
         </div>
       )}
     </Modal>

@@ -41,7 +41,7 @@ export function InventoryView({ state, setState, openProduct }: CommerceViewProp
     if (!Number.isFinite(qty) || qty <= 0) return
     setState((s) => restock(s, productId, Math.round(qty), 'Restock', 'Manual restock'))
     setAmounts((a) => ({ ...a, [productId]: '' }))
-    toast({ title: `Restocked ${label}`, description: `+${Math.round(qty)} units received (simulated purchase order).` })
+    toast({ title: `Restocked ${label}`, description: `+${Math.round(qty)} units received.` })
   }
 
   return (

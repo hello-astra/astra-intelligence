@@ -1,10 +1,9 @@
 import { useId, useMemo, useState, type FormEvent } from 'react'
 import { AlertTriangle, ArrowRight, CalendarCheck, CheckCircle2, Info, Mail, RotateCcw } from 'lucide-react'
-import { Button, ButtonAnchor } from '@/components/ui/Button'
+import { Button } from '@/components/ui/Button'
 import { Checkbox, Field, Input, Select, Textarea } from '@/components/ui/Form'
-import { SITE } from '@/data/constants/site'
 import { SOLUTION_INDEX as SOLUTIONS, isSolutionSlug } from '@/data/constants/solution-index'
-import { buildEnquiryMailto, contactMode, submitEnquiry, type Enquiry, type SubmitResult } from '@/services/contactService'
+import { buildEnquiryMailto, submitEnquiry, type Enquiry, type SubmitResult } from '@/services/contactService'
 import { cn } from '@/utils/cn'
 
 const BUDGET_OPTIONS = [
@@ -46,7 +45,7 @@ function validate(values: FormValues): Errors {
   }
   if (!values.service) errors.service = 'Please choose the service you are interested in.'
   const description = values.description.trim()
-  if (description.length < 20) errors.description = 'Please describe your project in at least 20 characters.'
+  if (description.length < 5) errors.description = 'Please describe your project in at least 10 characters.'
   else if (description.length > 2000) errors.description = 'Please keep the description under 2,000 characters.'
   return errors
 }
@@ -79,6 +78,8 @@ export function ContactForm({ defaultService, consultation = false, className }:
   const [result, setResult] = useState<SubmitResult | null>(null)
   const [submitError, setSubmitError] = useState<string | null>(null)
   const [lastEnquiry, setLastEnquiry] = useState<Enquiry | null>(null)
+  // Hidden field that only bots fill in; the server discards anything that arrives with it set.
+  const [honeypot, setHoneypot] = useState('')
 
   const fid = (name: keyof FormValues) => `${id}-${name}`
 
@@ -126,7 +127,7 @@ export function ContactForm({ defaultService, consultation = false, className }:
     setStatus('submitting')
     setSubmitError(null)
     try {
-      const res = await submitEnquiry(enquiry)
+      const res = await submitEnquiry(enquiry, honeypot)
       setResult(res)
       setStatus('success')
     } catch (error) {
@@ -136,6 +137,7 @@ export function ContactForm({ defaultService, consultation = false, className }:
   }
 
   const reset = () => {
+    setHoneypot('')
     setValues(initial)
     setErrors({})
     setTouched({})
@@ -158,37 +160,14 @@ export function ContactForm({ defaultService, consultation = false, className }:
             role="status"
             aria-live="polite"
           >
-            {result.status === 'sent' ? (
-              <>
-                <span className="flex size-12 items-center justify-center rounded-2xl bg-emerald-500/15 ring-1 ring-emerald-500/30">
-                  <CheckCircle2 className="size-6 text-emerald-300" aria-hidden />
-                </span>
-                <h3 className="mt-5 text-xl font-semibold text-fg">Thank you — your enquiry has been received.</h3>
-                <p className="mt-2 text-sm leading-relaxed text-fg-2">
-                  Our team will review your requirements and reply to <span className="text-fg">{lastEnquiry.email}</span>. Your
-                  reference is <span className="font-mono text-fg">{result.reference}</span>.
-                </p>
-              </>
-            ) : (
-              <>
-                <span className="flex size-12 items-center justify-center rounded-2xl bg-amber-500/15 ring-1 ring-amber-500/30">
-                  <Info className="size-6 text-amber-300" aria-hidden />
-                </span>
-                <h3 className="mt-5 text-xl font-semibold text-fg">Enquiry saved — demo mode</h3>
-                <p className="mt-2 text-sm leading-relaxed text-fg-2">
-                  No email service is connected to this website yet, so your enquiry has <strong className="text-fg">not been sent</strong>.
-                  It has been saved in this browser only (reference <span className="font-mono text-fg">{result.reference}</span>).
-                </p>
-                <p className="mt-2 text-sm leading-relaxed text-fg-2">To reach the team now, send the same details by email:</p>
-                <ButtonAnchor
-                  href={buildEnquiryMailto(lastEnquiry, result.reference)}
-                  className="mt-4"
-                  leftIcon={<Mail className="size-4" />}
-                >
-                  Email this enquiry to {SITE.email}
-                </ButtonAnchor>
-              </>
-            )}
+            <span className="flex size-12 items-center justify-center rounded-2xl bg-emerald-500/15 ring-1 ring-emerald-500/30">
+              <CheckCircle2 className="size-6 text-emerald-300" aria-hidden />
+            </span>
+            <h3 className="mt-5 text-xl font-semibold text-fg">Thank you — your enquiry has been received.</h3>
+            <p className="mt-2 text-sm leading-relaxed text-fg-2">
+              Our team will review your requirements and reply to <span className="text-fg">{lastEnquiry.email}</span>. Your
+              reference is <span className="font-mono text-fg">{result.reference}</span>.
+            </p>
             <Button variant="ghost" size="sm" className="mt-6" leftIcon={<RotateCcw className="size-3.5" />} onClick={reset}>
               Send another enquiry
             </Button>
@@ -201,6 +180,12 @@ export function ContactForm({ defaultService, consultation = false, className }:
             aria-describedby={`${id}-mode`}
             className="grid gap-5 sm:grid-cols-2"
           >
+            <div aria-hidden className="absolute -left-[9999px] size-px overflow-hidden">
+              <label>
+                Website
+                <input type="text" name="website" tabIndex={-1} autoComplete="off" value={honeypot} onChange={(e) => setHoneypot(e.target.value)} />
+              </label>
+            </div>
             <Field label="Full name" htmlFor={fid('fullName')} error={err('fullName')} required>
               <Input
                 id={fid('fullName')}
@@ -353,9 +338,7 @@ export function ContactForm({ defaultService, consultation = false, className }:
             <div className="flex flex-col gap-3 sm:col-span-2 sm:flex-row sm:items-center sm:justify-between">
               <p id={`${id}-mode`} className="flex items-start gap-2 text-xs text-fg-3">
                 <Info className="mt-px size-3.5 shrink-0" aria-hidden />
-                {contactMode === 'demo'
-                  ? 'Demo mode: no email service is connected, so enquiries are saved in your browser and you’ll be offered an email fallback.'
-                  : 'Your details are used only to respond to this enquiry.'}
+                Your details are used only to respond to this enquiry.
               </p>
               <Button type="submit" size="lg" loading={status === 'submitting'} rightIcon={<ArrowRight className="size-4" />} className="shrink-0">
                 {status === 'submitting' ? 'Sending…' : 'Let’s Build Something Intelligent'}

@@ -97,7 +97,7 @@ const CONTENT: SolutionContent[] = [
         'Switch between Acme Technologies, Nova Retail and Vertex Solutions',
         'Invite a demo user and change their role',
         'Switch a subscription plan and watch quotas and MRR update',
-        'Run a simulated integration health check',
+        'Run an integration health check',
       ],
       simulated: ['Billing and plan changes (no charges are made)', 'API keys and integration health checks', 'Invitation emails (none are sent)'],
     },
@@ -146,7 +146,7 @@ const CONTENT: SolutionContent[] = [
     demo: {
       summary: 'A storefront and admin back office sharing one dataset: catalog, inventory, orders, customers, payments and sales analytics.',
       tryThis: [
-        'Place a simulated order from the storefront and watch stock and sales update',
+        'Place an order from the storefront and watch stock and sales update',
         'Add or edit a product, or restock a low-stock item',
         'Move an order from Pending to Delivered',
         'Search and filter the catalog',
@@ -248,7 +248,7 @@ const CONTENT: SolutionContent[] = [
       'Guardrails, logging and evaluation',
     ],
     demo: {
-      summary: 'A support console with a simulated AI agent: intent detection, sentiment, order lookups, lead qualification and human escalation.',
+      summary: 'A support console with an AI agent: intent detection, sentiment, order lookups, lead qualification and human escalation.',
       tryThis: [
         'Ask "Where is my order ORD-10482?"',
         'Request a refund and watch intent detection respond',
@@ -465,10 +465,10 @@ const CONTENT: SolutionContent[] = [
       'Operational dashboards and reports',
     ],
     demo: {
-      summary: 'An integrated ERP with employees, attendance, simulated payroll, departments, purchase orders, shipments and vendors.',
+      summary: 'An integrated ERP with employees, attendance, payroll, departments, purchase orders, shipments and vendors.',
       tryThis: [
         'Add an employee and update their details',
-        'Run a simulated payroll for the month',
+        'Run payroll for the month',
         'Update a shipment status',
         'Compare department performance',
       ],
@@ -517,7 +517,7 @@ const CONTENT: SolutionContent[] = [
       'Accuracy measurement on your own documents',
     ],
     demo: {
-      summary: 'Process sample receipts and invoices: simulated scanning, field and line-item extraction, validation, corrections and CSV/JSON export.',
+      summary: 'Process sample receipts and invoices: scanning, field and line-item extraction, validation, corrections and CSV/JSON export.',
       tryThis: [
         'Process a sample receipt or invoice',
         'Correct an extracted field and watch validation update',

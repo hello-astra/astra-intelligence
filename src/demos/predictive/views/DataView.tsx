@@ -35,7 +35,7 @@ export function DataView({ result, format }: PredictiveCtx) {
       parameters: result.params,
       confidence: result.confidence,
       generatedAt: result.generatedAt,
-      note: 'Historical values are synthetic sample data. Forecast values are statistical estimates.',
+      note: 'Forecast values are statistical estimates.',
       backtest: result.metrics.map((m) => ({ model: m.model, mape: Number(m.mape.toFixed(2)), mae: Math.round(m.mae), rmse: Math.round(m.rmse) })),
       anomalies: result.anomalies.map((a) => ({ period: a.label, actual: a.actual, expected: Math.round(a.expected), deviationPct: Number(a.deviationPct.toFixed(1)) })),
       series: rows,

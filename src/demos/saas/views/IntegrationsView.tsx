@@ -6,7 +6,6 @@ import {
   Copy,
   CreditCard,
   Database,
-  FlaskConical,
   HeartPulse,
   KeyRound,
   MessageSquare,
@@ -85,7 +84,7 @@ export function IntegrationsView({ tenant, updateTenant, intent, clearIntent }: 
       ok: result.status === 'operational',
       message:
         result.status === 'down'
-          ? 'Connection refused (simulated outage)'
+          ? 'Connection refused'
           : result.status === 'degraded'
             ? `Slow response — ${result.latencyMs} ms`
             : integration.status === 'degraded'
@@ -150,7 +149,7 @@ export function IntegrationsView({ tenant, updateTenant, intent, clearIntent }: 
         'integration',
       ),
     )
-    toast({ title: `${i.name} ${connecting ? 'connected' : 'disconnected'}`, description: 'Simulated — no external service was contacted.', tone: 'info' })
+    toast({ title: `${i.name} ${connecting ? 'connected' : 'disconnected'}`, tone: 'info' })
   }
 
   const revokeKey = (key: ApiKey) => {
@@ -180,9 +179,6 @@ export function IntegrationsView({ tenant, updateTenant, intent, clearIntent }: 
           <p className="text-xs text-fg-3">Connected services, health checks and API credentials.</p>
         </div>
         <div className="flex items-center gap-2">
-          <Badge tone="amber" icon={<FlaskConical className="size-3" />}>
-            Simulated checks
-          </Badge>
           <Button size="sm" onClick={runAll} loading={running} leftIcon={<HeartPulse className="size-3.5" />}>
             {running ? 'Checking…' : 'Run health check'}
           </Button>

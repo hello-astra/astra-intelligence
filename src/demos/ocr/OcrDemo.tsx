@@ -106,7 +106,6 @@ export default function OcrDemo() {
                         <span className="block font-medium text-fg">{d.name}</span>
                         <span className="block text-[11px] text-fg-4">
                           {d.documentType} · {formatDateTime(d.processedAt)}
-                          {d.extraction.simulated && ' · simulated extraction'}
                         </span>
                       </TD>
                       <TD>{d.merchant}</TD>

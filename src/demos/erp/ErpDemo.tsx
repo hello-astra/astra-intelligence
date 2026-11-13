@@ -72,7 +72,6 @@ export default function ErpDemo() {
           toast({ title: message })
         }}
       />
-      <p className="mt-4 text-[11px] text-fg-4">Sample company and employees. Payroll and shipments are simulated — no payments, bank files or carrier bookings are created.</p>
     </DemoShell>
   )
 }

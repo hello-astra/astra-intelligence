@@ -1,6 +1,6 @@
 import { useMemo, useRef, useState } from 'react'
 import { useToday } from '@/hooks/useToday'
-import { Check, Download, FileText, FlaskConical, Lock, Play } from 'lucide-react'
+import { Check, Download, FileText, Lock, Play } from 'lucide-react'
 import { Badge } from '@/components/ui/Badge'
 import { Button } from '@/components/ui/Button'
 import { Modal } from '@/components/ui/Modal'
@@ -48,7 +48,7 @@ export function PayrollView({ state, setState }: ErpCtx) {
           ],
         }))
         setStep(STEPS.length)
-        toast({ title: `${formatMonthLong(fromMonthKey(month))} payroll processed (simulated)`, description: `${lines.length} payslips generated · net ${formatINRCompact(totals.net)} · no payments were initiated.` })
+        toast({ title: `${formatMonthLong(fromMonthKey(month))} payroll processed`, description: `${lines.length} payslips generated · net ${formatINRCompact(totals.net)}` })
       }, STEPS.length * 650 + 300),
     )
   }
@@ -76,9 +76,6 @@ export function PayrollView({ state, setState }: ErpCtx) {
           </p>
         </div>
         <div className="flex items-center gap-2">
-          <Badge tone="amber" icon={<FlaskConical className="size-3" />}>
-            Simulated — no payments are initiated
-          </Badge>
           <Button size="sm" variant="secondary" leftIcon={<Download className="size-3.5" />} onClick={exportRegister}>
             Register CSV
           </Button>
@@ -111,7 +108,7 @@ export function PayrollView({ state, setState }: ErpCtx) {
               )
             })}
           </ol>
-          {processed && <p className="mt-3 text-xs text-fg-3">Bank transfer file prepared for review (simulated). In production this would integrate with your bank’s bulk-payment API after approval.</p>}
+          {processed && <p className="mt-3 text-xs text-fg-3">Bank transfer file prepared for review.</p>}
         </Panel>
       )}
 

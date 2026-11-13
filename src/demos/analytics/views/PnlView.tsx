@@ -134,7 +134,7 @@ export function PnlView({ ds, list, range }: AnalyticsCtx) {
             </tfoot>
           </table>
         </div>
-        <p className="border-t border-line px-4 py-2.5 text-xs text-fg-4">Figures are computed from the synthetic sample dataset. Costs in brackets.</p>
+        <p className="border-t border-line px-4 py-2.5 text-xs text-fg-4">Costs in brackets.</p>
       </Panel>
     </div>
   )

@@ -240,7 +240,7 @@ export function Navbar() {
                     <FlaskConical className="size-3" /> Interactive Lab
                   </span>
                   <p className="mt-3 text-[15px] font-semibold text-fg">Try nine working product demos</p>
-                  <p className="mt-1.5 text-[13px] leading-relaxed text-fg-3">Real interfaces, realistic sample data and simulated operations — right in your browser.</p>
+                  <p className="mt-1.5 text-[13px] leading-relaxed text-fg-3">Real interfaces and working workflows — right in your browser.</p>
                 </div>
                 <div className="mt-5 flex flex-col gap-2">
                   <ButtonLink to={paths.lab} size="sm" rightIcon={<ArrowUpRight className="size-3.5" />} {...intent(paths.lab)}>

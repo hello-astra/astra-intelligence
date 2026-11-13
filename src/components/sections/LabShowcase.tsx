@@ -1,4 +1,4 @@
-import { ArrowRight, Database, FlaskConical, Laptop, RotateCcw, ShieldCheck } from 'lucide-react'
+import { ArrowRight, Database, FlaskConical, Laptop, RotateCcw } from 'lucide-react'
 import { Link } from 'react-router'
 import { Container } from '@/components/common/Container'
 import { Reveal } from '@/components/common/Reveal'
@@ -12,7 +12,6 @@ import { DemoTile } from './DemoTile'
 const LAB_PRINCIPLES = [
   { icon: Database, label: 'Realistic sample data' },
   { icon: Laptop, label: 'Runs entirely in your browser' },
-  { icon: ShieldCheck, label: 'Simulated operations — nothing is sent' },
   { icon: RotateCcw, label: 'Reset any demo at any time' },
 ]
 

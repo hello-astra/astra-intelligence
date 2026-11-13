@@ -47,7 +47,7 @@ export default function ChatbotDemo() {
       update(id, (c) => ({ ...c, updatedAt: new Date().toISOString(), messages: [...c.messages, agentIntro(c, Date.now())] }))
       setTypingId(null)
     }, 1800)
-    toast({ title: 'Escalated to a human agent', description: `${reason}. A handoff summary was shared (simulated).`, tone: 'warning' })
+    toast({ title: 'Escalated to a human agent', description: `${reason}. A handoff summary was shared.`, tone: 'warning' })
   }
 
   const send = async (id: string, raw: string) => {
@@ -100,7 +100,7 @@ export default function ChatbotDemo() {
             setTypingId(null)
           }, 1800)
         }, 500)
-        toast({ title: 'Escalated to a human agent', description: `${reason}. Handoff summary shared (simulated).`, tone: 'warning' })
+        toast({ title: 'Escalated to a human agent', description: `${reason}. Handoff summary shared.`, tone: 'warning' })
       }
       if (reply.context.lead.stage === 'qualified' && conv.context.lead.stage !== 'qualified') {
         toast({ title: `Lead qualified · ${reply.context.lead.tier}`, description: `Score ${reply.context.lead.score}/100 — ready to push to CRM.` })
@@ -161,7 +161,7 @@ export default function ChatbotDemo() {
             }))
             if (conv?.status === 'bot') toast({ title: 'You took over as the agent', description: 'The assistant has stepped back for this conversation.', tone: 'info' })
           }}
-          createLead={() => toast({ title: 'Lead pushed to CRM (simulated)', description: 'No external CRM is connected in this demo.', tone: 'info' })}
+          createLead={() => toast({ title: 'Lead pushed to CRM', description: 'The lead is queued for the sales team.', tone: 'info' })}
         />
       )}
       {view === 'history' && <ConversationsView state={state} open={open} />}

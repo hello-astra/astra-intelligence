@@ -173,7 +173,6 @@ export function PoDetailModal({ poId, state, onClose, onChange }: { poId: string
               </ol>
             </div>
           )}
-          <p className="text-xs text-fg-4">Shipment updates are simulated; in production they arrive from carrier APIs or EDI.</p>
         </div>
       )}
     </Modal>

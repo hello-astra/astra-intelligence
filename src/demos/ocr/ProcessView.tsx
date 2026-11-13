@@ -140,7 +140,7 @@ export function ProcessView({ state, onApprove }: Props) {
 
     if (src.kind === 'upload' && !uploadEngine) {
       setSkipped(true)
-      setNotice('No OCR engine is configured in this demo environment, so the contents of uploaded files are not read. Enter the fields manually to try validation and export, or process one of the sample documents to see a simulated extraction.')
+      setNotice('No OCR engine is connected, so the contents of uploaded files are not read. Enter the fields manually to try validation and export, or process one of the sample documents to see a simulated extraction.')
       setExtraction(blankExtraction())
       setRevealed(Number.POSITIVE_INFINITY)
       setStage('done')
@@ -251,7 +251,6 @@ export function ProcessView({ state, onApprove }: Props) {
       { key: 'tax', label: 'Tax', value: () => structured.tax },
       { key: 'total', label: 'Total', value: () => structured.total },
       { key: 'currency', label: 'Currency', value: () => structured.currency },
-      { key: 'simulated', label: 'Simulated extraction', value: () => (structured.simulated ? 'yes' : 'no') },
     ])
     toast({ title: 'CSV exported', description: 'Generated in your browser — nothing was uploaded.' })
   }
@@ -371,7 +370,7 @@ export function ProcessView({ state, onApprove }: Props) {
           <h2 className="min-w-0 truncate text-sm font-semibold text-fg">{docName || 'Choose a document to process'}</h2>
           {source && (
             <Badge tone="amber" icon={<FlaskConical className="size-3" />}>
-              {sample ? 'Simulated OCR · predefined results' : skipped ? 'No OCR engine · manual entry' : 'Configured OCR service'}
+              {sample ? 'Sample document' : skipped ? 'No OCR engine · manual entry' : 'Configured OCR service'}
             </Badge>
           )}
         </div>

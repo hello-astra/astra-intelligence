@@ -65,7 +65,6 @@ export default function AnalyticsDemo() {
       {view === 'geography' && <GeographyView {...ctx} />}
       {view === 'reports' && <ReportsView {...ctx} />}
       <DrilldownModal category={drill} ctx={ctx} onClose={() => setDrill(null)} />
-      <p className="mt-4 text-[11px] text-fg-4">Synthetic sample dataset generated for demonstration — not real business figures.</p>
     </DemoShell>
   )
 }

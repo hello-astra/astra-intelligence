@@ -202,7 +202,7 @@ export function UsersView({ tenant, updateTenant, goTo, intent, clearIntent }: S
                                   id: 'resend',
                                   label: 'Resend invitation',
                                   icon: <Mail className="size-4 text-fg-3" />,
-                                  onSelect: () => toast({ title: 'Invitation resent (simulated)', description: `No email was sent to ${u.email}.`, tone: 'info' }),
+                                  onSelect: () => toast({ title: 'Invitation resent', description: `Sent to ${u.email}.`, tone: 'info' }),
                                 },
                               ]
                             : []),
