@@ -580,7 +580,13 @@
   *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
+    /* Exactly zero, not "nearly zero": any positive duration still starts a transition.
+       When this stylesheet first applies, every element would then transition from the
+       browser defaults (e.g. border-width: medium → 0) and hold the start value until
+       the next frames are produced — a visible 3px text-coloured frame around the page
+       while the app boots. With 0s no transition is created at all. */
+    transition-duration: 0s !important;
+    transition-delay: 0s !important;
   }
   [data-reveal] {
     opacity: 1 !important;
