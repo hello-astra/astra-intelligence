@@ -11,11 +11,11 @@ import type { SolutionSlug } from '@/types/content'
 import { cn } from '@/utils/cn'
 
 const W = 640
-const H = 560
+const H = 600
 const CX = 320
-const CY = 300
+const CY = 310
 const RX = 200
-const RY = 155
+const RY = 150
 
 const ORDER: { slug: SolutionSlug; label: string }[] = [
   { slug: 'ai-chatbots', label: 'AI Agents' },
@@ -73,6 +73,14 @@ const FORECAST = [42, 45, 44, 49, 53, 51, 56, 60, 58, 63, 67, 66, 70, 74, 73, 78
 const parallax = (fx: number, fy: number): CSSProperties => ({
   transform: `translate3d(calc(var(--px, 0) * ${fx}px), calc(var(--py, 0) * ${fy}px), 0)`,
 })
+
+/**
+ * Floating cards are authored at the map's native 640px width and scaled with it
+ * (`100cqw / 640px` as a unitless ratio), so they keep clear of the node labels at every
+ * size instead of growing over them as the map shrinks. Below `sm` they are hidden:
+ * a phone-width map has no free corners.
+ */
+const card = 'absolute hidden sm:block [scale:max(0.78,tan(atan2(100cqw,640px)))]'
 
 const predictive = SOLUTION_BY_SLUG['predictive-analytics']
 const chatbot = SOLUTION_BY_SLUG['ai-chatbots']
@@ -135,7 +143,7 @@ export function HeroVisual() {
   return (
     <div
       ref={rootRef}
-      className="relative mx-auto aspect-[640/560] w-full max-w-[620px] select-none"
+      className="@container relative mx-auto aspect-[640/420] w-full max-w-[620px] select-none sm:aspect-[640/600]"
       onPointerMove={onPointerMove}
       onPointerLeave={() => capable && setPointer(0, 0)}
       data-paused={running ? undefined : ''}
@@ -143,7 +151,7 @@ export function HeroVisual() {
       <svg
         ref={svgRef}
         viewBox={`0 0 ${W} ${H}`}
-        className={cn('absolute inset-0 h-full w-full overflow-visible', layer)}
+        className={cn('absolute top-[-21.5%] left-0 h-[142.86%] w-full overflow-visible sm:top-0 sm:h-full', layer)}
         style={parallax(-5, -4)}
         role="group"
         aria-label="Astra Intelligence solution map — nine connected solution areas"
@@ -277,8 +285,7 @@ export function HeroVisual() {
                 x={lx - n.x}
                 y={ly - n.y}
                 textAnchor={anchor}
-                className={cn('font-sans', highlighted ? 'fill-fg' : 'fill-fg-3')}
-                fontSize={12}
+                className={cn('font-sans text-[19px] sm:text-[12px]', highlighted ? 'fill-fg' : 'fill-fg-3')}
                 fontWeight={500}
               >
                 {n.label}
@@ -305,7 +312,7 @@ export function HeroVisual() {
       )}
 
       {/* Floating product snippets (illustrative UI from the Lab demos), each in its product's colours */}
-      <div className={cn('absolute top-[1%] left-[-2%] w-[31%] min-w-[150px]', layer)} style={{ ...parallax(12, 10), ...accentVars(predictive) }}>
+      <div className={cn(card, 'top-0 left-[-2%] w-[196px] origin-top-left', layer)} style={{ ...parallax(12, 10), ...accentVars(predictive) }}>
         <div className="card-float motion-decor animate-float rounded-xl p-3 will-change-transform">
           <div className="flex items-center gap-1.5 text-[11px] font-medium text-fg-2">
             <BrainCircuit className="text-sol-accent size-3.5" aria-hidden /> Demand forecast
@@ -322,7 +329,7 @@ export function HeroVisual() {
         </div>
       </div>
 
-      <div className={cn('absolute top-[1%] right-[-3%] w-[33%] min-w-[170px]', layer)} style={{ ...parallax(-9, -8), ...accentVars(chatbot) }}>
+      <div className={cn(card, 'top-0 right-[-3%] w-[208px] origin-top-right', layer)} style={{ ...parallax(-9, -8), ...accentVars(chatbot) }}>
         <div className="card-float motion-decor animate-float-delayed rounded-xl p-3 will-change-transform">
           <div className="flex items-center justify-between gap-2 text-[11px] font-medium text-fg-2">
             <span className="flex items-center gap-1.5">
@@ -339,7 +346,7 @@ export function HeroVisual() {
         </div>
       </div>
 
-      <div className={cn('absolute bottom-[0%] left-[-1%] hidden w-[33%] min-w-[170px] sm:block', layer)} style={{ ...parallax(-9, 10), ...accentVars(ocr) }}>
+      <div className={cn(card, 'bottom-0 left-[-1%] w-[204px] origin-bottom-left', layer)} style={{ ...parallax(-9, 10), ...accentVars(ocr) }}>
         <div className="card-float motion-decor animate-float-delayed rounded-xl p-3 will-change-transform">
           <div className="flex items-center gap-1.5 text-[11px] font-medium text-fg-2">
             <ScanText className="text-sol-accent size-3.5" aria-hidden /> Invoice INV-2041
@@ -355,7 +362,7 @@ export function HeroVisual() {
         </div>
       </div>
 
-      <div className={cn('absolute right-[-2%] bottom-[2%] hidden w-[31%] min-w-[160px] sm:block', layer)} style={{ ...parallax(12, -8), ...accentVars(erp) }}>
+      <div className={cn(card, 'right-[-2%] bottom-0 w-[196px] origin-bottom-right', layer)} style={{ ...parallax(12, -8), ...accentVars(erp) }}>
         <div className="card-float motion-decor animate-float rounded-xl p-3 will-change-transform">
           <div className="flex items-center gap-1.5 text-[11px] font-medium text-fg-2">
             <Workflow className="text-sol-accent size-3.5" aria-hidden /> Automation
