@@ -34,6 +34,8 @@ export interface ChartPalette {
   rampText: string[]
   /** Hover band behind bars. */
   cursor: string
+  /** Forecast / projected series — distinct from the actuals and never the alarm red. */
+  forecast: string
 }
 
 export interface ResolvedDemoTheme {
@@ -233,12 +235,60 @@ function toVars(s: ReturnType<typeof surfaces>, b: ReturnType<typeof brandTokens
   return vars
 }
 
+/**
+ * Chart palette of the website theme ("Astra Classic"). The dark series is the validated
+ * categorical palette the site has always used (checked for colour-vision deficiency
+ * against #0a0f1d); the light series are the same hues deepened for white surfaces.
+ */
+const SITE_CHARTS: Record<ColorMode, Omit<ChartPalette, 'rampText'>> = {
+  dark: {
+    series: ['#4180f2', '#d95926', '#199e70', '#c98500', '#d55181', '#008300', '#9085e9', '#e66767'],
+    deemph: '#5b6886',
+    status: STATUS.dark,
+    surface: '#0a0f1d',
+    grid: '#18223a',
+    axis: '#26314d',
+    tick: '#8090ad',
+    text: '#a5b3cc',
+    ramp: ['#184f95', '#1c5cab', '#256abf', '#2a78d6', '#3987e5', '#5598e7', '#86b6ef'],
+    cursor: 'rgb(255 255 255 / 0.035)',
+    forecast: '#9085e9',
+  },
+  light: {
+    series: ['#2f6fe0', '#c84f1c', '#148a61', '#ad7200', '#c13f70', '#0a7a0a', '#6d5fd6', '#d24f4f'],
+    deemph: '#8a95a8',
+    status: STATUS.light,
+    surface: '#ffffff',
+    grid: '#e8ecf2',
+    axis: '#c9d1de',
+    tick: '#56637a',
+    text: '#334058',
+    ramp: buildRamp('#2f66e8', 'light').ramp,
+    cursor: 'rgb(11 26 51 / 0.045)',
+    forecast: '#6d5fd6',
+  },
+}
+
+const textOn = (bg: string) => (contrast(bg, '#0b0b0b') >= contrast(bg, '#ffffff') ? '#0b0b0b' : '#ffffff')
+
+/** The website palette: no overrides — the demo inherits the site's CSS tokens for the mode. */
+export function sitePalette(mode: ColorMode): ChartPalette {
+  const c = SITE_CHARTS[mode]
+  return { ...c, rampText: c.ramp.map(textOn) }
+}
+
 const cache = new Map<string, ResolvedDemoTheme>()
 
 export function resolveDemoTheme(preset: DemoThemePreset, mode: ColorMode): ResolvedDemoTheme {
   const key = `${preset.id}:${mode}`
   const hit = cache.get(key)
   if (hit) return hit
+
+  if (preset.site) {
+    const theme: ResolvedDemoTheme = { preset, mode, vars: {}, sidebar: null, chart: sitePalette(mode) }
+    cache.set(key, theme)
+    return theme
+  }
 
   const n = neutralScale(preset)
   const s = surfaces(preset, mode)
@@ -276,6 +326,7 @@ export function resolveDemoTheme(preset: DemoThemePreset, mode: ColorMode): Reso
       ramp,
       rampText,
       cursor: withAlpha(s.ink, mode === 'dark' ? 0.035 : 0.045),
+      forecast: series[2],
     },
   }
   cache.set(key, theme)

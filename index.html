@@ -3,25 +3,50 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <meta name="theme-color" content="#05070e" />
-    <meta name="color-scheme" content="dark light" />
     <!--
-      Bootstrap — runs before the first paint (keep it tiny, no dependencies):
-      1. theme:  saved light/dark choice → <html data-theme>, so nothing renders in the wrong theme
-      2. lite:   low-power / constrained devices → <html class="lite"> (decorative effects off)
-      3. route:  which pre-rendered first-paint shell to show for this URL (home / page / demo)
-      4. chunks: start downloading this route's code now, in parallel with the main bundle
+      Theme bootstrap: the first script the browser runs, before anything can paint.
+      The browser's own colours (the background it shows while loading, the area behind
+      rounded window corners, scrollbars and, on some browsers, the tab bar) come from the
+      color-scheme and theme-color meta tags. They are written here from the visitor's saved
+      theme rather than shipped as static defaults, so a dark site never gets light edges
+      (or a light site dark ones) on reload. ColorModeProvider keeps them in sync on toggle.
+    -->
+    <script>
+      ;(function () {
+        var d = document.documentElement,
+          t = 'dark'
+        try {
+          var saved = localStorage.getItem('astra:theme')
+          if (saved === 'light' || saved === 'dark') t = saved
+        } catch (e) {}
+        var bg = t === 'light' ? '#f4f6fb' : '#05070e'
+        d.setAttribute('data-theme', t)
+        d.style.colorScheme = t
+        d.style.backgroundColor = bg
+        var meta = function (name, content) {
+          var el = document.createElement('meta')
+          el.name = name
+          el.content = content
+          document.head.appendChild(el)
+        }
+        meta('color-scheme', t)
+        meta('theme-color', bg)
+      })()
+    </script>
+    <noscript>
+      <meta name="color-scheme" content="dark" />
+      <meta name="theme-color" content="#05070e" />
+    </noscript>
+    <!--
+      Bootstrap — also before the first paint (keep it tiny, no dependencies):
+      1. lite:   low-power / constrained devices → <html class="lite"> (decorative effects off)
+      2. route:  which pre-rendered first-paint shell to show for this URL (home / page / demo)
+      3. chunks: start downloading this route's code now, in parallel with the main bundle
                  (the build fills ROUTE_CHUNKS from Vite's manifest — see scripts/prerender-shell.mjs)
     -->
     <script>
       ;(function () {
         var d = document.documentElement
-        try {
-          var m = localStorage.getItem('astra:theme')
-          if (m === 'light' || m === 'dark') d.setAttribute('data-theme', m)
-        } catch (e) {}
-        d.style.colorScheme = d.getAttribute('data-theme')
-        if (d.getAttribute('data-theme') === 'light') document.querySelector('meta[name="theme-color"]').setAttribute('content', '#f4f6fb')
         try {
           var q = /[?&]perf=(lite|full)\b/.exec(location.search)
           if (q) localStorage.setItem('astra:perf', q[1])

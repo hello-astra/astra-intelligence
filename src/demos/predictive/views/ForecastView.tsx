@@ -79,9 +79,7 @@ export function ConfigBar({ config, setConfig, datasets, generate, running, stag
 }
 
 export function ForecastChart({ ctx, height = 320, showFit }: { ctx: PredictiveCtx; height?: number; showFit: boolean }) {
-  const { activeDot, axisProps, CHART, DEEMPH, gridProps, lineCursor, SERIES, STATUS, yAxisProps } = useChartTheme()
-  // Forecasts take the third series colour: distinct from the actuals and never the red used for anomalies.
-  const FORECAST = SERIES[2]
+  const { activeDot, axisProps, CHART, DEEMPH, gridProps, lineCursor, SERIES, STATUS, yAxisProps, FORECAST } = useChartTheme()
   const { result, format, running, stale } = ctx
   const ds = result.dataset
   const n = ds.points.length

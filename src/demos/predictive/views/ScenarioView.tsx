@@ -15,9 +15,7 @@ import { ASSUMPTIONS, NEUTRAL_SCENARIO, type Scenario } from '../models'
 import { signedPct, tickFormatter, type PredictiveCtx } from '../shared'
 
 export function ScenarioView(ctx: PredictiveCtx) {
-  const { activeDot, axisProps, gridProps, lineCursor, SERIES, yAxisProps, animate } = useChartTheme()
-  // Forecasts take the third series colour: distinct from the actuals and never the red used for anomalies.
-  const FORECAST = SERIES[2]
+  const { activeDot, axisProps, gridProps, lineCursor, SERIES, yAxisProps, animate, FORECAST } = useChartTheme()
   const { config, setConfig, result, format } = ctx
   const ds = result.dataset
   const s = config.scenario

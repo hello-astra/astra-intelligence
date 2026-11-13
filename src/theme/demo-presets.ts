@@ -3,11 +3,13 @@ import type { DemoId } from '@/types/content'
 /**
  * Theme presets for the nine product demos — pure data, no colour maths.
  *
- * Each product has a distinctive default identity plus two alternative templates.
- * A preset only names the brand colours, the neutral "temperature" of its surfaces
- * and two structural choices; src/theme/demo-theme-engine.ts derives complete,
- * contrast-checked light and dark palettes (surfaces, text, chart series, status)
- * from it. The first variant of every product is the default.
+ * Every product offers four templates:
+ * - "Astra Classic" (the default): the Astra Intelligence website theme, shared by all
+ *   demos — it uses the site's own design tokens, so a demo looks exactly like the site.
+ * - Three product templates: a signature identity (listed first) plus two alternatives.
+ *   A product preset only names the brand colours, the neutral "temperature" of its
+ *   surfaces and two structural choices; src/theme/demo-theme-engine.ts derives complete,
+ *   contrast-checked light and dark palettes (surfaces, text, chart series, status) from it.
  */
 
 /** How the app chrome (top bar + sidebar) relates to the content area. */
@@ -36,9 +38,26 @@ export interface DemoThemePreset {
   chart: string[]
   chrome: ChromeStyle
   radius: RadiusStyle
+  /** Use the website's design tokens as-is instead of a generated palette. */
+  site?: boolean
 }
 
-export const DEMO_THEME_PRESETS: Record<DemoId, readonly DemoThemePreset[]> = {
+/** The Astra Intelligence website theme, available (and the default) in every demo. */
+export const SITE_PRESET: DemoThemePreset = {
+  id: 'astra-classic',
+  name: 'Astra Classic',
+  description: 'The Astra Intelligence website theme',
+  primary: '#4F86FF',
+  secondary: '#8B74FF',
+  neutral: { hue: 265, chroma: 0.035 },
+  chart: [],
+  chrome: 'tinted',
+  radius: 'default',
+  site: true,
+}
+
+/** Product-specific templates; the first of each list is the product's signature identity. */
+const PRODUCT_PRESETS: Record<DemoId, readonly DemoThemePreset[]> = {
   saas: [
     {
       id: 'midnight-indigo',
@@ -356,4 +375,15 @@ export const DEMO_THEME_PRESETS: Record<DemoId, readonly DemoThemePreset[]> = {
   ],
 }
 
+/** All templates offered in each demo; the first one is the default. */
+export const DEMO_THEME_PRESETS = Object.fromEntries(
+  Object.entries(PRODUCT_PRESETS).map(([id, presets]) => [id, [SITE_PRESET, ...presets]]),
+) as unknown as Record<DemoId, readonly DemoThemePreset[]>
+
 export const DEFAULT_PRESET = (demoId: DemoId): DemoThemePreset => DEMO_THEME_PRESETS[demoId][0]
+
+/**
+ * The product's signature template. The marketing site uses its colours to give each
+ * solution an identity (navigation icons, previews, hero map) independent of the demo default.
+ */
+export const SIGNATURE_PRESET = (demoId: DemoId): DemoThemePreset => PRODUCT_PRESETS[demoId][0]

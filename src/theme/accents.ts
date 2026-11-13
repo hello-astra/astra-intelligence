@@ -1,11 +1,11 @@
 import type { CSSProperties } from 'react'
 import type { DemoId } from '@/types/content'
 import { clampLightness } from './color'
-import { DEFAULT_PRESET } from './demo-presets'
+import { SIGNATURE_PRESET } from './demo-presets'
 
 /**
- * Marketing-site colours for a solution, derived from its product's default theme
- * preset so the website and the demo always share one identity.
+ * Marketing-site colours for a solution, derived from its product's signature theme
+ * preset so the website and the product templates share one identity.
  */
 export interface SolutionAccents {
   /** Vivid primary for icons, glows and swatches on dark surfaces. */
@@ -19,7 +19,7 @@ export interface SolutionAccents {
 }
 
 export function solutionAccents(demoId: DemoId): SolutionAccents {
-  const p = DEFAULT_PRESET(demoId)
+  const p = SIGNATURE_PRESET(demoId)
   return {
     accent: clampLightness(p.primary, 0.6, 0.86),
     accent2: clampLightness(p.secondary, 0.62, 0.88),

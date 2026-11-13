@@ -2,10 +2,17 @@ import { useCallback, useEffect, useMemo, useState, type ReactNode } from 'react
 import { flushSync } from 'react-dom'
 import { COLOR_MODE_KEY, ColorModeContext, THEME_COLOR, readDocumentMode, type ColorMode } from './color-mode'
 
+/**
+ * Mirrors what the inline theme script in index.html does on load: the data-theme
+ * attribute drives our CSS; color-scheme, theme-color and the root background drive the
+ * browser's own colours (loading background, window corners, scrollbars, tab bar).
+ */
 function applyToDocument(mode: ColorMode) {
   const root = document.documentElement
   root.dataset.theme = mode
   root.style.colorScheme = mode
+  root.style.backgroundColor = THEME_COLOR[mode]
+  document.querySelector('meta[name="color-scheme"]')?.setAttribute('content', mode)
   document.querySelector('meta[name="theme-color"]')?.setAttribute('content', THEME_COLOR[mode])
 }
 

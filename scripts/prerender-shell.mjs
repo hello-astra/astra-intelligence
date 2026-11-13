@@ -99,7 +99,8 @@ for (const { slug, demoId } of shellModule.DEMO_SLUGS) {
 const routeChunks = `<script>window.ROUTE_CHUNKS=${JSON.stringify({ base: '/', files, routes, demos })}</script>`
 
 // The map must exist before the bootstrap script reads it; the font preload goes right after.
-const bootstrap = '<script>\n;(function () {'
+// The route bootstrap (the second inline script; the theme script before it must stay first).
+const bootstrap = '<script>\n;(function () {\nvar d = document.documentElement\ntry {\nvar q ='
 if (!html.includes(bootstrap)) throw new Error('bootstrap script not found')
 html = html.replace(bootstrap, `${routeChunks}\n${bootstrap}`)
 html = html.replace('<link rel="icon"', `${preload}\n<link rel="icon"`)

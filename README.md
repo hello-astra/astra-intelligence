@@ -48,7 +48,7 @@ back to a clearly labelled demo behavior (see [Configuring integrations](#config
 
 Every demo has its own navigation and controls, pre-populated data, a visible **Demo
 environment** badge (click it for what is real vs. simulated), a **Reset Demo** button, a
-**theme picker** (three product templates, each in light and dark), and saves its state in
+**theme picker** (the Astra Classic website theme by default, plus three product templates, each in light and dark), and saves its state in
 `localStorage` so changes survive a page reload.
 
 | Slug                      | Demo               | Highlights                                                                                                                                          |
@@ -104,16 +104,21 @@ Token families: surfaces (`canvas`, `base`, `chrome`, `panel`, `raised`, `popove
 (`series-1…8`, `deemph`) and status (`good`, `warning`, `serious`, `critical`).
 
 **Light / dark mode.** The sun/moon switch (in the navigation and in every demo) sets
-`<html data-theme>` and persists the choice under `astra:theme`. An inline script in `index.html`
-applies it before the first paint, so there is no flash of the wrong theme. Open tabs stay in sync.
+`<html data-theme>` and persists the choice under `astra:theme`. The first script in `index.html`
+applies it before anything can paint and writes the `color-scheme` and `theme-color` meta tags
+from it (they are deliberately not static: the browser uses them for its own colours, such as the
+loading background and window corners, so static values would show the wrong colour around the
+page on reload). Open tabs stay in sync.
 
-**Product themes.** Each demo has three templates defined as data in `src/theme/demo-presets.ts`
-(primary, secondary, neutral surface tint, chrome style, corner radius).
+**Product themes.** Every demo opens in **Astra Classic**, the website theme (it uses the site's
+own tokens and chart palette, so the demo looks exactly like the website). Each demo also has three
+product templates defined as data in `src/theme/demo-presets.ts` (primary, secondary, neutral
+surface tint, chrome style, corner radius).
 `src/theme/demo-theme-engine.ts` derives complete light and dark palettes from a preset in OKLCH
 and enforces WCAG AA text contrast (button text turns dark on light primaries such as amber or
 mint). The visitor's choice is stored per demo under `astra:theme:demo:<id>`.
 
-| # | Product | Default template | Other templates |
+| # | Product | Signature template | Other templates |
 | --- | --- | --- | --- |
 | 01 | Astra Console (SaaS) | Midnight Indigo: `#6366F1` / `#818CF8` on deep navy | Graphite, Electric (contrast sidebar) |
 | 02 | Astra Commerce | Emerald: `#10B981` / `#34D399` on charcoal / white | Fresh Mint, Boutique |
@@ -129,6 +134,9 @@ mint). The visitor's choice is stored per demo under `astra:theme:demo:<id>`.
 grid, axes, tooltips and a sequential ramp all follow the product theme. Never hard-code chart
 colours; use `SERIES[n]` in order. Inline styles may use the CSS variables directly
 (`var(--color-series-1)`, `var(--color-good)`).
+
+All nine also offer Astra Classic (default). The marketing site takes each solution's colours from
+its signature template.
 
 To add a template, append a preset to the product's list in `src/theme/demo-presets.ts`. To give a
 marketing component a product colour, set `style={accentVars(solution)}` and use the `text-sol` /
