@@ -35,7 +35,7 @@ export function StatTile({
   goodWhen = 'up',
   hint,
   trend,
-  trendColor = '#4180f2',
+  trendColor = 'var(--color-series-1)',
   className,
   onClick,
   active,

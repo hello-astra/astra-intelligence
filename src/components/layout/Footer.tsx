@@ -3,7 +3,7 @@ import { ArrowUpRight, FlaskConical, Mail } from 'lucide-react'
 import { Logo } from '@/components/common/Logo'
 import { SocialIcon } from '@/components/common/SocialIcon'
 import { SITE } from '@/data/constants/site'
-import { SOLUTIONS } from '@/data/constants/solutions'
+import { SOLUTION_INDEX as SOLUTIONS } from '@/data/constants/solution-index'
 import { contactPath, paths } from '@/routes/paths'
 
 const COMPANY_LINKS = [
@@ -18,7 +18,7 @@ const YEAR = new Date().getFullYear()
 
 export function Footer() {
   return (
-    <footer className="relative mt-24 border-t border-white/[0.06] bg-[#04060c]">
+    <footer className="relative mt-24 border-t border-ink/[0.06] bg-sunken">
       <div aria-hidden className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-brand/40 to-transparent" />
       <div className="mx-auto max-w-7xl px-4 pt-16 pb-10 sm:px-6 lg:px-8">
         <div className="grid gap-12 lg:grid-cols-[1.3fr_2fr]">
@@ -45,7 +45,7 @@ export function Footer() {
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label={`Astra Intelligence on ${s.label}`}
-                    className="inline-flex size-9 items-center justify-center rounded-lg text-fg-3 ring-1 ring-white/[0.08] transition-colors hover:bg-white/[0.05] hover:text-fg"
+                    className="inline-flex size-9 items-center justify-center rounded-lg text-fg-3 ring-1 ring-ink/[0.08] transition-colors hover:bg-ink/[0.05] hover:text-fg"
                   >
                     <SocialIcon id={s.id} />
                   </a>
@@ -106,7 +106,7 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="mt-14 flex flex-col gap-3 border-t border-white/[0.06] pt-6 text-xs text-fg-3 sm:flex-row sm:items-center sm:justify-between">
+        <div className="mt-14 flex flex-col gap-3 border-t border-ink/[0.06] pt-6 text-xs text-fg-3 sm:flex-row sm:items-center sm:justify-between">
           <p>
             © {YEAR} {SITE.name}. All rights reserved.
           </p>

@@ -1,5 +1,4 @@
 import { useId, useRef, useState, type KeyboardEvent, type ReactNode } from 'react'
-import { AnimatePresence, motion } from 'framer-motion'
 import { Check } from 'lucide-react'
 import { useClickOutside } from '@/hooks/useClickOutside'
 import { cn } from '@/utils/cn'
@@ -98,20 +97,16 @@ export function Dropdown({
       >
         {buttonContent}
       </button>
-      <AnimatePresence>
-        {open && (
-          <motion.div
+      {open && (
+          <div
             ref={menuRef}
             id={`${id}-menu`}
             role="menu"
+            tabIndex={-1}
             aria-label={ariaLabel}
             onKeyDown={onMenuKeyDown}
-            initial={{ opacity: 0, y: -4, scale: 0.98 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: -4, scale: 0.98 }}
-            transition={{ duration: 0.14 }}
             className={cn(
-              'absolute top-full z-50 mt-2 min-w-[220px] overflow-hidden rounded-xl border border-line-strong bg-[#0c1325] p-1 shadow-2xl shadow-black/50',
+              'animate-pop absolute top-full z-50 mt-2 min-w-[220px] overflow-hidden rounded-xl border border-line-strong bg-popover p-1 shadow-2xl shadow-black/30',
               align === 'end' ? 'right-0' : 'left-0',
               menuClassName,
             )}
@@ -130,7 +125,7 @@ export function Dropdown({
                 }}
                 className={cn(
                   'flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2 text-left text-[13px] transition-colors outline-none',
-                  'hover:bg-white/[0.06] focus-visible:bg-white/[0.08] disabled:opacity-40',
+                  'hover:bg-ink/[0.06] focus-visible:bg-ink/[0.08] disabled:opacity-40',
                   item.danger ? 'text-red-300' : 'text-fg',
                 )}
               >
@@ -143,9 +138,8 @@ export function Dropdown({
               </button>
             ))}
             {footer && <div className="mt-1 border-t border-line px-1 pt-1">{footer}</div>}
-          </motion.div>
+          </div>
         )}
-      </AnimatePresence>
     </div>
   )
 }

@@ -39,7 +39,7 @@ export function VendorsView({ state, setState }: ErpCtx) {
         {state.vendors.map((v) => (
           <article key={v.id} className="flex flex-col rounded-xl border border-line bg-panel p-4">
             <div className="flex items-start gap-3">
-              <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-white/[0.04] ring-1 ring-white/[0.07]">
+              <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-ink/[0.04] ring-1 ring-ink/[0.07]">
                 <Building2 className="size-4 text-fg-3" aria-hidden />
               </span>
               <div className="min-w-0 flex-1">

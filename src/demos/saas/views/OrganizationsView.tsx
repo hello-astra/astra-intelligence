@@ -12,7 +12,8 @@ import type { PlanId, Tenant } from '@/types/saas'
 import { cn } from '@/utils/cn'
 import { formatCompact, formatDate, formatUSD } from '@/utils/format'
 import { ChartFrame } from '../../shared/Chart'
-import { axisProps, BAR_SIZE, barCursor, gridProps, SERIES } from '../../shared/chartTheme'
+import { BAR_SIZE } from '../../shared/chartTheme'
+import { useChartTheme } from '../../shared/demo-theme'
 import { StatTile } from '../../shared/StatTile'
 import { tooltipRenderer } from '../../shared/tooltip'
 import type { SaasViewProps } from '../context'
@@ -20,6 +21,7 @@ import { mrrOf, periodCalls, seatsUsed } from '../logic'
 import { TenantMark } from '../TenantMark'
 
 export function OrganizationsView({ state, tenant: active, switchTenant, addTenant, intent, clearIntent }: SaasViewProps) {
+  const { axisProps, barCursor, gridProps, SERIES, animate } = useChartTheme()
   const toast = useToast()
   // Opens straight away when arriving from the overview's "New organization" quick action.
   const [createOpen, setCreateOpen] = useState(() => intent === 'create')
@@ -76,7 +78,7 @@ export function OrganizationsView({ state, tenant: active, switchTenant, addTena
             <XAxis type="number" {...axisProps} tickFormatter={(v: number) => formatUSD(v)} />
             <YAxis type="category" dataKey="name" {...axisProps} axisLine={false} width={130} />
             <Tooltip content={tooltipRenderer((v) => formatUSD(v, 2))} cursor={barCursor} />
-            <Bar dataKey="mrr" name="MRR" fill={SERIES[0]} radius={[0, 4, 4, 0]} maxBarSize={BAR_SIZE} />
+            <Bar isAnimationActive={animate} dataKey="mrr" name="MRR" fill={SERIES[0]} radius={[0, 4, 4, 0]} maxBarSize={BAR_SIZE} />
           </BarChart>
         </ResponsiveContainer>
       </ChartFrame>

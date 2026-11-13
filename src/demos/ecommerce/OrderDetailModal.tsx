@@ -120,7 +120,7 @@ export function OrderDetailModal({ orderId, state, onClose, onChange }: Props) {
 
           <div className="overflow-hidden rounded-xl border border-line">
             <table className="w-full text-left text-[13px]">
-              <thead className="bg-white/[0.02] text-[11px] tracking-wide text-fg-3 uppercase">
+              <thead className="bg-ink/[0.02] text-[11px] tracking-wide text-fg-3 uppercase">
                 <tr>
                   <th className="px-3 py-2 font-medium">Item</th>
                   <th className="px-3 py-2 text-right font-medium">Qty</th>
@@ -142,7 +142,7 @@ export function OrderDetailModal({ orderId, state, onClose, onChange }: Props) {
                 ))}
               </tbody>
             </table>
-            <dl className="space-y-1 border-t border-line bg-white/[0.015] px-3 py-2.5 text-[13px]">
+            <dl className="space-y-1 border-t border-line bg-ink/[0.015] px-3 py-2.5 text-[13px]">
               {[
                 ['Subtotal', formatINR(order.subtotal)],
                 ...(order.discount > 0 ? [['Discount', `−${formatINR(order.discount)}`]] : []),
@@ -166,7 +166,7 @@ export function OrderDetailModal({ orderId, state, onClose, onChange }: Props) {
             <ol className="mt-3 space-y-3 border-l border-line-strong pl-4">
               {order.timeline.map((e, i) => (
                 <li key={`${e.label}-${i}`} className="relative">
-                  <span className="absolute top-1.5 -left-[21px] size-2.5 rounded-full bg-brand ring-4 ring-[#0b1122]" aria-hidden />
+                  <span className="absolute top-1.5 -left-[21px] size-2.5 rounded-full bg-brand ring-4 ring-popover" aria-hidden />
                   <p className="text-[13px] text-fg">{e.label}</p>
                   <p className="text-xs text-fg-3">
                     {formatDateTime(e.at)}

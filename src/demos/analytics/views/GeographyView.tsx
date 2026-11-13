@@ -7,13 +7,12 @@ import { REGIONS, type Region } from '@/data/mock/analytics'
 import { cn } from '@/utils/cn'
 import { formatINR, formatINRCompact, formatINRTick, formatSignedPercent } from '@/utils/format'
 import { ChartFrame } from '../../shared/Chart'
-import { axisProps, BAR_SIZE, barCursor, DEEMPH, gridProps, SERIES } from '../../shared/chartTheme'
+import { BAR_SIZE } from '../../shared/chartTheme'
+import { useChartTheme } from '../../shared/demo-theme'
 import { tooltipRenderer } from '../../shared/tooltip'
 import type { AnalyticsCtx } from '../context'
 import { byRegion, change } from '../engine'
 
-// Single-hue sequential ramp. On the dark surface low values sit near the surface and high values are brightest.
-const RAMP = ['#184f95', '#1c5cab', '#256abf', '#2a78d6', '#3987e5', '#5598e7', '#86b6ef']
 const LAYOUT: Record<Region, string> = {
   North: 'col-start-2 row-start-1',
   West: 'col-start-1 row-start-2',
@@ -23,6 +22,8 @@ const LAYOUT: Record<Region, string> = {
 }
 
 export function GeographyView({ ds, filters, setFilters, range }: AnalyticsCtx) {
+  // Single-hue sequential ramp of the product colour: low values recede, high values stand out (in both modes).
+  const { axisProps, barCursor, DEEMPH, gridProps, RAMP, RAMP_TEXT, SERIES, animate } = useChartTheme()
   const regions = useMemo(() => byRegion(ds, filters.category, range), [ds, filters.category, range])
   const values = regions.map((r) => r.current.revenue)
   const min = Math.min(...values)
@@ -43,7 +44,6 @@ export function GeographyView({ ds, filters, setFilters, range }: AnalyticsCtx) 
           <div className="grid grid-cols-3 grid-rows-3 gap-2" role="group" aria-label="Regional revenue map">
             {regions.map((r) => {
               const s = step(r.current.revenue)
-              const light = s >= 5
               const selected = filters.regions.includes(r.key)
               const growth = r.previous ? change(r.current.revenue, r.previous.revenue) : null
               return (
@@ -58,7 +58,7 @@ export function GeographyView({ ds, filters, setFilters, range }: AnalyticsCtx) 
                     LAYOUT[r.key],
                     !selected && 'opacity-35',
                   )}
-                  style={{ backgroundColor: RAMP[s], color: light ? '#0b0b0b' : '#ffffff' }}
+                  style={{ backgroundColor: RAMP[s], color: RAMP_TEXT[s] }}
                 >
                   <span className="text-xs font-semibold">{r.key}</span>
                   <span>
@@ -99,7 +99,7 @@ export function GeographyView({ ds, filters, setFilters, range }: AnalyticsCtx) 
               <XAxis type="number" {...axisProps} tickFormatter={formatINRTick} />
               <YAxis type="category" dataKey="region" {...axisProps} axisLine={false} width={64} />
               <Tooltip content={tooltipRenderer((v) => formatINRCompact(v))} cursor={barCursor} />
-              <Bar dataKey="revenue" name="Revenue" radius={[0, 4, 4, 0]} maxBarSize={BAR_SIZE}>
+              <Bar isAnimationActive={animate} dataKey="revenue" name="Revenue" radius={[0, 4, 4, 0]} maxBarSize={BAR_SIZE}>
                 {ranked.map((r) => (
                   <Cell key={r.region} fill={filters.regions.includes(r.region) ? SERIES[0] : DEEMPH} />
                 ))}

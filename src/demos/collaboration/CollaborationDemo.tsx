@@ -67,7 +67,7 @@ export default function CollaborationDemo() {
         <Dropdown
           ariaLabel="Switch workspace"
           align="end"
-          buttonClassName="flex h-8 w-full items-center gap-2 rounded-lg bg-white/[0.05] px-2.5 text-left ring-1 ring-white/[0.08] hover:bg-white/[0.08] sm:w-auto"
+          buttonClassName="flex h-8 w-full items-center gap-2 rounded-lg bg-ink/[0.05] px-2.5 text-left ring-1 ring-ink/[0.08] hover:bg-ink/[0.08] sm:w-auto"
           buttonContent={
             <>
               <span className="min-w-0 flex-1 truncate text-[13px] font-medium text-fg sm:max-w-[220px]">{workspace.name}</span>

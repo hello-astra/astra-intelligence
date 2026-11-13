@@ -8,13 +8,16 @@ import { Slider } from '@/components/ui/Slider'
 import { futureLabel } from '@/data/mock/predictive'
 import { cn } from '@/utils/cn'
 import { ChartFrame } from '../../shared/Chart'
-import { activeDot, axisProps, gridProps, lineCursor, SERIES, yAxisProps } from '../../shared/chartTheme'
+import { useChartTheme } from '../../shared/demo-theme'
 import { StatTile } from '../../shared/StatTile'
 import { tooltipRenderer } from '../../shared/tooltip'
 import { ASSUMPTIONS, NEUTRAL_SCENARIO, type Scenario } from '../models'
 import { signedPct, tickFormatter, type PredictiveCtx } from '../shared'
 
 export function ScenarioView(ctx: PredictiveCtx) {
+  const { activeDot, axisProps, gridProps, lineCursor, SERIES, yAxisProps, animate } = useChartTheme()
+  // Forecasts take the third series colour: distinct from the actuals and never the red used for anomalies.
+  const FORECAST = SERIES[2]
   const { config, setConfig, result, format } = ctx
   const ds = result.dataset
   const s = config.scenario
@@ -81,7 +84,7 @@ export function ScenarioView(ctx: PredictiveCtx) {
             description="Forecast periods only"
             height={260}
             legend={[
-              { label: 'Baseline forecast', color: SERIES[6], kind: 'line' },
+              { label: 'Baseline forecast', color: FORECAST, kind: 'line' },
               { label: 'Scenario', color: SERIES[1], kind: 'line' },
             ]}
             table={{
@@ -99,8 +102,8 @@ export function ScenarioView(ctx: PredictiveCtx) {
                 <XAxis dataKey="label" {...axisProps} minTickGap={16} />
                 <YAxis {...yAxisProps} tickFormatter={tickFormatter(ds)} domain={['auto', 'auto']} />
                 <Tooltip content={tooltipRenderer((v) => format(v))} cursor={lineCursor} />
-                <Line dataKey="baseline" name="Baseline" stroke={SERIES[6]} strokeWidth={2} dot={{ r: 3, fill: SERIES[6], strokeWidth: 0 }} activeDot={activeDot} />
-                <Line dataKey="scenario" name="Scenario" stroke={SERIES[1]} strokeWidth={2} dot={{ r: 3, fill: SERIES[1], strokeWidth: 0 }} activeDot={activeDot} />
+                <Line isAnimationActive={animate} dataKey="baseline" name="Baseline" stroke={FORECAST} strokeWidth={2} dot={{ r: 3, fill: FORECAST, strokeWidth: 0 }} activeDot={activeDot} />
+                <Line isAnimationActive={animate} dataKey="scenario" name="Scenario" stroke={SERIES[1]} strokeWidth={2} dot={{ r: 3, fill: SERIES[1], strokeWidth: 0 }} activeDot={activeDot} />
               </LineChart>
             </ResponsiveContainer>
           </ChartFrame>

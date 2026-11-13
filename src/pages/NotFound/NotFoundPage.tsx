@@ -8,7 +8,7 @@ export default function NotFoundPage() {
   useDocumentTitle('Page not found')
   return (
     <Container className="flex min-h-[60vh] flex-col items-center justify-center py-24 text-center">
-      <span className="flex size-14 items-center justify-center rounded-2xl bg-white/[0.04] ring-1 ring-white/10">
+      <span className="flex size-14 items-center justify-center rounded-2xl bg-ink/[0.04] ring-1 ring-ink/10">
         <Compass className="size-7 text-brand-soft" aria-hidden />
       </span>
       <p className="mt-6 font-mono text-sm text-fg-3">404</p>

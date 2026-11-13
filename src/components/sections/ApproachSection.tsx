@@ -22,7 +22,7 @@ export function ApproachSection({ id = 'approach' }: { id?: string }) {
             <div className="mt-10 grid gap-3 sm:grid-cols-2">
               {DELIVERY_PILLARS.map((p, i) => (
                 <Reveal key={p.title} delay={i * 0.05}>
-                  <div className="h-full rounded-xl border border-white/[0.07] bg-panel/70 p-4">
+                  <div className="h-full rounded-xl border border-ink/[0.07] bg-panel/70 p-4">
                     <p.icon className="size-5 text-astra-cyan" aria-hidden />
                     <p className="mt-3 text-sm font-semibold text-fg">{p.title}</p>
                     <p className="mt-1 text-[13px] leading-relaxed text-fg-3">{p.description}</p>
@@ -37,10 +37,10 @@ export function ApproachSection({ id = 'approach' }: { id?: string }) {
             {APPROACH_STEPS.map((step, i) => (
               <li key={step.number} className="relative pb-8 pl-16 last:pb-0">
                 <Reveal delay={0.04 * i}>
-                  <span className="absolute top-0 left-0 flex size-11 items-center justify-center rounded-xl border border-white/10 bg-[#0b1226] shadow-[0_0_0_4px_#05070e]">
+                  <span className="absolute top-0 left-0 flex size-11 items-center justify-center rounded-xl border border-ink/10 bg-raised shadow-[0_0_0_4px_var(--color-canvas)]">
                     <step.icon className="size-5 text-brand-soft" aria-hidden />
                   </span>
-                  <div className="rounded-xl border border-white/[0.07] bg-panel/60 p-5 transition-colors hover:border-white/[0.13]">
+                  <div className="rounded-xl border border-ink/[0.07] bg-panel/60 p-5 transition-colors hover:border-ink/[0.13]">
                     <div className="flex items-baseline gap-3">
                       <span className="font-mono text-xs text-fg-4">{step.number}</span>
                       <h3 className="text-base font-semibold text-fg">{step.title}</h3>
@@ -48,7 +48,7 @@ export function ApproachSection({ id = 'approach' }: { id?: string }) {
                     <p className="mt-2 text-sm leading-relaxed text-fg-2">{step.description}</p>
                     <ul className="mt-3 flex flex-wrap gap-1.5" aria-label="Key outputs">
                       {step.outputs.map((o) => (
-                        <li key={o} className="rounded-md bg-white/[0.04] px-2 py-0.5 text-[11px] text-fg-3 ring-1 ring-white/[0.06]">
+                        <li key={o} className="rounded-md bg-ink/[0.04] px-2 py-0.5 text-[11px] text-fg-3 ring-1 ring-ink/[0.06]">
                           {o}
                         </li>
                       ))}

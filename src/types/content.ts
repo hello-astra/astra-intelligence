@@ -79,17 +79,31 @@ export interface UseCase {
   description: string
 }
 
-export interface Solution {
+/** Identity of a solution — everything navigation, previews and the hero need. */
+export interface SolutionSummary {
   slug: SolutionSlug
   demoId: DemoId
   number: string
   name: string
   shortName: string
   tagline: string
-  description: string
   icon: LucideIcon
-  /** Accent color used for icons/glows of this solution. */
+  /** Vivid primary (icons, glows) — derived from the product's default theme. */
   accent: string
+  /** Secondary identity colour. */
+  accent2: string
+  /** Primary tint for text on dark surfaces. */
+  accentSoft: string
+  /** Primary shade for text/icons on light surfaces. */
+  accentInk: string
+  demo: {
+    productName: string
+    category: string
+  }
+}
+
+export interface Solution extends SolutionSummary {
+  description: string
   whatItIs: string
   whyItMatters: string[]
   capabilities: Capability[]
@@ -97,9 +111,7 @@ export interface Solution {
   technologies: TechId[]
   useCases: UseCase[]
   deliverables: string[]
-  demo: {
-    productName: string
-    category: string
+  demo: SolutionSummary['demo'] & {
     summary: string
     tryThis: string[]
     simulated: string[]

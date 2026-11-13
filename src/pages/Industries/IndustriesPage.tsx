@@ -10,6 +10,7 @@ import { INDUSTRIES } from '@/data/constants/industries'
 import { SOLUTIONS } from '@/data/constants/solutions'
 import { useDocumentTitle } from '@/hooks/useDocumentTitle'
 import { paths } from '@/routes/paths'
+import { accentVars } from '@/theme/accents'
 
 export default function IndustriesPage() {
   useDocumentTitle('Industries', 'How Astra Intelligence applies AI, software and automation across banking, healthcare, retail, education, manufacturing, logistics, real estate, professional services and startups.')
@@ -43,12 +44,12 @@ export default function IndustriesPage() {
             </p>
           </Reveal>
           <Reveal className="mt-8">
-            <div className="relative overflow-x-auto rounded-2xl border border-white/[0.08] bg-panel/70">
+            <div className="relative overflow-x-auto rounded-2xl border border-ink/[0.08] bg-panel/70">
               <table className="w-full min-w-[880px] border-collapse text-left text-[13px]">
                 <caption className="sr-only">Astra Intelligence solutions by industry</caption>
                 <thead>
-                  <tr className="border-b border-white/[0.07]">
-                    <th scope="col" className="sticky left-0 z-10 bg-[#0a0f1d] px-4 py-3 text-xs font-medium text-fg-3">
+                  <tr className="border-b border-ink/[0.07]">
+                    <th scope="col" className="sticky left-0 z-10 bg-panel px-4 py-3 text-xs font-medium text-fg-3">
                       Solution
                     </th>
                     {INDUSTRIES.map((ind) => (
@@ -62,10 +63,10 @@ export default function IndustriesPage() {
                 </thead>
                 <tbody>
                   {SOLUTIONS.map((s) => (
-                    <tr key={s.slug} className="border-b border-white/[0.05] last:border-0 hover:bg-white/[0.02]">
-                      <th scope="row" className="sticky left-0 z-10 bg-[#0a0f1d] px-4 py-2.5 font-medium">
+                    <tr key={s.slug} className="border-b border-ink/[0.05] last:border-0 hover:bg-ink/[0.02]">
+                      <th scope="row" className="sticky left-0 z-10 bg-panel px-4 py-2.5 font-medium">
                         <Link to={paths.solution(s.slug)} className="flex items-center gap-2 text-fg-2 hover:text-fg">
-                          <s.icon className="size-4 shrink-0" style={{ color: s.accent }} aria-hidden />
+                          <s.icon className="text-sol-accent size-4 shrink-0" style={accentVars(s)} aria-hidden />
                           {s.shortName}
                         </Link>
                       </th>

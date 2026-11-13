@@ -130,7 +130,7 @@ export function ReportsView({ ds, filters, range }: AnalyticsCtx) {
               </thead>
               <tbody className="divide-y divide-line/60">
                 {rows.map((r) => (
-                  <tr key={r.label} className="hover:bg-white/[0.02]">
+                  <tr key={r.label} className="hover:bg-ink/[0.02]">
                     <th scope="row" className="px-3 py-2 text-left font-normal text-fg-2">
                       {r.label}
                     </th>

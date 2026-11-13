@@ -4,10 +4,11 @@ import { cn } from '@/utils/cn'
 export type BadgeTone = 'neutral' | 'blue' | 'violet' | 'cyan' | 'green' | 'amber' | 'red' | 'orange' | 'pink'
 
 const tones: Record<BadgeTone, string> = {
-  neutral: 'bg-white/[0.05] text-fg-2 ring-white/10',
-  blue: 'bg-[#4f86ff]/10 text-brand-soft ring-[#4f86ff]/25',
-  violet: 'bg-[#8b74ff]/10 text-astra-violet-soft ring-[#8b74ff]/25',
-  cyan: 'bg-[#22d3ee]/10 text-astra-cyan-soft ring-[#22d3ee]/20',
+  neutral: 'bg-ink/[0.05] text-fg-2 ring-ink/10',
+  // "blue" is the primary tone and "violet" the secondary: inside a demo they follow the product palette.
+  blue: 'bg-brand/10 text-brand-soft ring-brand/25',
+  violet: 'bg-astra-violet/10 text-astra-violet-soft ring-astra-violet/25',
+  cyan: 'bg-astra-cyan/10 text-astra-cyan-soft ring-astra-cyan/20',
   green: 'bg-emerald-500/10 text-emerald-300 ring-emerald-500/20',
   amber: 'bg-amber-500/10 text-amber-300 ring-amber-500/25',
   red: 'bg-red-500/10 text-red-300 ring-red-500/25',

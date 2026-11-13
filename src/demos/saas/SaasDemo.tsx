@@ -82,7 +82,7 @@ export default function SaasDemo() {
         <Dropdown
           ariaLabel="Switch organization"
           align="end"
-          buttonClassName="flex h-8 w-full items-center gap-2 rounded-lg bg-white/[0.05] pr-2 pl-1 text-left ring-1 ring-white/[0.08] transition-colors hover:bg-white/[0.08] sm:w-auto"
+          buttonClassName="flex h-8 w-full items-center gap-2 rounded-lg bg-ink/[0.05] pr-2 pl-1 text-left ring-1 ring-ink/[0.08] transition-colors hover:bg-ink/[0.08] sm:w-auto"
           buttonContent={
             <>
               <TenantMark tenant={tenant} size={24} />
@@ -103,7 +103,7 @@ export default function SaasDemo() {
             <button
               type="button"
               onClick={() => goTo('organizations', 'create')}
-              className="w-full rounded-lg px-2.5 py-2 text-left text-[13px] text-brand-soft hover:bg-white/[0.06]"
+              className="w-full rounded-lg px-2.5 py-2 text-left text-[13px] text-brand-soft hover:bg-ink/[0.06]"
             >
               + Create organization
             </button>

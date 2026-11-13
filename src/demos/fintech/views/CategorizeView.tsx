@@ -178,7 +178,7 @@ export function CategorizeView({ state, setState }: LedgerCtx) {
                       </select>
                       {t.categorizedBy === 'manual' && t.category !== 'Uncategorized' && (
                         <label className="mt-1 flex items-center gap-1 text-[10px] text-fg-3">
-                          <input type="checkbox" className="accent-[#4f86ff]" checked={Boolean(remember[t.id])} onChange={(e) => setRemember((r) => ({ ...r, [t.id]: e.target.checked }))} />
+                          <input type="checkbox" className="accent-brand" checked={Boolean(remember[t.id])} onChange={(e) => setRemember((r) => ({ ...r, [t.id]: e.target.checked }))} />
                           Remember “{suggestPattern(t.description)}”
                         </label>
                       )}
@@ -259,7 +259,7 @@ export function CategorizeView({ state, setState }: LedgerCtx) {
           ) : (
             <ul className="space-y-2">
               {state.rules.map((r) => (
-                <li key={r.id} className="flex items-center gap-2 rounded-lg bg-white/[0.03] px-3 py-2 text-xs">
+                <li key={r.id} className="flex items-center gap-2 rounded-lg bg-ink/[0.03] px-3 py-2 text-xs">
                   <code className="font-mono text-fg">“{r.pattern}”</code>
                   <span className="text-fg-3">→</span>
                   <Badge tone="blue" size="xs">

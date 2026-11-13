@@ -6,12 +6,14 @@ import { Badge } from '@/components/ui/Badge'
 import { Meter } from '@/components/ui/Meter'
 import { formatINRCompact } from '@/utils/format'
 import { ChartFrame } from '../../shared/Chart'
-import { axisProps, BAR_SIZE, barCursor, CHART, gridProps, SERIES, yAxisProps } from '../../shared/chartTheme'
+import { BAR_SIZE } from '../../shared/chartTheme'
+import { useChartTheme } from '../../shared/demo-theme'
 import { tooltipRenderer } from '../../shared/tooltip'
 import type { ErpCtx } from '../context'
 import { attendanceRate, onTimeDeliveryRate } from '../logic'
 
 export function DepartmentsView({ state }: ErpCtx) {
+  const { axisProps, barCursor, CHART, gridProps, SERIES, yAxisProps, animate } = useChartTheme()
   const days = useMemo(() => Object.keys(state.attendance).sort().slice(-20), [state.attendance])
   const rows = state.departments.map((d) => {
     const people = state.employees.filter((e) => e.departmentId === d.id)
@@ -66,7 +68,7 @@ export function DepartmentsView({ state }: ErpCtx) {
                   </div>
                   <Meter value={r.utilization} tone="auto" thresholds={[0.9, 1.0001]} size="xs" label={`${r.name} budget utilization`} />
                 </div>
-                <div className="flex items-center justify-between rounded-lg bg-white/[0.03] px-2.5 py-2">
+                <div className="flex items-center justify-between rounded-lg bg-ink/[0.03] px-2.5 py-2">
                   <dt className="text-fg-3">{r.kpiLabel}</dt>
                   <dd className="flex items-center gap-1.5">
                     <span className="font-semibold text-fg tabular-nums">{r.kpiValue.toFixed(1)}%</span>
@@ -93,7 +95,7 @@ export function DepartmentsView({ state }: ErpCtx) {
             <YAxis {...yAxisProps} domain={[70, 100]} tickFormatter={(v: number) => `${v}%`} />
             <Tooltip content={tooltipRenderer((v) => `${v.toFixed(1)}%`)} cursor={barCursor} />
             <ReferenceLine y={90} stroke={CHART.axis} strokeDasharray="4 4" />
-            <Bar dataKey="attendance" name="Attendance" fill={SERIES[0]} radius={[4, 4, 0, 0]} maxBarSize={BAR_SIZE} />
+            <Bar isAnimationActive={animate} dataKey="attendance" name="Attendance" fill={SERIES[0]} radius={[4, 4, 0, 0]} maxBarSize={BAR_SIZE} />
           </BarChart>
         </ResponsiveContainer>
       </ChartFrame>

@@ -8,13 +8,14 @@ import { Panel } from '@/components/ui/Panel'
 import { formatDateShort, formatINRCompact } from '@/utils/format'
 import { toISODate } from '@/utils/dates'
 import { ChartFrame } from '../../shared/Chart'
-import { activeDot, axisProps, gridProps, lineCursor, SERIES, yAxisProps } from '../../shared/chartTheme'
+import { useChartTheme } from '../../shared/demo-theme'
 import { StatTile } from '../../shared/StatTile'
 import { tooltipRenderer } from '../../shared/tooltip'
 import type { ErpCtx } from '../context'
 import { attendanceRate, poHealth, SHIPMENT_LABEL } from '../logic'
 
 export function DashboardView({ state, goTo, openPo }: ErpCtx) {
+  const { activeDot, axisProps, gridProps, lineCursor, SERIES, yAxisProps, animate } = useChartTheme()
   const today = toISODate(useToday())
   const active = state.employees.filter((e) => e.status !== 'on_leave')
   const todayRec = state.attendance[today] ?? {}
@@ -68,7 +69,7 @@ export function DashboardView({ state, goTo, openPo }: ErpCtx) {
               <XAxis dataKey="day" {...axisProps} minTickGap={16} />
               <YAxis {...yAxisProps} domain={[70, 100]} tickFormatter={(v: number) => `${v}%`} />
               <Tooltip content={tooltipRenderer((v) => `${v.toFixed(1)}%`)} cursor={lineCursor} />
-              <Line dataKey="rate" name="Attendance rate" stroke={SERIES[0]} strokeWidth={2} dot={{ r: 3, fill: SERIES[0], strokeWidth: 0 }} activeDot={activeDot} />
+              <Line isAnimationActive={animate} dataKey="rate" name="Attendance rate" stroke={SERIES[0]} strokeWidth={2} dot={{ r: 3, fill: SERIES[0], strokeWidth: 0 }} activeDot={activeDot} />
             </LineChart>
           </ResponsiveContainer>
         </ChartFrame>
@@ -76,7 +77,7 @@ export function DashboardView({ state, goTo, openPo }: ErpCtx) {
           <ul className="space-y-2">
             {alerts.map((a) => (
               <li key={a.id}>
-                <button type="button" onClick={a.action} className="flex w-full items-center gap-2.5 rounded-lg border border-line px-3 py-2 text-left hover:bg-white/[0.03]">
+                <button type="button" onClick={a.action} className="flex w-full items-center gap-2.5 rounded-lg border border-line px-3 py-2 text-left hover:bg-ink/[0.03]">
                   <Badge tone={a.tone} dot size="xs">
                     {a.tone === 'red' ? 'Urgent' : a.tone === 'amber' ? 'Action' : 'Info'}
                   </Badge>
@@ -101,7 +102,7 @@ export function DashboardView({ state, goTo, openPo }: ErpCtx) {
             .filter((p) => p.status === 'in_transit' || p.status === 'approved')
             .map((p) => (
               <li key={p.id}>
-                <button type="button" onClick={() => openPo(p.id)} className="flex w-full items-center gap-3 px-4 py-2.5 text-left hover:bg-white/[0.02]">
+                <button type="button" onClick={() => openPo(p.id)} className="flex w-full items-center gap-3 px-4 py-2.5 text-left hover:bg-ink/[0.02]">
                   <Truck className="size-4 shrink-0 text-fg-3" aria-hidden />
                   <span className="min-w-0 flex-1">
                     <span className="block font-mono text-xs text-fg">{p.id}</span>

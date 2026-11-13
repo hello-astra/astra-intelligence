@@ -35,14 +35,14 @@ export default function AboutPage() {
         <Container>
           <div className="grid gap-4 md:grid-cols-2">
             <Reveal>
-              <div className="relative h-full overflow-hidden rounded-3xl border border-white/[0.08] bg-gradient-to-br from-brand/[0.12] to-panel p-7 sm:p-9">
+              <div className="relative h-full overflow-hidden rounded-3xl border border-ink/[0.08] bg-gradient-to-br from-brand/[0.12] to-panel p-7 sm:p-9">
                 <Compass className="size-7 text-astra-cyan" aria-hidden />
                 <h2 className="mt-5 text-xs font-semibold tracking-[0.18em] text-fg-3 uppercase">Our mission</h2>
                 <p className="mt-3 text-xl leading-relaxed font-medium text-fg sm:text-2xl">{MISSION}</p>
               </div>
             </Reveal>
             <Reveal delay={0.06}>
-              <div className="relative h-full overflow-hidden rounded-3xl border border-white/[0.08] bg-gradient-to-br from-astra-violet/[0.12] to-panel p-7 sm:p-9">
+              <div className="relative h-full overflow-hidden rounded-3xl border border-ink/[0.08] bg-gradient-to-br from-astra-violet/[0.12] to-panel p-7 sm:p-9">
                 <Telescope className="size-7 text-astra-violet-soft" aria-hidden />
                 <h2 className="mt-5 text-xs font-semibold tracking-[0.18em] text-fg-3 uppercase">Our vision</h2>
                 <p className="mt-3 text-xl leading-relaxed font-medium text-fg sm:text-2xl">{VISION}</p>
@@ -63,8 +63,8 @@ export default function AboutPage() {
           <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {CORE_VALUES.map((v, i) => (
               <Reveal key={v.title} delay={(i % 3) * 0.05}>
-                <div className="h-full rounded-2xl border border-white/[0.07] bg-panel/70 p-6 transition-colors hover:border-white/[0.14]">
-                  <span className="flex size-10 items-center justify-center rounded-xl bg-white/[0.04] ring-1 ring-white/[0.08]">
+                <div className="h-full rounded-2xl border border-ink/[0.07] bg-panel/70 p-6 transition-colors hover:border-ink/[0.14]">
+                  <span className="flex size-10 items-center justify-center rounded-xl bg-ink/[0.04] ring-1 ring-ink/[0.08]">
                     <v.icon className="size-5 text-brand-soft" aria-hidden />
                   </span>
                   <h3 className="mt-5 text-base font-semibold text-fg">{v.title}</h3>
@@ -95,7 +95,7 @@ export default function AboutPage() {
             <div className="grid gap-3 sm:grid-cols-2">
               {CAPABILITY_DOMAINS.map((d, i) => (
                 <Reveal key={d.title} delay={i * 0.05}>
-                  <div className="h-full rounded-2xl border border-white/[0.07] bg-panel/70 p-5">
+                  <div className="h-full rounded-2xl border border-ink/[0.07] bg-panel/70 p-5">
                     <span className="font-mono text-xs text-fg-4">0{i + 1}</span>
                     <h3 className="mt-2 text-[15px] font-semibold text-fg">{d.title}</h3>
                     <p className="mt-1.5 text-sm leading-relaxed text-fg-3">{d.description}</p>

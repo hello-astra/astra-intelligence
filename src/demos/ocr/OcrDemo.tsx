@@ -185,14 +185,14 @@ export default function OcrDemo() {
               </div>
             </dl>
             <p className="mt-4 text-xs leading-relaxed text-fg-3">
-              To process real documents, set <code className="rounded bg-white/[0.06] px-1 font-mono text-fg-2">VITE_OCR_API_URL</code> to a backend endpoint that runs an OCR / document-AI engine and returns the extraction JSON. See README → “OCR & document intelligence”.
+              To process real documents, set <code className="rounded bg-ink/[0.06] px-1 font-mono text-fg-2">VITE_OCR_API_URL</code> to a backend endpoint that runs an OCR / document-AI engine and returns the extraction JSON. See README → “OCR & document intelligence”.
             </p>
           </Panel>
         </div>
       )}
 
       <Modal open={inspect !== null} onClose={() => setInspect(null)} size="lg" title={inspect?.name ?? ''} description="Stored extraction (JSON)">
-        {inspect && <pre className="max-h-[60vh] overflow-auto rounded-lg bg-[#060a14] p-3 font-mono text-[11px] text-fg-2">{JSON.stringify(inspect.extraction, null, 2)}</pre>}
+        {inspect && <pre className="max-h-[60vh] overflow-auto rounded-lg bg-sunken p-3 font-mono text-[11px] text-fg-2">{JSON.stringify(inspect.extraction, null, 2)}</pre>}
       </Modal>
     </DemoShell>
   )

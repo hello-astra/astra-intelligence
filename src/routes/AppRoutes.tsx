@@ -2,15 +2,16 @@ import { lazy } from 'react'
 import { Route, Routes } from 'react-router'
 import { SiteLayout } from '@/components/layout/SiteLayout'
 import HomePage from '@/pages/Home/HomePage'
+import DemoRoute from './DemoRoute'
+import { ROUTE_MODULES } from './route-modules'
 
-const SolutionsPage = lazy(() => import('@/pages/Solutions/SolutionsPage'))
-const SolutionDetailPage = lazy(() => import('@/pages/Solutions/SolutionDetailPage'))
-const LabPage = lazy(() => import('@/pages/Lab/LabPage'))
-const DemoPage = lazy(() => import('@/pages/Lab/DemoPage'))
-const IndustriesPage = lazy(() => import('@/pages/Industries/IndustriesPage'))
-const AboutPage = lazy(() => import('@/pages/About/AboutPage'))
-const ContactPage = lazy(() => import('@/pages/Contact/ContactPage'))
-const NotFoundPage = lazy(() => import('@/pages/NotFound/NotFoundPage'))
+const SolutionsPage = lazy(ROUTE_MODULES.solutions)
+const SolutionDetailPage = lazy(ROUTE_MODULES.solution)
+const LabPage = lazy(ROUTE_MODULES.lab)
+const IndustriesPage = lazy(ROUTE_MODULES.industries)
+const AboutPage = lazy(ROUTE_MODULES.about)
+const ContactPage = lazy(ROUTE_MODULES.contact)
+const NotFoundPage = lazy(ROUTE_MODULES.notFound)
 
 export function AppRoutes() {
   return (
@@ -20,7 +21,7 @@ export function AppRoutes() {
         <Route path="solutions" element={<SolutionsPage />} />
         <Route path="solutions/:slug" element={<SolutionDetailPage />} />
         <Route path="lab" element={<LabPage />} />
-        <Route path="lab/:slug" element={<DemoPage />} />
+        <Route path="lab/:slug" element={<DemoRoute />} />
         <Route path="industries" element={<IndustriesPage />} />
         <Route path="about" element={<AboutPage />} />
         <Route path="contact" element={<ContactPage />} />

@@ -24,7 +24,7 @@ export function TBody({ children }: { children: ReactNode }) {
 
 export function TR({ className, children, ...props }: ComponentProps<'tr'>) {
   return (
-    <tr className={cn('transition-colors hover:bg-white/[0.02]', className)} {...props}>
+    <tr className={cn('transition-colors hover:bg-ink/[0.02]', className)} {...props}>
       {children}
     </tr>
   )

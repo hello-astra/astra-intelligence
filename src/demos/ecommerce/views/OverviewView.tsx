@@ -10,7 +10,8 @@ import type { PaymentStatus } from '@/types/ecommerce'
 import { addDays, startOfDay, toISODate } from '@/utils/dates'
 import { formatDateShort, formatINR, formatINRCompact, formatINRTick, formatRelative, formatTick } from '@/utils/format'
 import { ChartFrame } from '../../shared/Chart'
-import { axisProps, BAR_SIZE, barCursor, gridProps, SERIES, yAxisProps } from '../../shared/chartTheme'
+import { BAR_SIZE } from '../../shared/chartTheme'
+import { useChartTheme } from '../../shared/demo-theme'
 import { StatTile } from '../../shared/StatTile'
 import { tooltipRenderer } from '../../shared/tooltip'
 import type { CommerceViewProps } from '../context'
@@ -18,6 +19,7 @@ import { countsAsRevenue, ordersBetween, pctChange, restock, revenueOf, stockLev
 import { OrderStatusBadge, ProductIcon } from '../parts'
 
 export function OverviewView({ state, setState, openOrder, goTo }: CommerceViewProps) {
+  const { axisProps, barCursor, gridProps, SERIES, yAxisProps, animate } = useChartTheme()
   const toast = useToast()
   const [metric, setMetric] = useState<'revenue' | 'orders'>('revenue')
 
@@ -120,7 +122,7 @@ export function OverviewView({ state, setState, openOrder, goTo }: CommerceViewP
               <XAxis dataKey="date" {...axisProps} minTickGap={24} />
               <YAxis {...yAxisProps} allowDecimals={false} tickFormatter={metric === 'revenue' ? formatINRTick : formatTick} />
               <Tooltip content={tooltipRenderer(metric === 'revenue' ? (v) => formatINR(v) : (v) => `${v}`)} cursor={barCursor} />
-              <Bar dataKey={metric} name={metric === 'revenue' ? 'Revenue' : 'Orders'} fill={SERIES[0]} radius={[4, 4, 0, 0]} maxBarSize={BAR_SIZE} />
+              <Bar isAnimationActive={animate} dataKey={metric} name={metric === 'revenue' ? 'Revenue' : 'Orders'} fill={SERIES[0]} radius={[4, 4, 0, 0]} maxBarSize={BAR_SIZE} />
             </BarChart>
           </ResponsiveContainer>
         </ChartFrame>
@@ -135,7 +137,7 @@ export function OverviewView({ state, setState, openOrder, goTo }: CommerceViewP
                     <span className="min-w-0 flex-1 truncate text-[13px] text-fg-2">{product.name}</span>
                     <span className="text-[13px] font-medium text-fg tabular-nums">{formatINRCompact(value)}</span>
                   </div>
-                  <div className="mt-1.5 ml-[38px] h-1.5 overflow-hidden rounded-full bg-white/[0.05]">
+                  <div className="mt-1.5 ml-[38px] h-1.5 overflow-hidden rounded-full bg-ink/[0.05]">
                     <div className="h-full rounded-full" style={{ width: `${(value / (topProducts[0]?.value || 1)) * 100}%`, backgroundColor: SERIES[0] }} />
                   </div>
                 </li>
@@ -150,7 +152,7 @@ export function OverviewView({ state, setState, openOrder, goTo }: CommerceViewP
           <SegmentedBar parts={payments.map((p) => ({ label: p.status, value: p.count, color: PAYMENT_COLORS[p.status] }))} />
           <ul className="mt-4 grid grid-cols-2 gap-2">
             {payments.map((p) => (
-              <li key={p.status} className="flex items-center gap-2 rounded-lg bg-white/[0.03] px-2.5 py-2 text-xs">
+              <li key={p.status} className="flex items-center gap-2 rounded-lg bg-ink/[0.03] px-2.5 py-2 text-xs">
                 <span className="size-2 rounded-full" style={{ backgroundColor: PAYMENT_COLORS[p.status] }} aria-hidden />
                 <span className="flex-1 text-fg-2 capitalize">{p.status}</span>
                 <span className="font-medium text-fg tabular-nums">{p.count}</span>

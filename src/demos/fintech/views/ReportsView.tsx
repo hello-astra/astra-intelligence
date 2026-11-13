@@ -12,13 +12,14 @@ import { addMonths, daysInMonth, fromMonthKey, monthKey } from '@/utils/dates'
 import { downloadCSV } from '@/utils/export'
 import { formatINR, formatINRCompact, formatINRTick, formatMonth, formatSignedPercent } from '@/utils/format'
 import { ChartFrame } from '../../shared/Chart'
-import { activeDot, axisProps, DEEMPH, gridProps, lineCursor, SERIES, yAxisProps } from '../../shared/chartTheme'
+import { useChartTheme } from '../../shared/demo-theme'
 import { StatTile } from '../../shared/StatTile'
 import { tooltipRenderer } from '../../shared/tooltip'
 import type { LedgerCtx } from '../context'
 import { currentMonthKey, lastMonths, monthTotals } from '../logic'
 
 export function ReportsView({ state }: LedgerCtx) {
+  const { activeDot, axisProps, DEEMPH, gridProps, lineCursor, SERIES, yAxisProps, animate } = useChartTheme()
   const toast = useToast()
   const months = lastMonths(6).reverse()
   const [month, setMonth] = useState(months[1] ?? months[0])
@@ -146,8 +147,8 @@ export function ReportsView({ state }: LedgerCtx) {
                   <XAxis dataKey="day" {...axisProps} interval={4} />
                   <YAxis {...yAxisProps} tickFormatter={formatINRTick} />
                   <Tooltip content={tooltipRenderer((v) => formatINR(v), (l) => `Day ${l}`)} cursor={lineCursor} />
-                  <Line dataKey="pace" name="Budget pace" stroke={DEEMPH} strokeWidth={1.5} strokeDasharray="4 4" dot={false} />
-                  <Line dataKey="spend" name="Cumulative spend" stroke={SERIES[1]} strokeWidth={2} dot={false} activeDot={activeDot} connectNulls={false} />
+                  <Line isAnimationActive={animate} dataKey="pace" name="Budget pace" stroke={DEEMPH} strokeWidth={1.5} strokeDasharray="4 4" dot={false} />
+                  <Line isAnimationActive={animate} dataKey="spend" name="Cumulative spend" stroke={SERIES[1]} strokeWidth={2} dot={false} activeDot={activeDot} connectNulls={false} />
                 </LineChart>
               </ResponsiveContainer>
             </ChartFrame>

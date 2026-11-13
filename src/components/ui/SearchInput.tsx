@@ -31,7 +31,7 @@ export function SearchInput({ value, onChange, placeholder = 'Search…', ariaLa
         <button
           type="button"
           onClick={() => onChange('')}
-          className="absolute top-1/2 right-1.5 inline-flex size-6 -translate-y-1/2 items-center justify-center rounded-md text-fg-3 hover:bg-white/[0.08] hover:text-fg"
+          className="absolute top-1/2 right-1.5 inline-flex size-6 -translate-y-1/2 items-center justify-center rounded-md text-fg-3 hover:bg-ink/[0.08] hover:text-fg"
           aria-label="Clear search"
         >
           <X className="size-3.5" />

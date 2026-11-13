@@ -5,7 +5,7 @@ import { useToast } from '@/components/ui/toast-context'
 import { CATEGORIES, REGIONS, type Category, type Dataset, type Region } from '@/data/mock/analytics'
 import { addDays, toISODate } from '@/utils/dates'
 import { cn } from '@/utils/cn'
-import { SERIES } from '../shared/chartTheme'
+import { useChartTheme } from '../shared/demo-theme'
 import { PRESET_LABELS, type Filters, type Range, type RangePreset } from './engine'
 
 interface Props {
@@ -17,6 +17,7 @@ interface Props {
 
 /** One filter row above the content; every chart, tile and table below re-renders against the same slice. */
 export function FilterBar({ filters, onChange, range, ds }: Props) {
+  const { SERIES } = useChartTheme()
   const toast = useToast()
   const minDate = toISODate(ds.start)
   const maxDate = toISODate(addDays(ds.start, ds.days - 1))
@@ -85,7 +86,7 @@ export function FilterBar({ filters, onChange, range, ds }: Props) {
             type="button"
             aria-pressed={allRegions}
             onClick={() => onChange({ regions: [...REGIONS] })}
-            className={cn('h-7 rounded-full px-2.5 text-xs font-medium ring-1 transition-colors', allRegions ? 'bg-white/[0.1] text-fg ring-white/15' : 'text-fg-3 ring-line hover:text-fg-2')}
+            className={cn('h-7 rounded-full px-2.5 text-xs font-medium ring-1 transition-colors', allRegions ? 'bg-ink/[0.1] text-fg ring-ink/15' : 'text-fg-3 ring-line hover:text-fg-2')}
           >
             All regions
           </button>
@@ -99,7 +100,7 @@ export function FilterBar({ filters, onChange, range, ds }: Props) {
                 onClick={() => toggleRegion(r)}
                 className={cn(
                   'inline-flex h-7 items-center gap-1.5 rounded-full px-2.5 text-xs font-medium ring-1 transition-colors',
-                  on ? 'bg-white/[0.06] text-fg ring-white/15' : 'text-fg-4 ring-line hover:text-fg-3',
+                  on ? 'bg-ink/[0.06] text-fg ring-ink/15' : 'text-fg-4 ring-line hover:text-fg-3',
                 )}
               >
                 <span className="size-2 rounded-full" style={{ backgroundColor: on ? SERIES[i] : 'transparent', boxShadow: on ? undefined : `inset 0 0 0 1px ${SERIES[i]}` }} aria-hidden />

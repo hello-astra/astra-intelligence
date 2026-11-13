@@ -316,7 +316,7 @@ export function ProcessView({ state, onApprove }: Props) {
                     selected ? 'border-brand/50 bg-brand/[0.08]' : 'border-line bg-panel hover:border-line-strong',
                   )}
                 >
-                  <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-[#fbfaf7]/90 text-[#2b5fd9]">
+                  <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-[#fbfaf7]/90 text-brand-strong">
                     {s.template === 'receipt' ? <Receipt className="size-4" aria-hidden /> : <FileText className="size-4" aria-hidden />}
                   </span>
                   <span className="min-w-0">
@@ -376,7 +376,7 @@ export function ProcessView({ state, onApprove }: Props) {
           )}
         </div>
         {skipped ? (
-          <p className="rounded-lg border border-line bg-white/[0.02] px-3 py-2 text-[11px] text-fg-3">Recognition pipeline skipped — no OCR engine is configured for uploads.</p>
+          <p className="rounded-lg border border-line bg-ink/[0.02] px-3 py-2 text-[11px] text-fg-3">Recognition pipeline skipped — no OCR engine is configured for uploads.</p>
         ) : (
           <ol className="grid grid-cols-5 gap-1" aria-label="Processing pipeline">
             {STAGES.map((s, i) => {
@@ -384,7 +384,7 @@ export function ProcessView({ state, onApprove }: Props) {
               const current = s.id === stage
               return (
                 <li key={s.id} className="min-w-0" aria-current={current ? 'step' : undefined}>
-                  <span className={cn('block h-1 rounded-full transition-colors', complete ? 'bg-emerald-400' : current ? 'animate-pulse bg-brand' : 'bg-white/10')} />
+                  <span className={cn('block h-1 rounded-full transition-colors', complete ? 'bg-emerald-400' : current ? 'animate-pulse bg-brand' : 'bg-ink/10')} />
                   <span className={cn('mt-1.5 flex items-center gap-1 truncate text-[10px]', complete ? 'text-fg-2' : current ? 'text-brand-soft' : 'text-fg-4')}>
                     {current && <Spinner className="size-2.5 shrink-0" />}
                     <span className="truncate">{s.label}</span>
@@ -394,7 +394,7 @@ export function ProcessView({ state, onApprove }: Props) {
             })}
           </ol>
         )}
-        <div ref={viewerRef} className="bg-dots relative flex min-h-[480px] items-start justify-center overflow-hidden rounded-2xl border border-line bg-[#070c19] p-5 sm:p-8">
+        <div ref={viewerRef} className="bg-dots relative flex min-h-[480px] items-start justify-center overflow-hidden rounded-2xl border border-line bg-sunken p-5 sm:p-8">
           {!source && (
             <div className="m-auto max-w-xs text-center">
               <ScanLine className="mx-auto size-8 text-fg-4" aria-hidden />
@@ -418,7 +418,9 @@ export function ProcessView({ state, onApprove }: Props) {
             ))}
           {stage === 'ocr' && (
             <div className="pointer-events-none absolute inset-x-6 top-0 bottom-0" aria-hidden>
-              <div className="animate-scan absolute inset-x-0 h-0.5 bg-cyan-400 shadow-[0_0_18px_4px_rgb(34_211_238/0.6)]" />
+              <div className="motion-decor animate-scan pointer-events-none absolute inset-0" aria-hidden>
+                <div className="h-0.5 bg-brand shadow-[0_0_18px_4px_color-mix(in_oklab,var(--color-brand)_60%,transparent)]" />
+              </div>
             </div>
           )}
           {showBoxes &&
@@ -429,7 +431,7 @@ export function ProcessView({ state, onApprove }: Props) {
                 className={cn('pointer-events-none absolute rounded-[3px] border transition-colors duration-200', active === b.region ? 'border-cyan-400 bg-cyan-400/25' : 'border-cyan-500/60 bg-cyan-400/[0.06]')}
                 style={{ left: b.x, top: b.y, width: b.w, height: b.h }}
               >
-                {active === b.region && <span className="absolute -top-4 left-0 rounded bg-cyan-500 px-1 text-[9px] font-medium text-[#04121a]">{b.region}</span>}
+                {active === b.region && <span className="absolute -top-4 left-0 rounded bg-brand-strong px-1 text-[9px] font-medium text-on-brand">{b.region}</span>}
               </div>
             ))}
         </div>
@@ -575,7 +577,7 @@ export function ProcessView({ state, onApprove }: Props) {
                       </label>
                       <span className="flex flex-col gap-0.5">
                         Amount
-                        <span className="flex h-7 items-center justify-end rounded bg-white/[0.03] px-1.5 text-xs text-fg tabular-nums">{formatINR(l.amount, 2)}</span>
+                        <span className="flex h-7 items-center justify-end rounded bg-ink/[0.03] px-1.5 text-xs text-fg tabular-nums">{formatINR(l.amount, 2)}</span>
                       </span>
                     </div>
                   </div>
@@ -591,7 +593,7 @@ export function ProcessView({ state, onApprove }: Props) {
               </div>
             )}
             {tab === 'raw' && (
-              <ul className="max-h-[360px] space-y-1 overflow-auto rounded-lg bg-[#060a14] p-3 font-mono text-[11px]">
+              <ul className="max-h-[360px] space-y-1 overflow-auto rounded-lg bg-sunken p-3 font-mono text-[11px]">
                 {extraction.rawText.length === 0 && <li className="text-fg-4">No recognized text.</li>}
                 {extraction.rawText.map((l, i) => (
                   <li key={i} className="flex gap-2">
@@ -601,7 +603,7 @@ export function ProcessView({ state, onApprove }: Props) {
                 ))}
               </ul>
             )}
-            {tab === 'json' && structured && <pre className="max-h-[360px] overflow-auto rounded-lg bg-[#060a14] p-3 font-mono text-[11px] text-fg-2">{JSON.stringify(structured, null, 2)}</pre>}
+            {tab === 'json' && structured && <pre className="max-h-[360px] overflow-auto rounded-lg bg-sunken p-3 font-mono text-[11px] text-fg-2">{JSON.stringify(structured, null, 2)}</pre>}
 
             {done && (
               <div className="border-t border-line pt-3">

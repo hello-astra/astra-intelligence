@@ -122,8 +122,8 @@ export function StorefrontView({ state, setState, openOrder, goTo }: CommerceVie
                     </p>
                   </div>
                   {qty > 0 ? (
-                    <div className="flex items-center gap-1 rounded-lg bg-white/[0.05] p-0.5 ring-1 ring-white/10">
-                      <button type="button" aria-label={`Remove one ${p.name}`} onClick={() => setQty(p.id, qty - 1)} className="inline-flex size-7 items-center justify-center rounded-md text-fg-2 hover:bg-white/[0.08]">
+                    <div className="flex items-center gap-1 rounded-lg bg-ink/[0.05] p-0.5 ring-1 ring-ink/10">
+                      <button type="button" aria-label={`Remove one ${p.name}`} onClick={() => setQty(p.id, qty - 1)} className="inline-flex size-7 items-center justify-center rounded-md text-fg-2 hover:bg-ink/[0.08]">
                         <Minus className="size-3.5" />
                       </button>
                       <span className="w-5 text-center text-sm text-fg tabular-nums">{qty}</span>
@@ -132,7 +132,7 @@ export function StorefrontView({ state, setState, openOrder, goTo }: CommerceVie
                         aria-label={`Add one ${p.name}`}
                         onClick={() => add(p.id)}
                         disabled={qty >= p.stock}
-                        className="inline-flex size-7 items-center justify-center rounded-md text-fg-2 hover:bg-white/[0.08] disabled:opacity-30"
+                        className="inline-flex size-7 items-center justify-center rounded-md text-fg-2 hover:bg-ink/[0.08] disabled:opacity-30"
                       >
                         <Plus className="size-3.5" />
                       </button>
@@ -158,7 +158,7 @@ export function StorefrontView({ state, setState, openOrder, goTo }: CommerceVie
               <p className="mt-1 text-xs text-fg-3">
                 {formatINR(result.order.total)} · {result.order.method} · payment {result.order.payment === 'paid' ? 'captured (simulated)' : 'due on delivery'}
               </p>
-              <div className="mt-4 rounded-lg border border-line bg-[#060a14] p-3">
+              <div className="mt-4 rounded-lg border border-line bg-sunken p-3">
                 <p className="flex items-center gap-1.5 text-[11px] font-semibold tracking-wide text-fg-3 uppercase">
                   <RefreshCw className="size-3" aria-hidden /> Inventory sync
                 </p>

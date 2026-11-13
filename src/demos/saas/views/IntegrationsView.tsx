@@ -201,7 +201,7 @@ export function IntegrationsView({ tenant, updateTenant, intent, clearIntent }: 
           return (
             <article key={i.id} className={cn('flex flex-col rounded-xl border bg-panel p-4', i.status === 'down' ? 'border-red-500/30' : 'border-line')}>
               <div className="flex items-start gap-3">
-                <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-white/[0.04] ring-1 ring-white/[0.07]">
+                <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-ink/[0.04] ring-1 ring-ink/[0.07]">
                   <Icon className="size-4 text-fg-2" aria-hidden />
                 </span>
                 <div className="min-w-0 flex-1">
@@ -326,11 +326,11 @@ export function IntegrationsView({ tenant, updateTenant, intent, clearIntent }: 
 
       <Panel title="Example request" description="Usage endpoint for this tenant — response reflects the current demo data">
         <div className="grid gap-3 xl:grid-cols-2">
-          <pre className="overflow-x-auto rounded-lg border border-line bg-[#060a14] p-3 font-mono text-[11.5px] leading-relaxed text-fg-2">
+          <pre className="overflow-x-auto rounded-lg border border-line bg-sunken p-3 font-mono text-[11.5px] leading-relaxed text-fg-2">
             <span className="text-astra-cyan-soft">curl</span> https://api.astra-console.example/v1/tenants/{tenant.id}/usage \{'\n'}
             {'  '}-H <span className="text-emerald-300">"Authorization: Bearer sk_live_••••"</span>
           </pre>
-          <pre className="overflow-x-auto rounded-lg border border-line bg-[#060a14] p-3 font-mono text-[11.5px] leading-relaxed text-fg-2">
+          <pre className="overflow-x-auto rounded-lg border border-line bg-sunken p-3 font-mono text-[11.5px] leading-relaxed text-fg-2">
             {JSON.stringify(sampleResponse, null, 2)}
           </pre>
         </div>
@@ -411,7 +411,7 @@ function CreateKeyModal({ open, onClose, onCreate }: { open: boolean; onClose: (
     >
       {created ? (
         <div className="space-y-3">
-          <div className="flex items-center gap-2 rounded-lg border border-line bg-[#060a14] p-3">
+          <div className="flex items-center gap-2 rounded-lg border border-line bg-sunken p-3">
             <code className="min-w-0 flex-1 font-mono text-xs break-all text-fg">{created}</code>
             <Button
               size="xs"

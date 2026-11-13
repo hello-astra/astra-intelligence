@@ -1,12 +1,103 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="dark">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#05070e" />
+    <meta name="color-scheme" content="dark light" />
+    <!--
+      Bootstrap — runs before the first paint (keep it tiny, no dependencies):
+      1. theme:  saved light/dark choice → <html data-theme>, so nothing renders in the wrong theme
+      2. lite:   low-power / constrained devices → <html class="lite"> (decorative effects off)
+      3. route:  which pre-rendered first-paint shell to show for this URL (home / page / demo)
+      4. chunks: start downloading this route's code now, in parallel with the main bundle
+                 (the build fills ROUTE_CHUNKS from Vite's manifest — see scripts/prerender-shell.mjs)
+    -->
+    <script>
+      ;(function () {
+        var d = document.documentElement
+        try {
+          var m = localStorage.getItem('astra:theme')
+          if (m === 'light' || m === 'dark') d.setAttribute('data-theme', m)
+        } catch (e) {}
+        d.style.colorScheme = d.getAttribute('data-theme')
+        if (d.getAttribute('data-theme') === 'light') document.querySelector('meta[name="theme-color"]').setAttribute('content', '#f4f6fb')
+        try {
+          var q = /[?&]perf=(lite|full)\b/.exec(location.search)
+          if (q) localStorage.setItem('astra:perf', q[1])
+          var pref = localStorage.getItem('astra:perf')
+        } catch (e) {}
+        var n = navigator,
+          c = n.connection || {},
+          lite =
+            pref === 'lite' ||
+            (pref !== 'full' &&
+              (c.saveData ||
+                /(^|-)(2g|3g)$/.test(c.effectiveType || '') ||
+                (n.deviceMemory && n.deviceMemory <= 4) ||
+                (n.hardwareConcurrency && n.hardwareConcurrency <= 4) ||
+                (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches)))
+        if (lite) d.classList.add('lite')
+        var p = location.pathname.replace(/\/+$/, '') || '/'
+        var route = p === '/' ? 'home' : /^\/lab\/[^/]+$/.test(p) ? 'demo' : 'page'
+        d.setAttribute('data-route', route)
+        if (route === 'demo') {
+          var st = document.createElement('style')
+          // #root raises specificity above the critical rule that hides all variants (parsed later).
+          st.textContent = '#root [data-shell-demo="' + p.split('/')[2].replace(/[^a-z0-9-]/g, '') + '"]{display:block}'
+          document.head.appendChild(st)
+        }
+        var R = window.ROUTE_CHUNKS
+        if (R && !c.saveData) {
+          var seg = p.split('/'),
+            list = R.routes[p === '/' ? '/' : '/' + seg[1] + (seg[2] ? '/:slug' : '')] || [],
+            demo = seg[2] && R.demos[seg[2]]
+          var add = function (files, rel) {
+            for (var i = 0; i < files.length; i++) {
+              var l = document.createElement('link')
+              l.rel = rel
+              l.crossOrigin = ''
+              l.href = R.base + R.files[files[i]]
+              document.head.appendChild(l)
+            }
+          }
+          // The page's own chunk at high priority; a demo (and its chart library) at low
+          // priority, so it downloads alongside without slowing the main bundle.
+          add(list, 'modulepreload')
+          if (demo && seg[1] === 'lab') add(demo, 'prefetch')
+        }
+      })()
+    </script>
+    <!-- Critical CSS: correct canvas colour and shell selection before any stylesheet arrives. -->
+    <style>
+      html {
+        background: #05070e;
+        color: #e8edf7;
+      }
+      html[data-theme='light'] {
+        background: #f4f6fb;
+        color: #0b1220;
+      }
+      body {
+        margin: 0;
+        min-height: 100dvh;
+      }
+      #root {
+        min-height: 100dvh;
+      }
+      [data-shell],
+      [data-shell-demo] {
+        display: none;
+      }
+      html:not([data-route]) [data-shell='home'],
+      [data-route='home'] [data-shell='home'],
+      [data-route='page'] [data-shell='page'],
+      [data-route='demo'] [data-shell='demo'] {
+        display: block;
+      }
+    </style>
     <link rel="icon" type="image/png" href="/favicon.png" />
     <link rel="apple-touch-icon" href="/favicon.png" />
-    <meta name="theme-color" content="#05070e" />
-    <meta name="color-scheme" content="dark" />
     <title>Astra Intelligence — Technology Beyond Boundaries.</title>
     <meta
       name="description"
@@ -22,9 +113,10 @@
     <meta name="twitter:card" content="summary" />
   </head>
   <body>
+    <!-- The build pre-renders the first-paint shell (navigation + hero / page skeleton) into #root. -->
     <div id="root"></div>
     <noscript>
-      <div style="padding: 24px; font-family: system-ui, sans-serif; color: #e8edf7; background: #05070e">
+      <div style="padding: 24px; font-family: system-ui, sans-serif">
         Astra Intelligence requires JavaScript to run the interactive website and product demonstrations.
       </div>
     </noscript>

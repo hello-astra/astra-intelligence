@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useMemo, useDeferredValue, useState } from 'react'
 import { Download, UserPlus, Users } from 'lucide-react'
 import { Avatar } from '@/components/ui/Avatar'
 import { Badge } from '@/components/ui/Badge'
@@ -22,17 +22,19 @@ const STATUS_BADGE: Record<EmployeeStatus, { label: string; tone: 'green' | 'blu
 
 export function EmployeesView({ state, openEmployee }: ErpCtx) {
   const [query, setQuery] = useState('')
+  // Typing stays instant; the filtered list re-renders at low priority (interruptible) behind it.
+  const deferredQuery = useDeferredValue(query)
   const [dept, setDept] = useState('all')
   const [status, setStatus] = useState<EmployeeStatus | 'all'>('all')
   const rows = useMemo(() => {
-    const q = query.trim().toLowerCase()
+    const q = deferredQuery.trim().toLowerCase()
     return state.employees.filter(
       (e) =>
         (dept === 'all' || e.departmentId === dept) &&
         (status === 'all' || e.status === status) &&
         (!q || e.name.toLowerCase().includes(q) || e.id.toLowerCase().includes(q) || e.designation.toLowerCase().includes(q)),
     )
-  }, [state.employees, query, dept, status])
+  }, [state.employees, deferredQuery, dept, status])
   const deptName = (id: string) => state.departments.find((d) => d.id === id)?.name ?? '—'
 
   return (

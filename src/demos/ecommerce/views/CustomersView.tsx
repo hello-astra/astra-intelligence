@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useMemo, useDeferredValue, useState } from 'react'
 import { Mail, MapPin, Phone, Users } from 'lucide-react'
 import { Avatar } from '@/components/ui/Avatar'
 import { Badge } from '@/components/ui/Badge'
@@ -17,13 +17,15 @@ const SEGMENT_TONE = { VIP: 'violet', Returning: 'blue', New: 'neutral' } as con
 
 export function CustomersView({ state, openOrder }: CommerceViewProps) {
   const [query, setQuery] = useState('')
+  // Typing stays instant; the filtered list re-renders at low priority (interruptible) behind it.
+  const deferredQuery = useDeferredValue(query)
   const [segment, setSegment] = useState<Segment | 'all'>('all')
   const [sort, setSort] = useState<{ key: 'spent' | 'orders' | 'name'; dir: SortDirection }>({ key: 'spent', dir: 'desc' })
   const [selected, setSelected] = useState<string | null>(null)
   const stats = useMemo(() => customerStats(state), [state])
 
   const rows = useMemo(() => {
-    const q = query.trim().toLowerCase()
+    const q = deferredQuery.trim().toLowerCase()
     return state.customers
       .filter((c) => (segment === 'all' || stats.get(c.id)?.segment === segment) && (!q || c.name.toLowerCase().includes(q) || c.email.includes(q) || c.city.toLowerCase().includes(q)))
       .sort((a, b) => {
@@ -32,7 +34,7 @@ export function CustomersView({ state, openOrder }: CommerceViewProps) {
         const cmp = sort.key === 'name' ? a.name.localeCompare(b.name) : (sa?.[sort.key] ?? 0) - (sb?.[sort.key] ?? 0)
         return sort.dir === 'asc' ? cmp : -cmp
       })
-  }, [state.customers, stats, query, segment, sort])
+  }, [state.customers, stats, deferredQuery, segment, sort])
 
   const toggleSort = (key: 'spent' | 'orders' | 'name') => setSort((s) => ({ key, dir: s.key === key && s.dir === 'desc' ? 'asc' : 'desc' }))
   const customer = state.customers.find((c) => c.id === selected)
@@ -144,7 +146,7 @@ export function CustomersView({ state, openOrder }: CommerceViewProps) {
                         setSelected(null)
                         openOrder(o.id)
                       }}
-                      className="flex w-full items-center gap-3 px-3 py-2.5 text-left hover:bg-white/[0.03]"
+                      className="flex w-full items-center gap-3 px-3 py-2.5 text-left hover:bg-ink/[0.03]"
                     >
                       <span className="min-w-0 flex-1">
                         <span className="block font-mono text-xs text-fg">{o.id}</span>

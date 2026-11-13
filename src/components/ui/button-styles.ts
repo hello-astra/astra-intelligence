@@ -10,14 +10,12 @@ const base =
   'disabled:pointer-events-none disabled:opacity-50 aria-disabled:pointer-events-none aria-disabled:opacity-50'
 
 const variants: Record<ButtonVariant, string> = {
-  primary:
-    'bg-brand-strong text-white hover:bg-[#3369eb] ' +
-    'shadow-[inset_0_1px_0_rgb(255_255_255/0.18),0_0_0_1px_rgb(79_134_255/0.45),0_10px_30px_-12px_rgb(79_134_255/0.7)] ' +
-    'hover:shadow-[inset_0_1px_0_rgb(255_255_255/0.22),0_0_0_1px_rgb(120_160_255/0.6),0_14px_36px_-12px_rgb(79_134_255/0.9)]',
-  secondary: 'bg-white/[0.06] text-fg ring-1 ring-inset ring-white/10 hover:bg-white/[0.1] hover:ring-white/[0.16]',
-  glass: 'glass text-fg hover:bg-white/[0.08]',
-  ghost: 'text-fg-2 hover:bg-white/[0.06] hover:text-fg',
-  outline: 'text-fg ring-1 ring-inset ring-line-strong hover:bg-white/[0.04] hover:ring-fg-4',
+  // Text colour comes from the theme: white on deep primaries, dark on light ones (amber, mint, sky).
+  primary: 'bg-brand-strong text-on-brand hover:bg-brand-hover shadow-(--shadow-brand) hover:shadow-(--shadow-brand-hover)',
+  secondary: 'bg-ink/[0.06] text-fg ring-1 ring-inset ring-ink/10 hover:bg-ink/[0.1] hover:ring-ink/[0.16]',
+  glass: 'glass text-fg hover:bg-ink/[0.08]',
+  ghost: 'text-fg-2 hover:bg-ink/[0.06] hover:text-fg',
+  outline: 'text-fg ring-1 ring-inset ring-line-strong hover:bg-ink/[0.04] hover:ring-fg-4',
   danger: 'bg-[#b42d2d] text-white hover:bg-[#c23434] shadow-[inset_0_1px_0_rgb(255_255_255/0.15)]',
 }
 
@@ -36,7 +34,7 @@ export function buttonStyles(options: { variant?: ButtonVariant; size?: ButtonSi
 export const iconButtonStyles = (className?: string) =>
   cn(
     'inline-flex size-8 shrink-0 items-center justify-center rounded-lg text-fg-3 transition-colors',
-    'hover:bg-white/[0.06] hover:text-fg focus-visible:outline-2 focus-visible:outline-astra-cyan',
+    'hover:bg-ink/[0.06] hover:text-fg focus-visible:outline-2 focus-visible:outline-astra-cyan',
     'disabled:pointer-events-none disabled:opacity-40',
     className,
   )

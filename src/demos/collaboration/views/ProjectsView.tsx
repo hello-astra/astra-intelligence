@@ -186,10 +186,10 @@ function NewProjectModal({ open, state, onClose, onCreate }: { open: boolean; st
           <legend className="text-[13px] font-medium text-fg-2">Team members</legend>
           <div className="mt-2 grid grid-cols-2 gap-2">
             {state.members.map((m) => (
-              <label key={m.id} className="flex cursor-pointer items-center gap-2 rounded-lg border border-line px-2.5 py-2 text-xs text-fg-2 hover:bg-white/[0.03]">
+              <label key={m.id} className="flex cursor-pointer items-center gap-2 rounded-lg border border-line px-2.5 py-2 text-xs text-fg-2 hover:bg-ink/[0.03]">
                 <input
                   type="checkbox"
-                  className="accent-[#4f86ff]"
+                  className="accent-brand"
                   checked={memberIds.includes(m.id)}
                   onChange={() => setMemberIds((ids) => (ids.includes(m.id) ? ids.filter((x) => x !== m.id) : [...ids, m.id]))}
                 />

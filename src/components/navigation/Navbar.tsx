@@ -1,18 +1,27 @@
 import { useEffect, useRef, useState } from 'react'
 import { Link, NavLink, useLocation } from 'react-router'
-import { AnimatePresence, motion } from 'framer-motion'
 import { ArrowRight, ArrowUpRight, CalendarCheck, ChevronDown, FlaskConical, Menu, X } from 'lucide-react'
 import { Logo } from '@/components/common/Logo'
+import { ThemeToggle } from '@/components/common/ThemeToggle'
 import { ButtonAnchor, ButtonLink } from '@/components/ui/Button'
 import { BOOKING_URL, NAV_ITEMS } from '@/data/constants/site'
-import { SOLUTIONS } from '@/data/constants/solutions'
+import { SOLUTION_INDEX as SOLUTIONS } from '@/data/constants/solution-index'
 import { contactPath, paths } from '@/routes/paths'
+import { prefetchPath } from '@/routes/route-modules'
+import { accentVars } from '@/theme/accents'
 import { cn } from '@/utils/cn'
 
 function isActive(pathname: string, to: string): boolean {
   if (to === '/') return pathname === '/'
   return pathname === to || pathname.startsWith(`${to}/`)
 }
+
+/** Props that prefetch a route's code when the user shows intent (hover / focus / touch). */
+const intent = (to: string) => ({
+  onMouseEnter: () => prefetchPath(to),
+  onFocus: () => prefetchPath(to),
+  onTouchStart: () => prefetchPath(to),
+})
 
 export function ConsultationButton({ size = 'sm', className }: { size?: 'sm' | 'md' | 'lg'; className?: string }) {
   if (BOOKING_URL) {
@@ -22,16 +31,30 @@ export function ConsultationButton({ size = 'sm', className }: { size?: 'sm' | '
       </ButtonAnchor>
     )
   }
+  const to = contactPath({ consultation: true })
   return (
-    <ButtonLink to={contactPath({ consultation: true })} size={size} className={className} leftIcon={<CalendarCheck className="size-4" />}>
+    <ButtonLink to={to} size={size} className={className} leftIcon={<CalendarCheck className="size-4" />} {...intent(to)}>
       Book a Consultation
     </ButtonLink>
   )
 }
 
+/** True once the page has scrolled past the top (IntersectionObserver on a sentinel — no scroll listener). */
+function useScrolled(): boolean {
+  const [scrolled, setScrolled] = useState(false)
+  useEffect(() => {
+    const sentinel = document.getElementById('top-sentinel')
+    if (!sentinel || typeof IntersectionObserver === 'undefined') return
+    const io = new IntersectionObserver(([entry]) => setScrolled(!entry.isIntersecting))
+    io.observe(sentinel)
+    return () => io.disconnect()
+  }, [])
+  return scrolled
+}
+
 export function Navbar() {
   const location = useLocation()
-  const [scrolled, setScrolled] = useState(false)
+  const scrolled = useScrolled()
   // Menus remember the location they were opened on, so any navigation closes them.
   const [mobileOpenAt, setMobileOpenAt] = useState<string | null>(null)
   const [menuOpenAt, setMenuOpenAt] = useState<string | null>(null)
@@ -49,13 +72,6 @@ export function Navbar() {
     })
   const closeTimer = useRef<number | undefined>(undefined)
   const menuRef = useRef<HTMLDivElement>(null)
-
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 8)
-    onScroll()
-    window.addEventListener('scroll', onScroll, { passive: true })
-    return () => window.removeEventListener('scroll', onScroll)
-  }, [])
 
   useEffect(() => {
     if (!mobileOpen) return
@@ -83,6 +99,8 @@ export function Navbar() {
     }
   }, [menuOpen])
 
+  useEffect(() => () => window.clearTimeout(closeTimer.current), [])
+
   const openMenu = () => {
     window.clearTimeout(closeTimer.current)
     setMenuOpen(true)
@@ -92,20 +110,18 @@ export function Navbar() {
     closeTimer.current = window.setTimeout(() => setMenuOpenAt(null), 140)
   }
 
+  const solid = scrolled || mobileOpen || menuOpen
+
   return (
-    <header
-      className={cn(
-        'sticky top-0 z-50 border-b transition-colors duration-300',
-        scrolled || mobileOpen || menuOpen ? 'border-white/[0.07]' : 'border-transparent',
-      )}
-    >
-      {/* The blur lives on its own layer: a backdrop-filter on <header> itself would become the
-          containing block for the fixed mobile menu below and collapse it to the header's height. */}
+    <header className={cn('sticky top-0 z-50 border-b transition-colors duration-300', solid ? 'border-ink/[0.07]' : 'border-transparent')}>
+      {/* The backdrop lives on its own layer: a backdrop-filter on <header> itself would become the
+          containing block for the fixed mobile menu below and collapse it to the header's height.
+          Low-power devices get an opaque bar instead of a live blur. */}
       <div
         aria-hidden
         className={cn(
-          'pointer-events-none absolute inset-0 -z-10 bg-[#05070e]/80 backdrop-blur-xl backdrop-saturate-150 transition-opacity duration-300',
-          scrolled || mobileOpen || menuOpen ? 'opacity-100' : 'opacity-0',
+          'pointer-events-none absolute inset-0 -z-10 bg-canvas/95 transition-opacity duration-300 motion-full:bg-canvas/80 motion-full:backdrop-blur-lg motion-full:backdrop-saturate-150',
+          solid ? 'opacity-100' : 'opacity-0',
         )}
       />
       <div ref={menuRef} onMouseLeave={scheduleClose}>
@@ -122,12 +138,12 @@ export function Navbar() {
                   <li key={item.to} className="flex items-center">
                     <NavLink
                       to={item.to}
-                      onMouseEnter={openMenu}
+                      onMouseEnter={() => {
+                        openMenu()
+                        prefetchPath(item.to)
+                      }}
                       onFocus={scheduleClose}
-                      className={cn(
-                        'rounded-l-lg py-2 pr-1 pl-3 text-sm transition-colors',
-                        active || menuOpen ? 'text-fg' : 'text-fg-2 hover:text-fg',
-                      )}
+                      className={cn('rounded-l-lg py-2 pr-1 pl-3 text-sm transition-colors', active || menuOpen ? 'text-fg' : 'text-fg-2 hover:text-fg')}
                     >
                       {item.label}
                     </NavLink>
@@ -150,22 +166,19 @@ export function Navbar() {
                   <NavLink
                     to={item.to}
                     end={item.to === '/'}
-                    onMouseEnter={scheduleClose}
-                    onFocus={scheduleClose}
-                    className={cn(
-                      'relative inline-flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm transition-colors',
-                      active ? 'text-fg' : 'text-fg-2 hover:text-fg',
-                    )}
+                    onMouseEnter={() => {
+                      scheduleClose()
+                      prefetchPath(item.to)
+                    }}
+                    onFocus={() => {
+                      scheduleClose()
+                      prefetchPath(item.to)
+                    }}
+                    className={cn('relative inline-flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm transition-colors', active ? 'text-fg' : 'text-fg-2 hover:text-fg')}
                   >
                     {item.to === paths.lab && <FlaskConical className="size-3.5 text-astra-cyan" aria-hidden />}
                     {item.label}
-                    {active && (
-                      <motion.span
-                        layoutId="nav-active"
-                        className="absolute inset-x-3 -bottom-[13px] h-px bg-gradient-to-r from-transparent via-brand to-transparent"
-                        transition={{ type: 'spring', stiffness: 500, damping: 40 }}
-                      />
-                    )}
+                    {active && <span className="absolute inset-x-3 -bottom-[13px] h-px bg-gradient-to-r from-transparent via-brand to-transparent" />}
                   </NavLink>
                 </li>
               )
@@ -173,98 +186,82 @@ export function Navbar() {
           </ul>
 
           <div className="ml-auto hidden items-center gap-2 lg:flex">
+            <ThemeToggle />
             <ConsultationButton />
           </div>
 
-          <button
-            type="button"
-            className="ml-auto inline-flex size-10 items-center justify-center rounded-lg text-fg-2 hover:bg-white/[0.06] hover:text-fg lg:hidden"
-            aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
-            aria-expanded={mobileOpen}
-            aria-controls="mobile-menu"
-            onClick={() => setMobileOpen((v) => !v)}
-          >
-            {mobileOpen ? <X className="size-5" /> : <Menu className="size-5" />}
-          </button>
+          <div className="ml-auto flex items-center gap-1 lg:hidden">
+            <ThemeToggle />
+            <button
+              type="button"
+              className="inline-flex size-10 items-center justify-center rounded-lg text-fg-2 hover:bg-ink/[0.06] hover:text-fg"
+              aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
+              aria-expanded={mobileOpen}
+              aria-controls="mobile-menu"
+              onClick={() => setMobileOpen((v) => !v)}
+            >
+              {mobileOpen ? <X className="size-5" /> : <Menu className="size-5" />}
+            </button>
+          </div>
         </nav>
 
         {/* Desktop solutions mega menu */}
-        <AnimatePresence>
-          {menuOpen && (
-            <motion.div
-              id="solutions-menu"
-              initial={{ opacity: 0, y: -6 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -6 }}
-              transition={{ duration: 0.16 }}
-              onMouseEnter={openMenu}
-              className="absolute inset-x-0 top-16 hidden border-b border-white/[0.07] bg-[#060912]/95 backdrop-blur-xl lg:block"
-            >
-              <div className="mx-auto grid max-w-7xl grid-cols-[1fr_300px] gap-8 px-8 py-7">
-                <ul className="grid grid-cols-3 gap-1">
-                  {SOLUTIONS.map((s) => (
-                    <li key={s.slug}>
-                      <Link
-                        to={paths.solution(s.slug)}
-                        className="group flex gap-3 rounded-xl p-3 transition-colors hover:bg-white/[0.04]"
+        {menuOpen && (
+          <div
+            id="solutions-menu"
+            onMouseEnter={openMenu}
+            className="animate-pop absolute inset-x-0 top-16 hidden border-b border-ink/[0.07] bg-canvas shadow-2xl shadow-black/20 motion-full:bg-canvas/95 motion-full:backdrop-blur-lg lg:block"
+          >
+            <div className="mx-auto grid max-w-7xl grid-cols-[1fr_300px] gap-8 px-8 py-7">
+              <ul className="grid grid-cols-3 gap-1">
+                {SOLUTIONS.map((s) => (
+                  <li key={s.slug}>
+                    <Link to={paths.solution(s.slug)} className="group flex gap-3 rounded-xl p-3 transition-colors hover:bg-ink/[0.04]" style={accentVars(s)} {...intent(paths.solution(s.slug))}>
+                      <span
+                        className="flex size-9 shrink-0 items-center justify-center rounded-lg ring-1 ring-ink/10"
+                        style={{ background: `linear-gradient(135deg, ${s.accent}2e, ${s.accent}0d)` }}
                       >
-                        <span
-                          className="flex size-9 shrink-0 items-center justify-center rounded-lg ring-1 ring-white/10"
-                          style={{ background: `linear-gradient(135deg, ${s.accent}2e, ${s.accent}0d)` }}
-                        >
-                          <s.icon className="size-[18px]" style={{ color: s.accent }} aria-hidden />
+                        <s.icon className="text-sol-accent size-[18px]" aria-hidden />
+                      </span>
+                      <span className="min-w-0">
+                        <span className="flex items-center gap-1.5 text-[13px] font-medium text-fg">
+                          {s.shortName}
+                          <ArrowRight className="size-3 -translate-x-1 opacity-0 transition-[opacity,transform] group-hover:translate-x-0 group-hover:opacity-100" />
                         </span>
-                        <span className="min-w-0">
-                          <span className="flex items-center gap-1.5 text-[13px] font-medium text-fg">
-                            {s.shortName}
-                            <ArrowRight className="size-3 -translate-x-1 opacity-0 transition-all group-hover:translate-x-0 group-hover:opacity-100" />
-                          </span>
-                          <span className="mt-0.5 line-clamp-2 block text-xs leading-relaxed text-fg-3">{s.tagline}</span>
-                        </span>
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-                <div className="flex flex-col justify-between rounded-2xl border border-white/[0.08] bg-gradient-to-br from-[#4f86ff]/15 via-[#8b74ff]/10 to-transparent p-5">
-                  <div>
-                    <span className="inline-flex items-center gap-1.5 rounded-full bg-astra-cyan/10 px-2 py-0.5 text-[11px] font-medium text-astra-cyan-soft ring-1 ring-astra-cyan/20">
-                      <FlaskConical className="size-3" /> Interactive Lab
-                    </span>
-                    <p className="mt-3 text-[15px] font-semibold text-fg">Try nine working product demos</p>
-                    <p className="mt-1.5 text-[13px] leading-relaxed text-fg-3">
-                      Real interfaces, realistic sample data and simulated operations — right in your browser.
-                    </p>
-                  </div>
-                  <div className="mt-5 flex flex-col gap-2">
-                    <ButtonLink to={paths.lab} size="sm" rightIcon={<ArrowUpRight className="size-3.5" />}>
-                      Open the Lab
-                    </ButtonLink>
-                    <ButtonLink to={paths.solutions} size="sm" variant="ghost">
-                      View all solutions
-                    </ButtonLink>
-                  </div>
+                        <span className="mt-0.5 line-clamp-2 block text-xs leading-relaxed text-fg-3">{s.tagline}</span>
+                      </span>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+              <div className="flex flex-col justify-between rounded-2xl border border-ink/[0.08] bg-gradient-to-br from-brand/15 via-astra-violet/10 to-transparent p-5">
+                <div>
+                  <span className="inline-flex items-center gap-1.5 rounded-full bg-astra-cyan/10 px-2 py-0.5 text-[11px] font-medium text-astra-cyan-soft ring-1 ring-astra-cyan/20">
+                    <FlaskConical className="size-3" /> Interactive Lab
+                  </span>
+                  <p className="mt-3 text-[15px] font-semibold text-fg">Try nine working product demos</p>
+                  <p className="mt-1.5 text-[13px] leading-relaxed text-fg-3">Real interfaces, realistic sample data and simulated operations — right in your browser.</p>
+                </div>
+                <div className="mt-5 flex flex-col gap-2">
+                  <ButtonLink to={paths.lab} size="sm" rightIcon={<ArrowUpRight className="size-3.5" />} {...intent(paths.lab)}>
+                    Open the Lab
+                  </ButtonLink>
+                  <ButtonLink to={paths.solutions} size="sm" variant="ghost">
+                    View all solutions
+                  </ButtonLink>
                 </div>
               </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Mobile menu */}
-      <AnimatePresence>
-        {mobileOpen && (
-          <motion.div
-            id="mobile-menu"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.18 }}
-            className="fixed inset-x-0 top-16 bottom-0 z-40 overflow-y-auto bg-[#05070e]/97 backdrop-blur-xl lg:hidden"
-          >
-            <MobileMenu pathname={location.pathname} />
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {mobileOpen && (
+        <div id="mobile-menu" className="animate-fade fixed inset-x-0 top-16 bottom-0 z-40 overflow-y-auto bg-canvas lg:hidden">
+          <MobileMenu pathname={location.pathname} />
+        </div>
+      )}
     </header>
   )
 }
@@ -275,13 +272,7 @@ function MobileMenu({ pathname }: { pathname: string }) {
     <nav aria-label="Mobile" className="mx-auto flex min-h-full max-w-xl flex-col px-4 pt-4 pb-10">
       <ul className="flex flex-col">
         {NAV_ITEMS.map((item, index) => (
-          <motion.li
-            key={item.to}
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.03 * index }}
-            className="border-b border-white/[0.06]"
-          >
+          <li key={item.to} className="animate-enter border-b border-ink/[0.06]" style={{ animationDelay: `${0.03 * index}s` }}>
             {item.menu === 'solutions' ? (
               <div>
                 <div className="flex items-center">
@@ -290,7 +281,7 @@ function MobileMenu({ pathname }: { pathname: string }) {
                   </NavLink>
                   <button
                     type="button"
-                    className="inline-flex size-10 items-center justify-center rounded-lg text-fg-3 hover:bg-white/[0.06]"
+                    className="inline-flex size-10 items-center justify-center rounded-lg text-fg-3 hover:bg-ink/[0.06]"
                     aria-expanded={solutionsOpen}
                     aria-label="Toggle solutions list"
                     onClick={() => setSolutionsOpen((v) => !v)}
@@ -302,8 +293,12 @@ function MobileMenu({ pathname }: { pathname: string }) {
                   <ul className="grid gap-1 pb-4">
                     {SOLUTIONS.map((s) => (
                       <li key={s.slug}>
-                        <Link to={paths.solution(s.slug)} className="flex items-center gap-3 rounded-lg px-2 py-2 text-[15px] text-fg-2 hover:bg-white/[0.04] hover:text-fg">
-                          <s.icon className="size-4" style={{ color: s.accent }} aria-hidden />
+                        <Link
+                          to={paths.solution(s.slug)}
+                          className="flex items-center gap-3 rounded-lg px-2 py-2 text-[15px] text-fg-2 hover:bg-ink/[0.04] hover:text-fg"
+                          style={accentVars(s)}
+                        >
+                          <s.icon className="text-sol-accent size-4" aria-hidden />
                           {s.shortName}
                         </Link>
                       </li>
@@ -321,7 +316,7 @@ function MobileMenu({ pathname }: { pathname: string }) {
                 {item.to === paths.lab && <FlaskConical className="size-4 text-astra-cyan" aria-hidden />}
               </NavLink>
             )}
-          </motion.li>
+          </li>
         ))}
       </ul>
       <div className="mt-8 flex flex-col gap-3">

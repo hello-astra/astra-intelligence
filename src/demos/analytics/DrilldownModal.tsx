@@ -5,12 +5,13 @@ import { Modal } from '@/components/ui/Modal'
 import { REGIONS, type Category } from '@/data/mock/analytics'
 import { formatINRCompact, formatSignedPercent } from '@/utils/format'
 import { ChartFrame } from '../shared/Chart'
-import { SERIES } from '../shared/chartTheme'
+import { useChartTheme } from '../shared/demo-theme'
 import type { AnalyticsCtx } from './context'
 import { bucketize, change, KPIS, selectSeries, sumRange } from './engine'
 import { TrendChart } from './TrendChart'
 
 export function DrilldownModal({ category, ctx, onClose }: { category: Category | null; ctx: AnalyticsCtx; onClose: () => void }) {
+  const { SERIES } = useChartTheme()
   const { ds, filters, range, gran, setFilters } = ctx
   const data = useMemo(() => {
     if (!category) return null
@@ -55,7 +56,7 @@ export function DrilldownModal({ category, ctx, onClose }: { category: Category 
                 .map((r) => (
                   <li key={r.region} className="grid grid-cols-[90px_1fr_80px] items-center gap-3 text-[13px]">
                     <span className="text-fg-2">{r.region}</span>
-                    <span className="h-1.5 overflow-hidden rounded-full bg-white/[0.04]">
+                    <span className="h-1.5 overflow-hidden rounded-full bg-ink/[0.04]">
                       <span className="block h-full rounded-full" style={{ width: `${(r.revenue / (data.regions[0]?.revenue || 1)) * 100}%`, backgroundColor: SERIES[0] }} />
                     </span>
                     <span className="text-right text-fg tabular-nums">{formatINRCompact(r.revenue)}</span>

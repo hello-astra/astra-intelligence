@@ -1,4 +1,4 @@
-import { useState, type DragEvent, type FormEvent } from 'react'
+import { useDeferredValue, useMemo, useState, type DragEvent, type FormEvent } from 'react'
 import { ArrowRightLeft, CalendarClock, MessageSquare, Plus, TriangleAlert } from 'lucide-react'
 import { Avatar } from '@/components/ui/Avatar'
 import { Badge } from '@/components/ui/Badge'
@@ -16,7 +16,9 @@ export function BoardView(ctx: CollabCtx) {
   const toast = useToast()
   const [over, setOver] = useState<TaskStatus | null>(null)
   const [adding, setAdding] = useState<TaskStatus | null>(null)
-  const tasks = visibleTasks(state, filters)
+  // Filter edits (e.g. typing a search) stay instant; the board re-renders at low priority behind them.
+  const deferredFilters = useDeferredValue(filters)
+  const tasks = useMemo(() => visibleTasks(state, deferredFilters), [state, deferredFilters])
 
   const move = (taskId: string, status: TaskStatus) => {
     const task = state.tasks.find((t) => t.id === taskId)
@@ -56,14 +58,14 @@ export function BoardView(ctx: CollabCtx) {
                 onDrop={(e) => onDrop(e, status)}
                 data-column={status}
                 className={cn(
-                  'flex w-full flex-col rounded-xl border bg-white/[0.02] transition-colors',
+                  'flex w-full flex-col rounded-xl border bg-ink/[0.02] transition-colors',
                   over === status ? 'border-brand/60 bg-brand/[0.06]' : 'border-line',
                 )}
               >
                 <header className="flex items-center gap-2 px-3 pt-3 pb-2">
                   <span className="size-2.5 rounded-full" style={{ backgroundColor: STATUS_META[status].color }} aria-hidden />
                   <h3 className="text-[13px] font-semibold text-fg">{STATUS_META[status].label}</h3>
-                  <span className="rounded-full bg-white/[0.06] px-1.5 text-[11px] text-fg-3 tabular-nums">{column.length}</span>
+                  <span className="rounded-full bg-ink/[0.06] px-1.5 text-[11px] text-fg-3 tabular-nums">{column.length}</span>
                   {status === 'in_progress' && (
                     <span className={cn('ml-auto flex items-center gap-1 text-[10px]', overLimit ? 'text-amber-300' : 'text-fg-4')} title="Work-in-progress limit">
                       {overLimit && <TriangleAlert className="size-3" aria-hidden />}
@@ -94,7 +96,7 @@ export function BoardView(ctx: CollabCtx) {
                   <button
                     type="button"
                     onClick={() => setAdding(status)}
-                    className="m-2 mt-0 flex items-center gap-1.5 rounded-lg px-2 py-1.5 text-xs text-fg-3 hover:bg-white/[0.04] hover:text-fg-2"
+                    className="m-2 mt-0 flex items-center gap-1.5 rounded-lg px-2 py-1.5 text-xs text-fg-3 hover:bg-ink/[0.04] hover:text-fg-2"
                   >
                     <Plus className="size-3.5" aria-hidden /> Add task
                   </button>
@@ -124,7 +126,7 @@ function TaskCard({ task, ctx, onOpen, onMove }: { task: Task; ctx: CollabCtx; o
         e.dataTransfer.effectAllowed = 'move'
       }}
       data-task={task.key}
-      className="group cursor-grab rounded-lg border border-line bg-[#0c1325] p-2.5 shadow-sm transition-colors hover:border-line-strong active:cursor-grabbing"
+      className="group cursor-grab rounded-lg border border-line bg-popover p-2.5 shadow-sm transition-colors hover:border-line-strong active:cursor-grabbing"
     >
       <div className="flex items-start gap-2">
         <button type="button" onClick={onOpen} className="min-w-0 flex-1 text-left">
@@ -137,7 +139,7 @@ function TaskCard({ task, ctx, onOpen, onMove }: { task: Task; ctx: CollabCtx; o
         <Dropdown
           ariaLabel={`Move ${task.key}`}
           align="end"
-          buttonClassName="inline-flex size-6 shrink-0 items-center justify-center rounded-md text-fg-4 opacity-70 hover:bg-white/[0.06] hover:text-fg group-hover:opacity-100"
+          buttonClassName="inline-flex size-6 shrink-0 items-center justify-center rounded-md text-fg-4 opacity-70 hover:bg-ink/[0.06] hover:text-fg group-hover:opacity-100"
           buttonContent={<ArrowRightLeft className="size-3" />}
           header={<p className="text-[11px] text-fg-3">Move to</p>}
           items={STATUSES.map((s) => ({ id: s, label: STATUS_META[s].label, active: s === task.status, onSelect: () => onMove(s) }))}
@@ -147,7 +149,7 @@ function TaskCard({ task, ctx, onOpen, onMove }: { task: Task; ctx: CollabCtx; o
       {task.tags.length > 0 && (
         <div className="mt-2 flex flex-wrap gap-1">
           {task.tags.slice(0, 2).map((tag) => (
-            <span key={tag} className="rounded bg-white/[0.05] px-1.5 py-px text-[10px] text-fg-3">
+            <span key={tag} className="rounded bg-ink/[0.05] px-1.5 py-px text-[10px] text-fg-3">
               {tag}
             </span>
           ))}
@@ -190,7 +192,7 @@ function QuickAdd({ ctx, status, onDone }: { ctx: CollabCtx; status: TaskStatus;
     onDone(title.trim().length >= 3 ? title.trim() : '', projectId)
   }
   return (
-    <form onSubmit={submit} className="m-2 mt-0 space-y-1.5 rounded-lg border border-brand/40 bg-[#0c1325] p-2">
+    <form onSubmit={submit} className="m-2 mt-0 space-y-1.5 rounded-lg border border-brand/40 bg-popover p-2">
       <input
         // Shown in direct response to the user's "Add task" click, so focus moves with them.
         // oxlint-disable-next-line jsx-a11y/no-autofocus
@@ -220,7 +222,7 @@ function QuickAdd({ ctx, status, onDone }: { ctx: CollabCtx; status: TaskStatus;
         <button type="button" onClick={() => onDone('', projectId)} className="rounded px-2 py-0.5 text-[11px] text-fg-3 hover:text-fg">
           Cancel
         </button>
-        <button type="submit" className="rounded bg-brand-strong px-2 py-0.5 text-[11px] font-medium text-white disabled:opacity-40" disabled={title.trim().length < 3}>
+        <button type="submit" className="rounded bg-brand-strong px-2 py-0.5 text-[11px] font-medium text-on-brand disabled:opacity-40" disabled={title.trim().length < 3}>
           Add
         </button>
       </div>

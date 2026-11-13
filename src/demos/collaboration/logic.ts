@@ -4,13 +4,16 @@ import { uid } from '@/utils/id'
 
 export const STATUSES: TaskStatus[] = ['backlog', 'todo', 'in_progress', 'review', 'done']
 
-/** Workflow stages are ordered, so they share one hue stepping from dark (backlog) to light (done). */
+/** Ordered stage colour: one hue (the product's primary) growing from faint to full as work progresses. */
+const stage = (pct: number) => `color-mix(in oklab, var(--color-brand) ${pct}%, var(--color-panel))`
+
+/** Workflow stages are ordered, so they share one hue (CSS variables — follows the product theme and mode). */
 export const STATUS_META: Record<TaskStatus, { label: string; color: string }> = {
-  backlog: { label: 'Backlog', color: '#1c5cab' },
-  todo: { label: 'To do', color: '#2a78d6' },
-  in_progress: { label: 'In progress', color: '#5598e7' },
-  review: { label: 'Review', color: '#86b6ef' },
-  done: { label: 'Done', color: '#b7d3f6' },
+  backlog: { label: 'Backlog', color: stage(28) },
+  todo: { label: 'To do', color: stage(46) },
+  in_progress: { label: 'In progress', color: stage(64) },
+  review: { label: 'Review', color: stage(82) },
+  done: { label: 'Done', color: stage(100) },
 }
 
 export const PRIORITY_META: Record<Priority, { label: string; tone: 'neutral' | 'blue' | 'amber' | 'red'; rank: number }> = {

@@ -1,7 +1,8 @@
 import { useId } from 'react'
 import { Area, Bar, BarChart, CartesianGrid, Cell, ComposedChart, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 import { formatINRTick, formatTick } from '@/utils/format'
-import { activeDot, axisProps, BAR_SIZE, barCursor, DEEMPH, gridProps, lineCursor, SERIES, yAxisProps } from '../shared/chartTheme'
+import { BAR_SIZE } from '../shared/chartTheme'
+import { useChartTheme } from '../shared/demo-theme'
 import { tooltipRenderer } from '../shared/tooltip'
 import { KPIS, type ChartType, type KpiKey } from './engine'
 
@@ -27,6 +28,7 @@ const partialLabel = (label: string) => (label.endsWith('*') ? `${label.slice(0,
  * or faded (bars) so a short period is not mistaken for a real drop.
  */
 export function TrendChart({ rows, kpi, chartType, compare }: { rows: TrendRow[]; kpi: KpiKey; chartType: ChartType; compare: boolean }) {
+  const { activeDot, axisProps, barCursor, DEEMPH, gridProps, lineCursor, SERIES, yAxisProps, animate } = useChartTheme()
   const gradient = useId().replace(/:/g, '')
   const format = KPIS[kpi].format
   const label = KPIS[kpi].label
@@ -45,21 +47,21 @@ export function TrendChart({ rows, kpi, chartType, compare }: { rows: TrendRow[]
     <Tooltip key="tip" content={tooltipRenderer((v) => format(v), partialLabel, ['solid', 'dashed'])} cursor={chartType === 'bar' ? barCursor : lineCursor} />,
   ]
   const previousLine = compare && (
-    <Line type="monotone" dataKey="previous" name="Previous period" stroke={DEEMPH} strokeWidth={2} strokeDasharray="4 4" dot={false} activeDot={activeDot} />
+    <Line isAnimationActive={animate} type="monotone" dataKey="previous" name="Previous period" stroke={DEEMPH} strokeWidth={2} strokeDasharray="4 4" dot={false} activeDot={activeDot} />
   )
   const partialLine = hasPartial && (
-    <Line type="monotone" dataKey="dashed" stroke={SERIES[0]} strokeOpacity={0.6} strokeWidth={2} strokeDasharray="2 4" dot={false} activeDot={false} tooltipType="none" legendType="none" />
+    <Line isAnimationActive={animate} type="monotone" dataKey="dashed" stroke={SERIES[0]} strokeOpacity={0.6} strokeWidth={2} strokeDasharray="2 4" dot={false} activeDot={false} tooltipType="none" legendType="none" />
   )
   // Invisible series carrying the tooltip and hover dot for every bucket.
-  const hoverLine = <Line type="monotone" dataKey="current" name={label} stroke="transparent" fill={SERIES[0]} dot={false} activeDot={activeDot} />
+  const hoverLine = <Line isAnimationActive={animate} type="monotone" dataKey="current" name={label} stroke="transparent" fill={SERIES[0]} dot={false} activeDot={activeDot} />
 
   return (
     <ResponsiveContainer width="100%" height="100%">
       {chartType === 'bar' ? (
         <BarChart data={data} margin={{ top: 8, right: 8, left: 0, bottom: 0 }} barGap={2}>
           {common}
-          {compare && <Bar dataKey="previous" name="Previous period" fill={DEEMPH} radius={[4, 4, 0, 0]} maxBarSize={BAR_SIZE / 2} />}
-          <Bar dataKey="current" name={label} fill={SERIES[0]} radius={[4, 4, 0, 0]} maxBarSize={compare ? BAR_SIZE / 2 : BAR_SIZE}>
+          {compare && <Bar isAnimationActive={animate} dataKey="previous" name="Previous period" fill={DEEMPH} radius={[4, 4, 0, 0]} maxBarSize={BAR_SIZE / 2} />}
+          <Bar isAnimationActive={animate} dataKey="current" name={label} fill={SERIES[0]} radius={[4, 4, 0, 0]} maxBarSize={compare ? BAR_SIZE / 2 : BAR_SIZE}>
             {data.map((r) => (
               <Cell key={r.label} fillOpacity={r.partial ? 0.4 : 1} />
             ))}
@@ -70,7 +72,7 @@ export function TrendChart({ rows, kpi, chartType, compare }: { rows: TrendRow[]
           {common}
           {previousLine}
           {partialLine}
-          <Line
+          <Line isAnimationActive={animate}
             type="monotone"
             dataKey="solid"
             stroke={SERIES[0]}
@@ -93,7 +95,7 @@ export function TrendChart({ rows, kpi, chartType, compare }: { rows: TrendRow[]
           {common}
           {previousLine}
           {partialLine}
-          <Area type="monotone" dataKey="solid" stroke={SERIES[0]} strokeWidth={2} fill={`url(#${gradient})`} activeDot={false} tooltipType="none" legendType="none" />
+          <Area isAnimationActive={animate} type="monotone" dataKey="solid" stroke={SERIES[0]} strokeWidth={2} fill={`url(#${gradient})`} activeDot={false} tooltipType="none" legendType="none" />
           {hoverLine}
         </ComposedChart>
       )}

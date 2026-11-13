@@ -1,40 +1,92 @@
 @import 'tailwindcss';
 
+/* --------------------------------------------------------------------------
+   Font: Geist (variable weight, SIL OFL — see assets/fonts/LICENSE-Geist.txt).
+   One family, self-hosted, Latin subsets only. The Latin file is preloaded by the
+   build; Latin-Extended (₹ and accented letters) downloads only when such a glyph
+   appears. `swap` shows the system fallback immediately — text is never invisible.
+   Monospace uses the platform's system font (no download).
+   -------------------------------------------------------------------------- */
+@font-face {
+  font-family: 'Geist Variable';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 100 900;
+  src: url('./assets/fonts/geist-latin-wght-normal.woff2') format('woff2-variations');
+  unicode-range:
+    U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191,
+    U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Geist Variable';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 100 900;
+  src: url('./assets/fonts/geist-latin-ext-wght-normal.woff2') format('woff2-variations');
+  unicode-range:
+    U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020,
+    U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+/* Light-mode variants: `light:bg-panel`. Dark is the default, so no `dark:` variant is needed. */
+@custom-variant light (&:where([data-theme='light'], [data-theme='light'] *));
+/* Decorative-motion variant: skipped on low-power devices (html.lite) and for reduced motion. */
+@custom-variant motion-full (&:where(html:not(.lite) *));
+
 /* ==========================================================================
    Astra Intelligence — design tokens
-   Dark-first. Surfaces step up from the page canvas; ink steps down from
-   primary text. Chart colours are a validated categorical palette
-   (CVD-checked against the panel surface #0a0f1d) — see src/demos/shared/chartTheme.ts.
+   --------------------------------------------------------------------------
+   Every colour in the UI resolves to one of these variables. Three layers set them:
+
+   1. :root            corporate dark theme (the defaults below)
+   2. [data-theme=light]  corporate light theme (base layer, further down)
+   3. demo root (inline)  each product demo writes its own palette for the current
+                          mode — see src/theme/demo-themes.ts. Charts read the same
+                          palette through useChartTheme().
+
+   Utilities such as `bg-panel`, `text-fg-2` or `border-line` therefore re-theme
+   automatically wherever they are rendered.
    ========================================================================== */
 @theme {
-  --font-sans: 'Geist Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-  --font-mono: 'Geist Mono Variable', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --font-sans: 'Geist Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace;
 
-  /* Surfaces */
+  /* Surfaces — page canvas → app chrome → panels → raised/popover */
   --color-canvas: #05070e;
   --color-base: #070b16;
+  --color-chrome: #080d1a;
   --color-panel: #0a0f1d;
   --color-raised: #0f1628;
+  --color-popover: #0c1325;
   --color-hover: #141d33;
+  --color-sunken: #04060c;
   --color-line: #1a2440;
   --color-line-strong: #26314d;
+  --color-scrim: #02040a;
 
-  /* Ink */
+  /* Ink — `ink` is the overlay base for subtle tints (white on dark, navy on light) */
   --color-fg: #e8edf7;
   --color-fg-2: #a5b3cc;
   --color-fg-3: #8090ad;
-  --color-fg-4: #64748f;
+  --color-fg-4: #74829f;
+  --color-ink: #ffffff;
+  --color-on-brand: #ffffff;
 
-  /* Brand */
+  /* Brand — primary action colour; `accent` is the secondary identity colour */
   --color-brand: #4f86ff;
   --color-brand-strong: #2f66e8;
+  --color-brand-hover: #3a71f0;
   --color-brand-soft: #9dbcff;
+  --color-accent: #8b74ff;
+  --color-accent-soft: #c4b5fd;
+
+  /* Corporate accents (used by the marketing site) */
   --color-astra-violet: #8b74ff;
   --color-astra-violet-soft: #c4b5fd;
   --color-astra-cyan: #22d3ee;
   --color-astra-cyan-soft: #67e8f9;
 
-  /* Validated categorical chart palette (dark) */
+  /* Categorical chart palette (demos override this per product theme) */
   --color-series-1: #4180f2;
   --color-series-2: #d95926;
   --color-series-3: #199e70;
@@ -53,22 +105,19 @@
 
   --radius-xl2: 1.25rem;
 
-  --animate-flow: flow-dash 2.4s linear infinite;
-  --animate-flow-slow: flow-dash 6s linear infinite;
   --animate-float: float 7s ease-in-out infinite;
   --animate-float-delayed: float 8s ease-in-out 1.5s infinite;
   --animate-pulse-ring: pulse-ring 2.8s cubic-bezier(0.2, 0.6, 0.4, 1) infinite;
   --animate-scan: scan 2.2s ease-in-out infinite;
-  --animate-shimmer: shimmer 2.2s linear infinite;
+  --animate-shimmer: shimmer 1.6s linear infinite;
   --animate-blink: blink 1.2s ease-in-out infinite;
   --animate-spin-slow: spin 18s linear infinite;
-  --animate-marquee: marquee 40s linear infinite;
+  --animate-enter: enter 0.32s cubic-bezier(0.21, 0.47, 0.32, 0.98) both;
+  --animate-fade: fade 0.2s ease-out both;
+  --animate-pop: pop 0.16s cubic-bezier(0.2, 0.8, 0.3, 1) both;
+  --animate-drawer: drawer 0.24s cubic-bezier(0.2, 0.8, 0.3, 1) both;
+  --animate-sheet: sheet 0.22s cubic-bezier(0.2, 0.8, 0.3, 1) both;
 
-  @keyframes flow-dash {
-    to {
-      stroke-dashoffset: -40;
-    }
-  }
   @keyframes float {
     0%,
     100% {
@@ -91,21 +140,22 @@
   }
   @keyframes scan {
     0% {
-      top: 0%;
+      transform: translateY(0);
     }
     50% {
-      top: calc(100% - 2px);
+      /* Applied to a full-height wrapper, so 100% travels the whole document. */
+      transform: translateY(var(--scan-distance, 100%));
     }
     100% {
-      top: 0%;
+      transform: translateY(0);
     }
   }
   @keyframes shimmer {
     from {
-      background-position: -200% 0;
+      background-position: 200% 0;
     }
     to {
-      background-position: 200% 0;
+      background-position: -200% 0;
     }
   }
   @keyframes blink {
@@ -117,30 +167,169 @@
       opacity: 1;
     }
   }
-  @keyframes marquee {
+  @keyframes enter {
     from {
-      transform: translateX(0);
+      opacity: 0;
+      transform: translateY(8px);
     }
-    to {
-      transform: translateX(-50%);
+  }
+  @keyframes fade {
+    from {
+      opacity: 0;
+    }
+  }
+  @keyframes pop {
+    from {
+      opacity: 0;
+      transform: translateY(-4px) scale(0.98);
+    }
+  }
+  @keyframes drawer {
+    from {
+      opacity: 0;
+      transform: translateX(40px);
+    }
+  }
+  @keyframes sheet {
+    from {
+      opacity: 0;
+      transform: translateY(20px) scale(0.98);
     }
   }
 }
 
 /* ==========================================================================
-   Base
+   Theme scopes
    ========================================================================== */
 @layer base {
-  html {
+  :root,
+  [data-theme='dark'] {
     color-scheme: dark;
+    --grad-hero: linear-gradient(100deg, #ffffff 0%, #c9d8ff 38%, #a99bff 72%, #7fe3f5 100%);
+    --grad-brand: linear-gradient(95deg, #7aa6ff 0%, #a68fff 55%, #5fdcf2 100%);
+    --grid-line: rgb(148 163 184 / 0.06);
+    --dot: rgb(148 163 184 / 0.16);
+    --shadow-elevated: 0 24px 60px -24px rgb(0 0 0 / 0.65);
+    --logo-filter: none;
+
+    /* Tailwind palette — restored for dark scopes nested inside a light one */
+    --color-red-100: oklch(93.6% 0.032 17.717);
+    --color-red-200: oklch(88.5% 0.062 18.334);
+    --color-red-300: oklch(80.8% 0.114 19.571);
+    --color-red-400: oklch(70.4% 0.191 22.216);
+    --color-emerald-100: oklch(95% 0.052 163.051);
+    --color-emerald-200: oklch(90.5% 0.093 164.15);
+    --color-emerald-300: oklch(84.5% 0.143 164.978);
+    --color-emerald-400: oklch(76.5% 0.177 163.223);
+    --color-amber-100: oklch(96.2% 0.059 95.617);
+    --color-amber-200: oklch(92.4% 0.12 95.746);
+    --color-amber-300: oklch(87.9% 0.169 91.605);
+    --color-amber-400: oklch(82.8% 0.189 84.429);
+    --color-cyan-300: oklch(86.5% 0.127 207.078);
+    --color-cyan-400: oklch(78.9% 0.154 211.53);
+    --color-pink-300: oklch(82.3% 0.12 346.018);
+    --color-pink-400: oklch(71.8% 0.202 349.761);
+    --color-orange-300: oklch(83.7% 0.128 66.29);
+    --color-orange-400: oklch(75% 0.183 55.934);
+  }
+
+  /* Derived from the scope's own brand colour, so it is re-declared on every theme scope. */
+  :root,
+  [data-theme] {
+    --shadow-brand:
+      inset 0 1px 0 rgb(255 255 255 / 0.18), 0 0 0 1px color-mix(in oklab, var(--color-brand) 45%, transparent),
+      0 10px 30px -12px color-mix(in oklab, var(--color-brand) 70%, transparent);
+    --shadow-brand-hover:
+      inset 0 1px 0 rgb(255 255 255 / 0.22), 0 0 0 1px color-mix(in oklab, var(--color-brand) 60%, transparent),
+      0 14px 36px -12px color-mix(in oklab, var(--color-brand) 90%, transparent);
+  }
+
+  [data-theme='light'] {
+    color-scheme: light;
+
+    --color-canvas: #f4f6fb;
+    --color-base: #f8f9fc;
+    --color-chrome: #f1f4f9;
+    --color-panel: #ffffff;
+    --color-raised: #f3f5f9;
+    --color-popover: #ffffff;
+    --color-hover: #eceff5;
+    --color-sunken: #eceff5;
+    --color-line: #e1e6ee;
+    --color-line-strong: #c9d1de;
+    --color-scrim: #0b1220;
+
+    --color-fg: #0b1220;
+    --color-fg-2: #334058;
+    --color-fg-3: #56637a;
+    --color-fg-4: #5f6c84;
+    --color-ink: #0b1a33;
+
+    --color-brand: #2f66e8;
+    --color-brand-strong: #2f66e8;
+    --color-brand-hover: #2558d0;
+    --color-brand-soft: #2152c9;
+    --color-accent: #6a4fe0;
+    --color-accent-soft: #5a3fcf;
+
+    --color-astra-violet: #6a4fe0;
+    --color-astra-violet-soft: #5a3fcf;
+    --color-astra-cyan: #0891b2;
+    --color-astra-cyan-soft: #0e7490;
+
+    --color-series-1: #2f6fe0;
+    --color-series-2: #c84f1c;
+    --color-series-3: #148a61;
+    --color-series-4: #ad7200;
+    --color-series-5: #c13f70;
+    --color-series-6: #0a7a0a;
+    --color-series-7: #6d5fd6;
+    --color-series-8: #d24f4f;
+    --color-deemph: #8a95a8;
+
+    --color-good: #0a8a0a;
+    --color-warning: #b77d00;
+    --color-serious: #cf5f2b;
+    --color-critical: #c42f2f;
+
+    --grad-hero: linear-gradient(100deg, #0b1220 0%, #1d3b8f 45%, #4b33c4 75%, #0e7490 100%);
+    --grad-brand: linear-gradient(95deg, #2457d6 0%, #6a3fe0 55%, #0a8fb0 100%);
+    --grid-line: rgb(15 30 60 / 0.06);
+    --dot: rgb(15 30 60 / 0.12);
+    --shadow-elevated: 0 20px 50px -24px rgb(15 30 60 / 0.28);
+    --logo-filter: invert(1) brightness(0.55) contrast(1.15);
+
+    /* Light shades of the Tailwind palette are used as text on dark surfaces.
+       On light surfaces they swap to their deep counterparts for contrast. */
+    --color-red-100: oklch(44.4% 0.177 26.899);
+    --color-red-200: oklch(44.4% 0.177 26.899);
+    --color-red-300: oklch(50.5% 0.213 27.518);
+    --color-red-400: oklch(57.7% 0.245 27.325);
+    --color-emerald-100: oklch(43.2% 0.095 166.913);
+    --color-emerald-200: oklch(43.2% 0.095 166.913);
+    --color-emerald-300: oklch(50.8% 0.118 165.612);
+    --color-emerald-400: oklch(59.6% 0.145 163.225);
+    --color-amber-100: oklch(47.3% 0.137 46.201);
+    --color-amber-200: oklch(47.3% 0.137 46.201);
+    --color-amber-300: oklch(55.5% 0.163 48.998);
+    --color-amber-400: oklch(66.6% 0.179 58.318);
+    --color-cyan-300: oklch(52% 0.105 223.128);
+    --color-cyan-400: oklch(60.9% 0.126 221.723);
+    --color-pink-300: oklch(52.5% 0.223 3.958);
+    --color-pink-400: oklch(59.2% 0.249 0.584);
+    --color-orange-300: oklch(55.3% 0.195 38.402);
+    --color-orange-400: oklch(64.6% 0.222 41.116);
+  }
+
+  html {
     background-color: var(--color-canvas);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    text-rendering: optimizeLegibility;
     -webkit-tap-highlight-color: transparent;
   }
 
   body {
+    margin: 0;
     background-color: var(--color-canvas);
     color: var(--color-fg);
     font-family: var(--font-sans);
@@ -148,9 +337,13 @@
     overflow-x: hidden;
   }
 
+  #root {
+    min-height: 100dvh;
+  }
+
   ::selection {
-    background: rgb(79 134 255 / 0.35);
-    color: #fff;
+    background: color-mix(in oklab, var(--color-brand) 35%, transparent);
+    color: var(--color-fg);
   }
 
   :focus-visible {
@@ -161,14 +354,14 @@
   /* Thin, quiet scrollbars */
   * {
     scrollbar-width: thin;
-    scrollbar-color: #26314d transparent;
+    scrollbar-color: var(--color-line-strong) transparent;
   }
   *::-webkit-scrollbar {
     width: 10px;
     height: 10px;
   }
   *::-webkit-scrollbar-thumb {
-    background: #26314d;
+    background: var(--color-line-strong);
     border-radius: 999px;
     border: 3px solid transparent;
     background-clip: padding-box;
@@ -182,15 +375,22 @@
     opacity: 0.4;
   }
 
+  [data-theme='dark'] input[type='date']::-webkit-calendar-picker-indicator,
+  [data-theme='dark'] input[type='month']::-webkit-calendar-picker-indicator {
+    filter: invert(0.75);
+  }
   input[type='date']::-webkit-calendar-picker-indicator,
   input[type='month']::-webkit-calendar-picker-indicator {
-    filter: invert(0.75);
     cursor: pointer;
   }
 
   button:not(:disabled),
   [role='button']:not([aria-disabled='true']) {
     cursor: pointer;
+  }
+
+  img {
+    -webkit-user-drag: none;
   }
 
   @media (prefers-reduced-motion: no-preference) {
@@ -203,29 +403,48 @@
 /* ==========================================================================
    Utilities
    ========================================================================== */
+
+/* Restrained glass: a translucent panel with a light blur. Low-power devices get a solid surface. */
 @utility glass {
-  background: rgb(12 18 34 / 0.62);
-  backdrop-filter: blur(18px) saturate(140%);
-  -webkit-backdrop-filter: blur(18px) saturate(140%);
-  border: 1px solid rgb(148 163 184 / 0.12);
+  background: color-mix(in oklab, var(--color-panel) 72%, transparent);
+  backdrop-filter: blur(12px) saturate(140%);
+  -webkit-backdrop-filter: blur(12px) saturate(140%);
+  border: 1px solid color-mix(in oklab, var(--color-ink) 12%, transparent);
+  :where(.lite) & {
+    background: color-mix(in oklab, var(--color-panel) 94%, transparent);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
 }
 
 @utility glass-strong {
-  background: rgb(10 15 29 / 0.82);
-  backdrop-filter: blur(20px) saturate(150%);
-  -webkit-backdrop-filter: blur(20px) saturate(150%);
-  border: 1px solid rgb(148 163 184 / 0.14);
+  background: color-mix(in oklab, var(--color-popover) 90%, transparent);
+  backdrop-filter: blur(14px) saturate(150%);
+  -webkit-backdrop-filter: blur(14px) saturate(150%);
+  border: 1px solid color-mix(in oklab, var(--color-ink) 14%, transparent);
+  :where(.lite) & {
+    background: var(--color-popover);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+}
+
+/* Solid elevated surface for floating cards (no backdrop blur — cheap to animate). */
+@utility card-float {
+  background: color-mix(in oklab, var(--color-popover) 94%, transparent);
+  border: 1px solid color-mix(in oklab, var(--color-ink) 11%, transparent);
+  box-shadow: var(--shadow-elevated);
 }
 
 @utility text-gradient {
-  background-image: linear-gradient(100deg, #ffffff 0%, #c9d8ff 38%, #a99bff 72%, #7fe3f5 100%);
+  background-image: var(--grad-hero);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
 }
 
 @utility text-gradient-brand {
-  background-image: linear-gradient(95deg, #7aa6ff 0%, #a68fff 55%, #5fdcf2 100%);
+  background-image: var(--grad-brand);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -233,13 +452,13 @@
 
 @utility bg-grid {
   background-image:
-    linear-gradient(to right, rgb(148 163 184 / 0.06) 1px, transparent 1px),
-    linear-gradient(to bottom, rgb(148 163 184 / 0.06) 1px, transparent 1px);
+    linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
   background-size: 56px 56px;
 }
 
 @utility bg-dots {
-  background-image: radial-gradient(rgb(148 163 184 / 0.16) 1px, transparent 1px);
+  background-image: radial-gradient(var(--dot) 1px, transparent 1px);
   background-size: 18px 18px;
 }
 
@@ -265,20 +484,91 @@
   }
 }
 
+/* Loading placeholder. The shimmer is a background-position animation on a small element. */
 @utility skeleton {
-  background: linear-gradient(90deg, #111a2e 0%, #1a2440 50%, #111a2e 100%);
+  background: linear-gradient(
+    90deg,
+    color-mix(in oklab, var(--color-ink) 5%, transparent) 0%,
+    color-mix(in oklab, var(--color-ink) 10%, transparent) 50%,
+    color-mix(in oklab, var(--color-ink) 5%, transparent) 100%
+  );
   background-size: 200% 100%;
   animation: var(--animate-shimmer);
+  :where(.lite) & {
+    animation: none;
+  }
 }
 
-/* Paper-like surface for rendered sample documents (OCR demo) */
+/* The brand mark is a silver PNG drawn for dark backgrounds; light scopes render it in graphite. */
+@utility logo-mark {
+  filter: var(--logo-filter);
+}
+
+/* Solution accent text: `--sol` on dark, `--sol-ink` (a deeper shade) on light. Set via accentVars(). */
+@utility text-sol {
+  color: var(--sol);
+  :where([data-theme='light']) & {
+    color: var(--sol-ink, var(--sol));
+  }
+}
+
+/* Solution accent for icons/marks: vivid on dark, deep on light. */
+@utility text-sol-accent {
+  color: var(--sol-accent);
+  :where([data-theme='light']) & {
+    color: var(--sol-accent-ink, var(--sol-accent));
+  }
+}
+
+/* Paper-like surface for rendered sample documents (OCR demo) — light in both themes. */
 @utility paper {
   background: #fbfaf7;
   color: #1c1f26;
   box-shadow:
     0 1px 0 rgb(255 255 255 / 0.6) inset,
-    0 24px 48px -16px rgb(0 0 0 / 0.65),
-    0 2px 6px rgb(0 0 0 / 0.35);
+    0 24px 48px -16px rgb(0 0 0 / 0.45),
+    0 2px 6px rgb(0 0 0 / 0.25);
+}
+
+/* Skip rendering work for off-screen homepage sections until they approach the viewport. */
+@utility cv-auto {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 900px;
+}
+
+/* ==========================================================================
+   Reveal-on-scroll (driven by <Reveal/> with a shared IntersectionObserver)
+   Content is only hidden once JS has marked the document as ready, so a slow or
+   failed script never leaves sections invisible.
+   ========================================================================== */
+.js-ready [data-reveal]:not([data-revealed]) {
+  opacity: 0;
+  transform: translateY(var(--reveal-y, 16px));
+}
+.js-ready [data-reveal] {
+  transition:
+    opacity 0.55s cubic-bezier(0.21, 0.47, 0.32, 0.98) var(--reveal-delay, 0s),
+    transform 0.55s cubic-bezier(0.21, 0.47, 0.32, 0.98) var(--reveal-delay, 0s);
+}
+.lite [data-reveal] {
+  opacity: 1 !important;
+  transform: none !important;
+  transition: none !important;
+}
+
+/* Theme switch: suppress per-element colour transitions so the whole page swaps in one frame. */
+.theme-switching,
+.theme-switching * {
+  transition: none !important;
+}
+
+/* Decorative motion is paused while its container is off-screen, and dropped on low-power devices. */
+[data-paused] .motion-decor,
+[data-paused].motion-decor {
+  animation-play-state: paused !important;
+}
+.lite .motion-decor {
+  animation: none !important;
 }
 
 /* ==========================================================================
@@ -292,6 +582,10 @@
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
+  [data-reveal] {
+    opacity: 1 !important;
+    transform: none !important;
+  }
 }
 
 /* Print: keep reports legible */
@@ -299,5 +593,9 @@
   body {
     background: #fff;
     color: #000;
+  }
+  [data-reveal] {
+    opacity: 1 !important;
+    transform: none !important;
   }
 }

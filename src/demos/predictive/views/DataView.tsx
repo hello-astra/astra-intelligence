@@ -73,7 +73,7 @@ export function DataView({ result, format }: PredictiveCtx) {
             </thead>
             <tbody className="divide-y divide-line/60">
               {[...rows].reverse().map((r) => (
-                <tr key={`${r.type}-${r.date}`} className={r.type === 'Forecast' ? 'bg-[#9085e9]/[0.04]' : undefined}>
+                <tr key={`${r.type}-${r.date}`} className={r.type === 'Forecast' ? 'bg-brand/[0.05]' : undefined}>
                   <th scope="row" className="px-3 py-2 text-left font-normal text-fg-2">
                     {r.date}
                   </th>

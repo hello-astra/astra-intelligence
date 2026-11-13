@@ -10,10 +10,11 @@ import { ButtonAnchor, ButtonLink } from '@/components/ui/Button'
 import { INDUSTRY_BY_ID } from '@/data/constants/industries'
 import { SOLUTIONS, getSolution } from '@/data/constants/solutions'
 import { TECH_BY_ID } from '@/data/constants/techStack'
-import { DemoHost } from '@/demos/DemoHost'
+import { DeferredDemoHost } from '@/demos/DemoHost'
 import { useDocumentTitle } from '@/hooks/useDocumentTitle'
 import NotFoundPage from '@/pages/NotFound/NotFoundPage'
 import { contactPath, paths } from '@/routes/paths'
+import { accentVars } from '@/theme/accents'
 
 export default function SolutionDetailPage() {
   const { slug } = useParams()
@@ -45,13 +46,13 @@ export default function SolutionDetailPage() {
           <div className="grid items-center gap-10 lg:grid-cols-[1.05fr_1fr] lg:gap-14">
             <Reveal>
               <div className="flex items-center gap-3">
-                <span className="flex size-12 items-center justify-center rounded-xl ring-1 ring-white/10" style={{ background: `linear-gradient(135deg, ${s.accent}40, ${s.accent}0f)` }}>
-                  <s.icon className="size-6" style={{ color: s.accent }} aria-hidden />
+                <span className="flex size-12 items-center justify-center rounded-xl ring-1 ring-ink/10" style={{ background: `linear-gradient(135deg, ${s.accent}40, ${s.accent}0f)` }}>
+                  <s.icon className="text-sol-accent size-6" style={accentVars(s)} aria-hidden />
                 </span>
                 <Eyebrow>Solution {s.number}</Eyebrow>
               </div>
               <h1 className="mt-6 text-4xl leading-[1.06] font-semibold tracking-[-0.03em] text-balance text-fg sm:text-5xl">{s.name}</h1>
-              <p className="mt-3 text-lg font-medium" style={{ color: s.accent }}>
+              <p className="text-sol mt-3 text-lg font-medium" style={accentVars(s)}>
                 {s.tagline}
               </p>
               <p className="mt-5 max-w-xl text-lg leading-relaxed text-fg-2">{s.description}</p>
@@ -86,8 +87,8 @@ export default function SolutionDetailPage() {
               <Eyebrow>Why businesses need it</Eyebrow>
               <ul className="mt-5 space-y-3">
                 {s.whyItMatters.map((w) => (
-                  <li key={w} className="flex gap-3 rounded-xl border border-white/[0.06] bg-panel/60 p-4 text-[15px] leading-relaxed text-fg-2">
-                    <Target className="mt-1 size-4 shrink-0" style={{ color: s.accent }} aria-hidden />
+                  <li key={w} className="flex gap-3 rounded-xl border border-ink/[0.06] bg-panel/60 p-4 text-[15px] leading-relaxed text-fg-2">
+                    <Target className="text-sol-accent mt-1 size-4 shrink-0" style={accentVars(s)} aria-hidden />
                     {w}
                   </li>
                 ))}
@@ -106,11 +107,11 @@ export default function SolutionDetailPage() {
               What the platform does
             </h2>
           </Reveal>
-          <div className="mt-10 grid gap-px overflow-hidden rounded-2xl border border-white/[0.07] bg-white/[0.06] sm:grid-cols-2 lg:grid-cols-3">
+          <div className="mt-10 grid gap-px overflow-hidden rounded-2xl border border-ink/[0.07] bg-ink/[0.06] sm:grid-cols-2 lg:grid-cols-3">
             {s.capabilities.map((c, i) => (
-              <Reveal key={c.title} delay={(i % 3) * 0.05} className="bg-[#070b16]">
+              <Reveal key={c.title} delay={(i % 3) * 0.05} className="bg-base">
                 <div className="h-full p-6">
-                  <c.icon className="size-5" style={{ color: s.accent }} aria-hidden />
+                  <c.icon className="text-sol-accent size-5" style={accentVars(s)} aria-hidden />
                   <h3 className="mt-4 text-[15px] font-semibold text-fg">{c.title}</h3>
                   <p className="mt-1.5 text-sm leading-relaxed text-fg-3">{c.description}</p>
                 </div>
@@ -135,7 +136,7 @@ export default function SolutionDetailPage() {
               Open full screen
             </ButtonLink>
           </div>
-          <DemoHost demoId={s.demoId} variant="embedded" />
+          <DeferredDemoHost key={s.demoId} demoId={s.demoId} variant="embedded" />
           <ul className="mt-4 flex flex-wrap gap-x-5 gap-y-2 text-xs text-fg-3">
             {s.demo.tryThis.map((t) => (
               <li key={t} className="flex items-center gap-1.5">
@@ -161,7 +162,7 @@ export default function SolutionDetailPage() {
               const industry = INDUSTRY_BY_ID[u.industry]
               return (
                 <Reveal key={u.title} delay={i * 0.05}>
-                  <div className="h-full rounded-2xl border border-white/[0.07] bg-panel/70 p-5">
+                  <div className="h-full rounded-2xl border border-ink/[0.07] bg-panel/70 p-5">
                     <industry.icon className="size-5 text-fg-3" aria-hidden />
                     <p className="mt-4 text-xs text-fg-3">{industry.name}</p>
                     <h3 className="mt-1 text-[15px] font-semibold text-fg">{u.title}</h3>
@@ -177,7 +178,7 @@ export default function SolutionDetailPage() {
       {/* Deliverables */}
       <section className="py-14 sm:py-20" aria-labelledby="deliver-heading">
         <Container>
-          <div className="grid gap-10 rounded-3xl border border-white/[0.08] bg-gradient-to-br from-panel to-[#0a0d22] p-6 sm:p-10 lg:grid-cols-[1.1fr_1fr] lg:gap-14">
+          <div className="grid gap-10 rounded-3xl border border-ink/[0.08] bg-gradient-to-br from-panel to-astra-violet/[0.06] p-6 sm:p-10 lg:grid-cols-[1.1fr_1fr] lg:gap-14">
             <Reveal>
               <Eyebrow>What Astra Intelligence can deliver</Eyebrow>
               <h2 id="deliver-heading" className="mt-4 text-2xl font-semibold tracking-tight text-fg sm:text-3xl">
@@ -196,7 +197,7 @@ export default function SolutionDetailPage() {
               <h3 className="text-xs font-semibold tracking-wide text-fg-3 uppercase">Technologies typically involved</h3>
               <ul className="mt-4 grid grid-cols-2 gap-2">
                 {s.technologies.map((t) => (
-                  <li key={t} className="flex items-center gap-2.5 rounded-xl border border-white/[0.06] bg-white/[0.02] px-3 py-2.5">
+                  <li key={t} className="flex items-center gap-2.5 rounded-xl border border-ink/[0.06] bg-ink/[0.02] px-3 py-2.5">
                     <TechLogo id={t} size={16} />
                     <span className="text-[13px] text-fg-2">{TECH_BY_ID[t].name}</span>
                   </li>
@@ -223,14 +224,14 @@ export default function SolutionDetailPage() {
       />
 
       <Container>
-        <nav aria-label="More solutions" className="grid gap-3 border-t border-white/[0.06] pt-8 sm:grid-cols-2">
-          <Link to={paths.solution(prev.slug)} className="group rounded-xl border border-white/[0.07] p-4 transition-colors hover:border-white/[0.15]">
+        <nav aria-label="More solutions" className="grid gap-3 border-t border-ink/[0.06] pt-8 sm:grid-cols-2">
+          <Link to={paths.solution(prev.slug)} className="group rounded-xl border border-ink/[0.07] p-4 transition-colors hover:border-ink/[0.15]">
             <span className="flex items-center gap-1.5 text-xs text-fg-3">
               <ArrowLeft className="size-3.5 transition-transform group-hover:-translate-x-0.5" /> Previous solution
             </span>
             <span className="mt-1 block text-sm font-medium text-fg">{prev.name}</span>
           </Link>
-          <Link to={paths.solution(next.slug)} className="group rounded-xl border border-white/[0.07] p-4 text-right transition-colors hover:border-white/[0.15]">
+          <Link to={paths.solution(next.slug)} className="group rounded-xl border border-ink/[0.07] p-4 text-right transition-colors hover:border-ink/[0.15]">
             <span className="flex items-center justify-end gap-1.5 text-xs text-fg-3">
               Next solution <ArrowRight className="size-3.5 transition-transform group-hover:translate-x-0.5" />
             </span>

@@ -1,10 +1,10 @@
 import { useState } from 'react'
 import { Link } from 'react-router'
-import { AnimatePresence, motion } from 'framer-motion'
 import { ArrowUpRight, CircleAlert, CircleCheck } from 'lucide-react'
 import { INDUSTRIES } from '@/data/constants/industries'
-import { SOLUTION_BY_SLUG } from '@/data/constants/solutions'
+import { SUMMARY_BY_SLUG as SOLUTION_BY_SLUG } from '@/data/constants/solution-index'
 import { paths } from '@/routes/paths'
+import { accentVars } from '@/theme/accents'
 import type { IndustryId } from '@/types/content'
 import { cn } from '@/utils/cn'
 
@@ -29,8 +29,8 @@ export function IndustryExplorer({ initial = 'banking' }: { initial?: IndustryId
               className={cn(
                 'group relative flex min-h-[112px] flex-col justify-between overflow-hidden rounded-xl border p-3.5 text-left transition-all duration-200',
                 selected
-                  ? 'border-brand/50 bg-gradient-to-br from-brand/15 to-astra-violet/5 shadow-[0_0_0_1px_rgb(79_134_255/0.2)]'
-                  : 'border-white/[0.07] bg-panel/60 hover:border-white/[0.15] hover:bg-white/[0.03]',
+                  ? 'border-brand/50 bg-gradient-to-br from-brand/15 to-astra-violet/5 ring-1 ring-brand/20'
+                  : 'border-ink/[0.07] bg-panel/60 hover:border-ink/[0.15] hover:bg-ink/[0.03]',
               )}
             >
               <industry.icon className={cn('size-5 transition-colors', selected ? 'text-brand-soft' : 'text-fg-3 group-hover:text-fg-2')} aria-hidden />
@@ -44,18 +44,10 @@ export function IndustryExplorer({ initial = 'banking' }: { initial?: IndustryId
         id="industry-panel"
         role="tabpanel"
         aria-labelledby={`industry-tab-${active.id}`}
-        className="relative overflow-hidden rounded-2xl border border-white/[0.08] bg-panel/80 p-6 sm:p-7"
+        className="relative overflow-hidden rounded-2xl border border-ink/[0.08] bg-panel/80 p-6 sm:p-7"
       >
-        <div aria-hidden className="pointer-events-none absolute -right-20 -bottom-24 size-72 rounded-full bg-[radial-gradient(closest-side,rgb(139_116_255/0.16),transparent)]" />
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={active.id}
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -6 }}
-            transition={{ duration: 0.22 }}
-            className="relative"
-          >
+        <div aria-hidden className="pointer-events-none absolute -right-20 -bottom-24 size-72 rounded-full bg-[radial-gradient(closest-side,color-mix(in_oklab,var(--color-astra-violet)_16%,transparent),transparent)]" />
+        <div key={active.id} className="animate-enter relative">
             <div className="flex items-center gap-3">
               <span className="flex size-10 items-center justify-center rounded-xl bg-brand/15 ring-1 ring-brand/25">
                 <active.icon className="size-5 text-brand-soft" aria-hidden />
@@ -91,7 +83,7 @@ export function IndustryExplorer({ initial = 'banking' }: { initial?: IndustryId
               </div>
             </div>
 
-            <div className="mt-7 border-t border-white/[0.06] pt-5">
+            <div className="mt-7 border-t border-ink/[0.06] pt-5">
               <h4 className="text-xs font-semibold tracking-wide text-fg-3 uppercase">Relevant Astra services</h4>
               <ul className="mt-3 flex flex-wrap gap-2">
                 {active.services.map((slug) => {
@@ -100,9 +92,9 @@ export function IndustryExplorer({ initial = 'banking' }: { initial?: IndustryId
                     <li key={slug}>
                       <Link
                         to={paths.solution(slug)}
-                        className="group inline-flex items-center gap-1.5 rounded-lg bg-white/[0.04] px-2.5 py-1.5 text-xs text-fg-2 ring-1 ring-white/[0.08] transition-colors hover:bg-white/[0.08] hover:text-fg"
+                        className="group inline-flex items-center gap-1.5 rounded-lg bg-ink/[0.04] px-2.5 py-1.5 text-xs text-fg-2 ring-1 ring-ink/[0.08] transition-colors hover:bg-ink/[0.08] hover:text-fg"
                       >
-                        <s.icon className="size-3.5" style={{ color: s.accent }} aria-hidden />
+                        <s.icon className="text-sol-accent size-3.5" style={accentVars(s)} aria-hidden />
                         {s.shortName}
                         <ArrowUpRight className="size-3 opacity-50 transition-opacity group-hover:opacity-100" aria-hidden />
                       </Link>
@@ -111,8 +103,7 @@ export function IndustryExplorer({ initial = 'banking' }: { initial?: IndustryId
                 })}
               </ul>
             </div>
-          </motion.div>
-        </AnimatePresence>
+        </div>
       </div>
     </div>
   )

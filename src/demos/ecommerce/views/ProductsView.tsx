@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useMemo, useDeferredValue, useState } from 'react'
 import { LayoutGrid, List, PackageSearch, Plus, Star } from 'lucide-react'
 import { Badge } from '@/components/ui/Badge'
 import { Button } from '@/components/ui/Button'
@@ -19,6 +19,8 @@ type SortKey = 'name' | 'price' | 'stock' | 'margin'
 
 export function ProductsView({ state, openProduct }: CommerceViewProps) {
   const [query, setQuery] = useState('')
+  // Typing stays instant; the filtered list re-renders at low priority (interruptible) behind it.
+  const deferredQuery = useDeferredValue(query)
   const [category, setCategory] = useState<ProductCategory | 'all'>('all')
   const [stock, setStock] = useState<StockLevel | 'all'>('all')
   const [status, setStatus] = useState<Product['status'] | 'all'>('all')
@@ -26,7 +28,7 @@ export function ProductsView({ state, openProduct }: CommerceViewProps) {
   const [sort, setSort] = useState<{ key: SortKey; dir: SortDirection }>({ key: 'name', dir: 'asc' })
 
   const products = useMemo(() => {
-    const q = query.trim().toLowerCase()
+    const q = deferredQuery.trim().toLowerCase()
     const list = state.products.filter(
       (p) =>
         (category === 'all' || p.category === category) &&
@@ -41,7 +43,7 @@ export function ProductsView({ state, openProduct }: CommerceViewProps) {
       const cmp = typeof va === 'string' ? va.localeCompare(String(vb)) : Number(va) - Number(vb)
       return sort.dir === 'asc' ? cmp : -cmp
     })
-  }, [state.products, query, category, stock, status, sort])
+  }, [state.products, deferredQuery, category, stock, status, sort])
 
   const toggleSort = (key: SortKey) => setSort((s) => ({ key, dir: s.key === key && s.dir === 'asc' ? 'desc' : 'asc' }))
 

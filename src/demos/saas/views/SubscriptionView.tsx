@@ -178,7 +178,7 @@ function PlanCard({ plan, cycle, current, currentPrice, onSelect }: { plan: Plan
   return (
     <article className={cn('relative flex flex-col rounded-xl border bg-panel p-4', current ? 'border-brand/60 ring-1 ring-brand/25' : 'border-line')}>
       {plan.id === 'growth' && !current && (
-        <span className="absolute -top-2.5 right-4 rounded-full bg-astra-violet px-2 py-0.5 text-[10px] font-semibold text-white">Most popular</span>
+        <span className="absolute -top-2.5 right-4 rounded-full bg-brand-strong px-2 py-0.5 text-[10px] font-semibold text-on-brand">Most popular</span>
       )}
       <div className="flex items-center justify-between">
         <h3 className="text-sm font-semibold text-fg">{plan.name}</h3>
@@ -195,7 +195,7 @@ function PlanCard({ plan, cycle, current, currentPrice, onSelect }: { plan: Plan
           ['Storage', `${formatNumber(plan.storageGb)} GB`],
           ['Integrations', String(plan.integrations)],
         ].map(([k, v]) => (
-          <div key={k} className="rounded-lg bg-white/[0.03] px-2.5 py-2">
+          <div key={k} className="rounded-lg bg-ink/[0.03] px-2.5 py-2">
             <dt className="text-fg-3">{k}</dt>
             <dd className="mt-0.5 font-medium text-fg">{v}</dd>
           </div>
@@ -251,7 +251,7 @@ function PlanChangeModal({
     >
       {next && check && (
         <div className="space-y-4 text-sm">
-          <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-3 rounded-xl bg-white/[0.03] p-3">
+          <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-3 rounded-xl bg-ink/[0.03] p-3">
             <div>
               <p className="text-xs text-fg-3">From</p>
               <p className="font-medium text-fg">{fromPlan.name}</p>

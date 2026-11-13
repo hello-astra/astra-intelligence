@@ -52,7 +52,7 @@ export function Segmented<T extends string>({
       role="radiogroup"
       aria-label={ariaLabel}
       className={cn(
-        'inline-flex max-w-full items-center gap-0.5 overflow-x-auto rounded-lg bg-white/[0.04] p-0.5 ring-1 ring-white/[0.07] ring-inset scrollbar-none',
+        'inline-flex max-w-full items-center gap-0.5 overflow-x-auto rounded-lg bg-ink/[0.04] p-0.5 ring-1 ring-ink/[0.07] ring-inset scrollbar-none',
         fullWidth && 'flex w-full',
         className,
       )}
@@ -81,8 +81,8 @@ export function Segmented<T extends string>({
               size === 'md' && 'h-8 px-3 text-[13px]',
               fullWidth && 'flex-1',
               active
-                ? 'bg-white/[0.1] text-fg shadow-[inset_0_1px_0_rgb(255_255_255/0.06)]'
-                : 'text-fg-3 hover:bg-white/[0.04] hover:text-fg-2',
+                ? 'bg-ink/[0.1] text-fg shadow-[inset_0_1px_0_rgb(255_255_255/0.06)]'
+                : 'text-fg-3 hover:bg-ink/[0.04] hover:text-fg-2',
               option.disabled && 'cursor-not-allowed opacity-40',
             )}
           >

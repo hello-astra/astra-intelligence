@@ -154,7 +154,7 @@ export function InventoryView({ state, setState, openProduct }: CommerceViewProp
             const inbound = m.change > 0
             return (
               <li key={m.id} className="flex items-center gap-3 py-2 text-[13px] first:pt-0 last:pb-0">
-                <span className={cn('flex size-7 shrink-0 items-center justify-center rounded-lg', inbound ? 'bg-emerald-500/10' : 'bg-white/[0.04]')}>
+                <span className={cn('flex size-7 shrink-0 items-center justify-center rounded-lg', inbound ? 'bg-emerald-500/10' : 'bg-ink/[0.04]')}>
                   {inbound ? <ArrowUpRight className="size-3.5 text-emerald-300" aria-hidden /> : <ArrowDownRight className="size-3.5 text-fg-3" aria-hidden />}
                 </span>
                 <span className="min-w-0 flex-1 truncate text-fg-2">{p?.name ?? 'Removed product'}</span>

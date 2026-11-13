@@ -33,7 +33,7 @@ export function TechStackSection() {
             const items = TECH_STACK.filter((t) => t.category === cat.id)
             return (
               <Reveal key={cat.id} delay={ci * 0.05} className={cn('flex', LAYOUT[cat.id])}>
-                <div className="w-full rounded-2xl border border-white/[0.07] bg-panel/70 p-5">
+                <div className="w-full rounded-2xl border border-ink/[0.07] bg-panel/70 p-5">
                   <div className="flex flex-wrap items-baseline justify-between gap-2">
                     <h3 className="text-sm font-semibold text-fg">{cat.label}</h3>
                     <p className="text-xs text-fg-3">{cat.description}</p>
@@ -43,9 +43,9 @@ export function TechStackSection() {
                       <li
                         key={t.id}
                         title={t.description}
-                        className="group flex flex-col items-start gap-3 rounded-xl border border-white/[0.05] bg-white/[0.02] p-3 transition-colors hover:border-white/[0.12] hover:bg-white/[0.04]"
+                        className="group flex flex-col items-start gap-3 rounded-xl border border-ink/[0.05] bg-ink/[0.02] p-3 transition-colors hover:border-ink/[0.12] hover:bg-ink/[0.04]"
                       >
-                        <span className="flex size-9 items-center justify-center rounded-lg bg-white/[0.04] ring-1 ring-white/[0.06]">
+                        <span className="flex size-9 items-center justify-center rounded-lg bg-ink/[0.04] ring-1 ring-ink/[0.06]">
                           <TechLogo id={t.id} size={18} />
                         </span>
                         <span>

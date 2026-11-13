@@ -33,7 +33,7 @@ export function LabPrinciples({ className }: { className?: string }) {
   return (
     <ul className={cn('flex flex-wrap gap-2', className)}>
       {LAB_PRINCIPLES.map(({ icon: Icon, label }) => (
-        <li key={label} className="inline-flex items-center gap-2 rounded-full bg-white/[0.04] px-3 py-1.5 text-xs text-fg-2 ring-1 ring-white/[0.07]">
+        <li key={label} className="inline-flex items-center gap-2 rounded-full bg-ink/[0.04] px-3 py-1.5 text-xs text-fg-2 ring-1 ring-ink/[0.07]">
           <Icon className="size-3.5 text-astra-cyan" aria-hidden />
           {label}
         </li>
@@ -51,7 +51,7 @@ export function LabGrid({ detailed }: { detailed?: boolean }) {
         </Reveal>
       ))}
       <Reveal delay={0.1} className="flex sm:col-span-2 lg:col-span-2">
-        <div className="relative flex w-full flex-col justify-between overflow-hidden rounded-2xl border border-white/[0.08] bg-gradient-to-br from-[#2f66e8]/25 via-[#7c5cff]/12 to-transparent p-6">
+        <div className="relative flex w-full flex-col justify-between overflow-hidden rounded-2xl border border-ink/[0.08] bg-gradient-to-br from-brand/20 via-astra-violet/10 to-transparent p-6">
           <div aria-hidden className="bg-grid absolute inset-0 opacity-40" />
           <div className="relative">
             <FlaskConical className="size-6 text-astra-cyan" aria-hidden />
@@ -75,8 +75,8 @@ export function LabGrid({ detailed }: { detailed?: boolean }) {
 export function LabShowcase() {
   return (
     <section id="lab" className="relative scroll-mt-20 overflow-x-clip py-20 sm:py-28" aria-label="Interactive Solutions Lab">
-      <div aria-hidden className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
-      <div aria-hidden className="pointer-events-none absolute top-24 left-1/2 h-[480px] w-[900px] -translate-x-1/2 rounded-full bg-[radial-gradient(closest-side,rgb(34_211_238/0.07),transparent)]" />
+      <div aria-hidden className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-ink/10 to-transparent" />
+      <div aria-hidden className="pointer-events-none absolute top-24 left-1/2 h-[480px] w-[900px] -translate-x-1/2 rounded-full bg-[radial-gradient(closest-side,color-mix(in_oklab,var(--color-astra-cyan)_8%,transparent),transparent)]" />
       <Container>
         <SectionHeading
           eyebrow="Interactive Solutions Lab"

@@ -7,7 +7,7 @@ import { REGIONS } from '@/data/mock/analytics'
 import { cn } from '@/utils/cn'
 import { formatINRCompact, formatSignedPercent } from '@/utils/format'
 import { ChartFrame } from '../../shared/Chart'
-import { DEEMPH, SERIES } from '../../shared/chartTheme'
+import { useChartTheme } from '../../shared/demo-theme'
 import { StatTile } from '../../shared/StatTile'
 import type { AnalyticsCtx } from '../context'
 import { byCategory, byRegion, change, KPIS, type ChartType, type Granularity, type KpiKey } from '../engine'
@@ -16,6 +16,7 @@ import { TrendChart } from '../TrendChart'
 const TILE_KPIS: KpiKey[] = ['revenue', 'orders', 'aov', 'margin', 'newCustomers']
 
 export function OverviewView(ctx: AnalyticsCtx) {
+  const { DEEMPH, SERIES } = useChartTheme()
   const { ds, filters, setFilters, range, current, previous, buckets, prevBuckets, gran, openDrilldown } = ctx
   const kpi = filters.kpi
   const compare = filters.compare && range.hasPrevious
@@ -109,7 +110,7 @@ export function OverviewView(ctx: AnalyticsCtx) {
               const growth = c.previous ? change(c.current.revenue, c.previous.revenue) : null
               return (
                 <li key={c.key}>
-                  <button type="button" onClick={() => openDrilldown(c.key)} className="group w-full rounded-lg px-2 py-2 text-left hover:bg-white/[0.03]" aria-label={`Details for ${c.key}`}>
+                  <button type="button" onClick={() => openDrilldown(c.key)} className="group w-full rounded-lg px-2 py-2 text-left hover:bg-ink/[0.03]">
                     <div className="flex items-center gap-2 text-[13px]">
                       <span className={cn('flex-1', highlighted ? 'text-fg' : 'text-fg-3')}>{c.key}</span>
                       {growth !== null && filters.compare && (
@@ -117,8 +118,9 @@ export function OverviewView(ctx: AnalyticsCtx) {
                       )}
                       <span className="w-20 text-right font-medium text-fg tabular-nums">{formatINRCompact(c.current.revenue)}</span>
                       <ChevronRight className="size-3.5 text-fg-4 group-hover:text-fg-2" aria-hidden />
+                      <span className="sr-only">: view details</span>
                     </div>
-                    <div className="mt-1.5 h-1.5 overflow-hidden rounded-full bg-white/[0.04]">
+                    <div className="mt-1.5 h-1.5 overflow-hidden rounded-full bg-ink/[0.04]">
                       <div className="h-full rounded-full transition-[width] duration-500" style={{ width: `${(c.current.revenue / topRevenue) * 100}%`, backgroundColor: highlighted ? SERIES[0] : DEEMPH }} />
                     </div>
                   </button>

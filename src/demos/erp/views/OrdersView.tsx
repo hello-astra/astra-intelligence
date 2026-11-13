@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useMemo, useDeferredValue, useState } from 'react'
 import { ClipboardList, Plus, Truck } from 'lucide-react'
 import { Badge } from '@/components/ui/Badge'
 import { Button } from '@/components/ui/Button'
@@ -22,17 +22,19 @@ export function OrdersView({ state, setState, openPo }: ErpCtx) {
   const toast = useToast()
   const [tab, setTab] = useState<(typeof TABS)[number]>('open')
   const [query, setQuery] = useState('')
+  // Typing stays instant; the filtered list re-renders at low priority (interruptible) behind it.
+  const deferredQuery = useDeferredValue(query)
   const [create, setCreate] = useState(false)
 
   const vendorName = (id: string) => state.vendors.find((v) => v.id === id)?.name ?? '—'
   const rows = useMemo(() => {
     const name = (id: string) => state.vendors.find((v) => v.id === id)?.name ?? ''
-    const q = query.trim().toLowerCase()
+    const q = deferredQuery.trim().toLowerCase()
     return state.purchaseOrders
       .filter((p) => (tab === 'all' ? true : tab === 'open' ? ['draft', 'approved', 'in_transit'].includes(p.status) : p.status === tab))
       .filter((p) => !q || p.id.toLowerCase().includes(q) || name(p.vendorId).toLowerCase().includes(q) || p.items.some((i) => i.name.toLowerCase().includes(q)))
       .sort((a, b) => b.createdAt.localeCompare(a.createdAt))
-  }, [state.purchaseOrders, state.vendors, tab, query])
+  }, [state.purchaseOrders, state.vendors, tab, deferredQuery])
 
   const open = state.purchaseOrders.filter((p) => ['draft', 'approved', 'in_transit'].includes(p.status))
   const late = state.purchaseOrders.filter((p) => poHealth(p) === 'late')

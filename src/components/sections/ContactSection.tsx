@@ -25,6 +25,8 @@ interface ContactSectionProps {
 }
 
 export function ContactSection({ defaultService, consultation, showHeading = true, formKey }: ContactSectionProps) {
+  // Keeps the outline valid: h3 under the section's h2, or h2 when the page hero supplies the h1.
+  const SubHeading = showHeading ? 'h3' : 'h2'
   return (
     <section id="contact" className="relative scroll-mt-20 py-20 sm:py-28" aria-labelledby={showHeading ? 'contact-heading' : undefined} aria-label={showHeading ? undefined : 'Enquiry form'}>
       <Container>
@@ -46,7 +48,7 @@ export function ContactSection({ defaultService, consultation, showHeading = tru
               <div className="space-y-3">
                 <a
                   href={`mailto:${SITE.email}`}
-                  className="group flex items-center gap-4 rounded-xl border border-white/[0.07] bg-panel/70 p-4 transition-colors hover:border-white/[0.15]"
+                  className="group flex items-center gap-4 rounded-xl border border-ink/[0.07] bg-panel/70 p-4 transition-colors hover:border-ink/[0.15]"
                 >
                   <span className="flex size-10 items-center justify-center rounded-lg bg-brand/15 ring-1 ring-brand/25">
                     <Mail className="size-5 text-brand-soft" aria-hidden />
@@ -61,14 +63,14 @@ export function ContactSection({ defaultService, consultation, showHeading = tru
                     href={BOOKING_URL}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="group flex items-center gap-4 rounded-xl border border-white/[0.07] bg-panel/70 p-4 transition-colors hover:border-white/[0.15]"
+                    className="group flex items-center gap-4 rounded-xl border border-ink/[0.07] bg-panel/70 p-4 transition-colors hover:border-ink/[0.15]"
                   >
                     <ConsultationContent />
                   </a>
                 ) : (
                   <Link
                     to={contactPath({ consultation: true })}
-                    className="group flex items-center gap-4 rounded-xl border border-white/[0.07] bg-panel/70 p-4 transition-colors hover:border-white/[0.15]"
+                    className="group flex items-center gap-4 rounded-xl border border-ink/[0.07] bg-panel/70 p-4 transition-colors hover:border-ink/[0.15]"
                   >
                     <ConsultationContent />
                   </Link>
@@ -76,11 +78,11 @@ export function ContactSection({ defaultService, consultation, showHeading = tru
               </div>
 
               <div className="mt-8">
-                <h3 className="text-xs font-semibold tracking-wide text-fg-3 uppercase">What happens next</h3>
+                <SubHeading className="text-xs font-semibold tracking-wide text-fg-3 uppercase">What happens next</SubHeading>
                 <ol className="mt-4 space-y-4">
                   {NEXT_STEPS.map((s, i) => (
                     <li key={s.title} className="flex gap-3">
-                      <span className="flex size-7 shrink-0 items-center justify-center rounded-full bg-white/[0.05] font-mono text-[11px] text-fg-2 ring-1 ring-white/10">
+                      <span className="flex size-7 shrink-0 items-center justify-center rounded-full bg-ink/[0.05] font-mono text-[11px] text-fg-2 ring-1 ring-ink/10">
                         {i + 1}
                       </span>
                       <div>
@@ -101,7 +103,7 @@ export function ContactSection({ defaultService, consultation, showHeading = tru
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label={`Astra Intelligence on ${s.label}`}
-                    className="inline-flex size-9 items-center justify-center rounded-lg text-fg-3 ring-1 ring-white/[0.08] transition-colors hover:bg-white/[0.05] hover:text-fg"
+                    className="inline-flex size-9 items-center justify-center rounded-lg text-fg-3 ring-1 ring-ink/[0.08] transition-colors hover:bg-ink/[0.05] hover:text-fg"
                   >
                     <SocialIcon id={s.id} />
                   </a>
@@ -111,7 +113,7 @@ export function ContactSection({ defaultService, consultation, showHeading = tru
           </div>
 
           <Reveal delay={0.1}>
-            <div id="enquiry" className="scroll-mt-24 rounded-2xl border border-white/[0.08] bg-panel/80 p-5 shadow-[0_40px_120px_-60px_rgb(79_134_255/0.45)] sm:p-8">
+            <div id="enquiry" className="scroll-mt-24 rounded-2xl border border-ink/[0.08] bg-panel/80 p-5 shadow-[0_40px_120px_-60px_rgb(79_134_255/0.45)] sm:p-8">
               <ContactForm key={formKey} defaultService={defaultService} consultation={consultation} />
             </div>
           </Reveal>

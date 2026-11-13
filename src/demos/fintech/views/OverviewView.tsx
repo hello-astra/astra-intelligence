@@ -8,13 +8,15 @@ import { cn } from '@/utils/cn'
 import { fromMonthKey } from '@/utils/dates'
 import { formatDateShort, formatINR, formatINRCompact, formatINRTick, formatMonthShort } from '@/utils/format'
 import { ChartFrame } from '../../shared/Chart'
-import { activeDot, axisProps, BAR_SIZE, barCursor, gridProps, SERIES, yAxisProps } from '../../shared/chartTheme'
+import { BAR_SIZE } from '../../shared/chartTheme'
+import { useChartTheme } from '../../shared/demo-theme'
 import { StatTile } from '../../shared/StatTile'
 import { tooltipRenderer } from '../../shared/tooltip'
 import type { LedgerCtx } from '../context'
 import { budgetRows, currentMonthKey, HEALTH_META, lastMonths, monthTotals } from '../logic'
 
 export function OverviewView({ state, openTransaction, goTo }: LedgerCtx) {
+  const { activeDot, axisProps, barCursor, gridProps, SERIES, yAxisProps, animate } = useChartTheme()
   const months = lastMonths(6)
   const key = currentMonthKey()
   const prevKey = months[months.length - 2]
@@ -98,9 +100,9 @@ export function OverviewView({ state, openTransaction, goTo }: LedgerCtx) {
               <XAxis dataKey="month" {...axisProps} />
               <YAxis {...yAxisProps} tickFormatter={formatINRTick} />
               <Tooltip content={tooltipRenderer((v) => formatINR(v))} cursor={barCursor} />
-              <Bar dataKey="income" name="Income" fill={SERIES[0]} radius={[4, 4, 0, 0]} maxBarSize={BAR_SIZE} />
-              <Bar dataKey="expenses" name="Expenses" fill={SERIES[1]} radius={[4, 4, 0, 0]} maxBarSize={BAR_SIZE} />
-              <Line dataKey="net" name="Net cash flow" stroke={SERIES[2]} strokeWidth={2} dot={{ r: 3, fill: SERIES[2], strokeWidth: 0 }} activeDot={activeDot} />
+              <Bar isAnimationActive={animate} dataKey="income" name="Income" fill={SERIES[0]} radius={[4, 4, 0, 0]} maxBarSize={BAR_SIZE} />
+              <Bar isAnimationActive={animate} dataKey="expenses" name="Expenses" fill={SERIES[1]} radius={[4, 4, 0, 0]} maxBarSize={BAR_SIZE} />
+              <Line isAnimationActive={animate} dataKey="net" name="Net cash flow" stroke={SERIES[2]} strokeWidth={2} dot={{ r: 3, fill: SERIES[2], strokeWidth: 0 }} activeDot={activeDot} />
             </ComposedChart>
           </ResponsiveContainer>
         </ChartFrame>
@@ -113,7 +115,7 @@ export function OverviewView({ state, openTransaction, goTo }: LedgerCtx) {
                   <span className="text-fg-2">{c}</span>
                   <span className="font-medium text-fg tabular-nums">{formatINRCompact(v)}</span>
                 </div>
-                <div className="mt-1 h-1.5 overflow-hidden rounded-full bg-white/[0.04]">
+                <div className="mt-1 h-1.5 overflow-hidden rounded-full bg-ink/[0.04]">
                   <div className="h-full rounded-full" style={{ width: `${(v / (categories[0]?.[1] || 1)) * 100}%`, backgroundColor: SERIES[1] }} />
                 </div>
               </li>
@@ -160,7 +162,7 @@ export function OverviewView({ state, openTransaction, goTo }: LedgerCtx) {
             {state.transactions.slice(0, 6).map((t) => (
               <li key={t.id}>
                 <button type="button" onClick={() => openTransaction(t.id)} className="flex w-full items-center gap-3 py-2 text-left first:pt-0">
-                  <span className={cn('flex size-8 shrink-0 items-center justify-center rounded-lg', t.type === 'income' ? 'bg-emerald-500/10' : 'bg-white/[0.04]')}>
+                  <span className={cn('flex size-8 shrink-0 items-center justify-center rounded-lg', t.type === 'income' ? 'bg-emerald-500/10' : 'bg-ink/[0.04]')}>
                     <Wallet className={cn('size-3.5', t.type === 'income' ? 'text-emerald-300' : 'text-fg-3')} aria-hidden />
                   </span>
                   <span className="min-w-0 flex-1">

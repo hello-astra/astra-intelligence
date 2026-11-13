@@ -9,7 +9,7 @@ export function TechChip({ id, className }: { id: TechId; className?: string }) 
     <span
       title={tech.description}
       className={cn(
-        'inline-flex items-center gap-1.5 rounded-md bg-white/[0.04] px-2 py-1 text-xs text-fg-2 ring-1 ring-white/[0.07] ring-inset',
+        'inline-flex items-center gap-1.5 rounded-md bg-ink/[0.04] px-2 py-1 text-xs text-fg-2 ring-1 ring-ink/[0.07] ring-inset',
         className,
       )}
     >

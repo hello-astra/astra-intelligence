@@ -12,6 +12,7 @@ import { useDocumentTitle } from '@/hooks/useDocumentTitle'
 import { contactPath, paths } from '@/routes/paths'
 import type { Solution } from '@/types/content'
 import { cn } from '@/utils/cn'
+import { accentVars } from '@/theme/accents'
 
 export default function SolutionsPage() {
   useDocumentTitle('Solutions', 'Nine solution areas from Astra Intelligence: SaaS, commerce, dashboards, AI agents, predictive analytics, workspaces, FinTech, ERP and document intelligence.')
@@ -32,9 +33,9 @@ export default function SolutionsPage() {
               <li key={s.slug}>
                 <a
                   href={`#${s.slug}`}
-                  className="inline-flex items-center gap-1.5 rounded-full bg-white/[0.04] px-3 py-1.5 text-xs text-fg-2 ring-1 ring-white/[0.08] transition-colors hover:bg-white/[0.08] hover:text-fg"
+                  className="inline-flex items-center gap-1.5 rounded-full bg-ink/[0.04] px-3 py-1.5 text-xs text-fg-2 ring-1 ring-ink/[0.08] transition-colors hover:bg-ink/[0.08] hover:text-fg"
                 >
-                  <s.icon className="size-3.5" style={{ color: s.accent }} aria-hidden />
+                  <s.icon className="text-sol-accent size-3.5" style={accentVars(s)} aria-hidden />
                   {s.shortName}
                 </a>
               </li>
@@ -59,27 +60,27 @@ function SolutionFeature({ solution: s, reverse }: { solution: Solution; reverse
     <section id={s.slug} className="scroll-mt-24" aria-labelledby={`${s.slug}-title`}>
       <Container>
         <Reveal>
-          <div className="relative overflow-hidden rounded-3xl border border-white/[0.08] bg-panel/70">
+          <div className="relative overflow-hidden rounded-3xl border border-ink/[0.08] bg-panel/70">
             <div
               aria-hidden
-              className={cn('pointer-events-none absolute -top-40 size-[28rem] rounded-full blur-2xl', reverse ? '-left-40' : '-right-40')}
+              className={cn('pointer-events-none absolute -top-40 size-[28rem] rounded-full', reverse ? '-left-40' : '-right-40')}
               style={{ background: `radial-gradient(closest-side, ${s.accent}24, transparent)` }}
             />
             <div className={cn('relative grid gap-8 p-5 sm:p-8 lg:grid-cols-2 lg:gap-12 lg:p-10', reverse && 'lg:[&>*:first-child]:order-2')}>
               <div className="flex min-w-0 flex-col">
                 <div className="flex items-center gap-3">
                   <span
-                    className="flex size-11 items-center justify-center rounded-xl ring-1 ring-white/10"
+                    className="flex size-11 items-center justify-center rounded-xl ring-1 ring-ink/10"
                     style={{ background: `linear-gradient(135deg, ${s.accent}38, ${s.accent}0d)` }}
                   >
-                    <s.icon className="size-5" style={{ color: s.accent }} aria-hidden />
+                    <s.icon className="text-sol-accent size-5" style={accentVars(s)} aria-hidden />
                   </span>
                   <span className="font-mono text-xs text-fg-4">{s.number} / 09</span>
                 </div>
                 <h2 id={`${s.slug}-title`} className="mt-5 text-2xl font-semibold tracking-tight text-fg sm:text-3xl">
                   {s.name}
                 </h2>
-                <p className="mt-2 text-[15px] font-medium" style={{ color: s.accent }}>
+                <p className="text-sol mt-2 text-[15px] font-medium" style={accentVars(s)}>
                   {s.tagline}
                 </p>
                 <p className="mt-4 text-[15px] leading-relaxed text-fg-2">{s.description}</p>

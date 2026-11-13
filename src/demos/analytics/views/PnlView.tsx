@@ -8,13 +8,15 @@ import { cn } from '@/utils/cn'
 import { dateStamp, downloadCSV } from '@/utils/export'
 import { formatINRCompact, formatINRTick } from '@/utils/format'
 import { ChartFrame } from '../../shared/Chart'
-import { activeDot, axisProps, BAR_SIZE, barCursor, gridProps, SERIES, yAxisProps } from '../../shared/chartTheme'
+import { BAR_SIZE } from '../../shared/chartTheme'
+import { useChartTheme } from '../../shared/demo-theme'
 import { StatTile } from '../../shared/StatTile'
 import { tooltipRenderer } from '../../shared/tooltip'
 import type { AnalyticsCtx } from '../context'
 import { monthlyPnl } from '../engine'
 
 export function PnlView({ ds, list, range }: AnalyticsCtx) {
+  const { activeDot, axisProps, barCursor, gridProps, SERIES, yAxisProps, animate } = useChartTheme()
   const toast = useToast()
   const rows = useMemo(() => monthlyPnl(ds, list, range), [ds, list, range])
   const sum = (k: 'revenue' | 'cogs' | 'grossProfit' | 'marketing' | 'fulfilment' | 'overheads' | 'opex' | 'netProfit') => rows.reduce((s, r) => s + r[k], 0)
@@ -72,9 +74,9 @@ export function PnlView({ ds, list, range }: AnalyticsCtx) {
             <XAxis dataKey="label" {...axisProps} tickFormatter={(v: string) => v.replace(' (partial)', '*')} minTickGap={12} />
             <YAxis {...yAxisProps} tickFormatter={formatINRTick} />
             <Tooltip content={tooltipRenderer((v) => formatINRCompact(v))} cursor={barCursor} />
-            <Bar dataKey="revenue" name="Revenue" fill={SERIES[0]} radius={[4, 4, 0, 0]} maxBarSize={BAR_SIZE} />
-            <Bar dataKey="grossProfit" name="Gross profit" fill={SERIES[2]} radius={[4, 4, 0, 0]} maxBarSize={BAR_SIZE} />
-            <Line type="monotone" dataKey="netProfit" name="Net profit" stroke={SERIES[1]} strokeWidth={2} dot={{ r: 3, fill: SERIES[1], strokeWidth: 0 }} activeDot={activeDot} />
+            <Bar isAnimationActive={animate} dataKey="revenue" name="Revenue" fill={SERIES[0]} radius={[4, 4, 0, 0]} maxBarSize={BAR_SIZE} />
+            <Bar isAnimationActive={animate} dataKey="grossProfit" name="Gross profit" fill={SERIES[2]} radius={[4, 4, 0, 0]} maxBarSize={BAR_SIZE} />
+            <Line isAnimationActive={animate} type="monotone" dataKey="netProfit" name="Net profit" stroke={SERIES[1]} strokeWidth={2} dot={{ r: 3, fill: SERIES[1], strokeWidth: 0 }} activeDot={activeDot} />
           </ComposedChart>
         </ResponsiveContainer>
       </ChartFrame>
@@ -102,7 +104,7 @@ export function PnlView({ ds, list, range }: AnalyticsCtx) {
             </thead>
             <tbody className="divide-y divide-line/60">
               {rows.map((r) => (
-                <tr key={r.label} className="hover:bg-white/[0.02]">
+                <tr key={r.label} className="hover:bg-ink/[0.02]">
                   <th scope="row" className="px-3 py-2 text-left font-normal whitespace-nowrap text-fg-2">
                     {r.label}
                   </th>

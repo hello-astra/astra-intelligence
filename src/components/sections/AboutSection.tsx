@@ -10,7 +10,7 @@ export function AboutSection() {
   return (
     <section id="about" className="relative scroll-mt-20 py-20 sm:py-28" aria-labelledby="about-heading">
       <Container>
-        <div className="relative overflow-hidden rounded-3xl border border-white/[0.08] bg-gradient-to-br from-[#0b1430] via-panel to-[#0d0b24] p-6 sm:p-10 lg:p-14">
+        <div className="relative overflow-hidden rounded-3xl border border-ink/[0.08] bg-gradient-to-br from-brand/[0.09] via-panel to-astra-violet/[0.07] p-6 sm:p-10 lg:p-14">
           <div aria-hidden className="bg-grid mask-fade-b absolute inset-0 opacity-50" />
           <div aria-hidden className="absolute -top-32 -left-24 size-96 rounded-full bg-[radial-gradient(closest-side,rgb(79_134_255/0.22),transparent)]" />
           <div className="relative grid gap-12 lg:grid-cols-[1.1fr_1fr]">
@@ -30,7 +30,7 @@ export function AboutSection() {
             </Reveal>
             <div className="flex flex-col gap-4">
               <Reveal delay={0.05}>
-                <div className="rounded-2xl border border-white/[0.08] bg-[#060a16]/70 p-5 backdrop-blur">
+                <div className="rounded-2xl border border-ink/[0.08] bg-base/70 p-5">
                   <div className="flex items-center gap-2 text-xs font-semibold tracking-wide text-astra-cyan-soft uppercase">
                     <Compass className="size-4" aria-hidden /> Mission
                   </div>
@@ -38,7 +38,7 @@ export function AboutSection() {
                 </div>
               </Reveal>
               <Reveal delay={0.1}>
-                <div className="rounded-2xl border border-white/[0.08] bg-[#060a16]/70 p-5 backdrop-blur">
+                <div className="rounded-2xl border border-ink/[0.08] bg-base/70 p-5">
                   <div className="flex items-center gap-2 text-xs font-semibold tracking-wide text-astra-violet-soft uppercase">
                     <Telescope className="size-4" aria-hidden /> Vision
                   </div>
@@ -48,7 +48,7 @@ export function AboutSection() {
               <Reveal delay={0.15}>
                 <ul className="grid grid-cols-2 gap-2">
                   {CORE_VALUES.map((v) => (
-                    <li key={v.title} className="flex items-center gap-2.5 rounded-xl border border-white/[0.06] bg-white/[0.02] px-3 py-2.5">
+                    <li key={v.title} className="flex items-center gap-2.5 rounded-xl border border-ink/[0.06] bg-ink/[0.02] px-3 py-2.5">
                       <v.icon className="size-4 shrink-0 text-brand-soft" aria-hidden />
                       <span className="text-[13px] font-medium text-fg-2">{v.title}</span>
                     </li>

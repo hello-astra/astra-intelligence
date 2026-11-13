@@ -90,7 +90,7 @@ export function ChatView({ state, select, send, typingId, newConversation, escal
                   type="button"
                   onClick={() => select(c.id)}
                   aria-current={c.id === active.id ? 'true' : undefined}
-                  className={cn('mb-1 flex w-full gap-2.5 rounded-lg p-2.5 text-left transition-colors', c.id === active.id ? 'bg-white/[0.07]' : 'hover:bg-white/[0.03]')}
+                  className={cn('mb-1 flex w-full gap-2.5 rounded-lg p-2.5 text-left transition-colors', c.id === active.id ? 'bg-ink/[0.07]' : 'hover:bg-ink/[0.03]')}
                 >
                   <Avatar name={c.customer} size={30} title="" />
                   <span className="min-w-0 flex-1">
@@ -158,7 +158,7 @@ export function ChatView({ state, select, send, typingId, newConversation, escal
                       key={q}
                       type="button"
                       onClick={() => send(active.id, q)}
-                      className="rounded-full bg-white/[0.04] px-3 py-1.5 text-xs text-fg-2 ring-1 ring-brand/30 transition-colors hover:bg-brand/15 hover:text-fg"
+                      className="rounded-full bg-ink/[0.04] px-3 py-1.5 text-xs text-fg-2 ring-1 ring-brand/30 transition-colors hover:bg-brand/15 hover:text-fg"
                     >
                       {q}
                     </button>
@@ -177,7 +177,7 @@ export function ChatView({ state, select, send, typingId, newConversation, escal
                     key={s}
                     type="button"
                     onClick={() => send(active.id, s)}
-                    className="flex items-start gap-2 rounded-xl border border-line bg-white/[0.02] p-2.5 text-left text-xs text-fg-2 transition-colors hover:border-brand/40 hover:bg-white/[0.04] hover:text-fg"
+                    className="flex items-start gap-2 rounded-xl border border-line bg-ink/[0.02] p-2.5 text-left text-xs text-fg-2 transition-colors hover:border-brand/40 hover:bg-ink/[0.04] hover:text-fg"
                   >
                     <Sparkles className="mt-px size-3.5 shrink-0 text-astra-cyan" aria-hidden />
                     {s}
@@ -202,7 +202,7 @@ export function ChatView({ state, select, send, typingId, newConversation, escal
               type="submit"
               disabled={!input.trim() || typing}
               aria-label="Send message"
-              className="inline-flex size-8 items-center justify-center rounded-lg bg-brand-strong text-white transition-opacity disabled:opacity-40"
+              className="inline-flex size-8 items-center justify-center rounded-lg bg-brand-strong text-on-brand transition-opacity disabled:opacity-40"
             >
               <ArrowUp className="size-4" />
             </button>
@@ -263,7 +263,7 @@ function InsightsPanel({
   const entities = Object.entries(insights.entities).filter(([, v]) => v !== undefined && !(Array.isArray(v) && v.length === 0))
 
   return (
-    <aside className="min-h-0 overflow-y-auto border-t border-line bg-[#080d1a]/50 lg:border-t-0 lg:border-l" aria-label="Conversation insights">
+    <aside className="min-h-0 overflow-y-auto border-t border-line bg-chrome/60 lg:border-t-0 lg:border-l" aria-label="Conversation insights">
       <Section title="Conversation">
         <div className="flex flex-wrap gap-2">
           {c.status === 'bot' && (
@@ -317,8 +317,8 @@ function InsightsPanel({
           </Badge>
           <span className="text-xs text-fg-3 tabular-nums">score {sentiment.score.toFixed(2)}</span>
         </div>
-        <div className="relative mt-3 h-1.5 rounded-full bg-gradient-to-r from-[#d03b3b] via-[#5b6886] to-[#0ca30c]" aria-hidden>
-          <span className="absolute top-1/2 size-3 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-[#080d1a] bg-white" style={{ left: `${((sentiment.score + 1) / 2) * 100}%` }} />
+        <div className="relative mt-3 h-1.5 rounded-full bg-gradient-to-r from-critical via-deemph to-good" aria-hidden>
+          <span className="absolute top-1/2 size-3 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-chrome bg-white" style={{ left: `${((sentiment.score + 1) / 2) * 100}%` }} />
         </div>
         <div className="mt-1 flex justify-between text-[10px] text-fg-4">
           <span>Negative</span>
@@ -327,7 +327,7 @@ function InsightsPanel({
         {insights.sentimentHistory.length > 1 && (
           <div className="mt-2">
             <p className="text-[10px] text-fg-4">Trend across customer messages</p>
-            <Sparkline data={insights.sentimentHistory} width={240} height={30} color="#4180f2" className="mt-1 w-full" ariaLabel="Sentiment trend" />
+            <Sparkline data={insights.sentimentHistory} width={240} height={30} color="var(--color-series-1)" className="mt-1 w-full" ariaLabel="Sentiment trend" />
           </div>
         )}
       </Section>
@@ -338,7 +338,7 @@ function InsightsPanel({
         ) : (
           <div className="flex flex-wrap gap-1.5">
             {entities.map(([k, v]) => (
-              <span key={k} className="rounded-md bg-white/[0.05] px-2 py-1 font-mono text-[10.5px] text-fg-2 ring-1 ring-white/[0.07]">
+              <span key={k} className="rounded-md bg-ink/[0.05] px-2 py-1 font-mono text-[10.5px] text-fg-2 ring-1 ring-ink/[0.07]">
                 {k}: {Array.isArray(v) ? v.join(', ') : k === 'amount' ? formatINR(Number(v)) : String(v)}
               </span>
             ))}
@@ -393,7 +393,7 @@ function InsightsPanel({
         ) : (
           <ul className="space-y-2">
             {insights.suggestions.map((s) => (
-              <li key={s} className="rounded-lg border border-line bg-white/[0.02] p-2.5">
+              <li key={s} className="rounded-lg border border-line bg-ink/[0.02] p-2.5">
                 <p className="text-xs leading-relaxed text-fg-2">{s}</p>
                 <button
                   type="button"

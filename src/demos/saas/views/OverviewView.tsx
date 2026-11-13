@@ -8,7 +8,8 @@ import { Panel } from '@/components/ui/Panel'
 import { addDays, startOfDay } from '@/utils/dates'
 import { formatCompact, formatDateShort, formatNumber, formatRelative, formatTick, formatUSD } from '@/utils/format'
 import { ChartFrame } from '../../shared/Chart'
-import { activeDot, axisProps, gridProps, lineCursor, niceMax, SERIES, STATUS, yAxisProps } from '../../shared/chartTheme'
+import { niceMax } from '../../shared/chartTheme'
+import { useChartTheme } from '../../shared/demo-theme'
 import { StatTile } from '../../shared/StatTile'
 import { tooltipRenderer } from '../../shared/tooltip'
 import type { SaasViewProps } from '../context'
@@ -18,6 +19,7 @@ import { activeUsers, mrrOf, PERIOD_DAYS, periodCalls, planOf, seatsUsed } from 
 const KIND_ICON = { user: Users, billing: CreditCard, integration: HeartPulse, security: ShieldCheck, workspace: Activity }
 
 export function OverviewView({ tenant, goTo }: SaasViewProps) {
+  const { activeDot, axisProps, gridProps, lineCursor, SERIES, STATUS, yAxisProps, animate } = useChartTheme()
   const gradientId = useId().replace(/:/g, '')
   const plan = planOf(tenant)
   const calls = periodCalls(tenant)
@@ -111,7 +113,7 @@ export function OverviewView({ tenant, goTo }: SaasViewProps) {
               <YAxis {...yAxisProps} domain={[0, niceMax(Math.max(allowance, ...tenant.dailyCalls))]} tickFormatter={formatTick} />
               <Tooltip content={tooltipRenderer((v) => v.toLocaleString('en-US'))} cursor={lineCursor} />
               <ReferenceLine y={allowance} stroke={STATUS.warning} strokeDasharray="4 4" strokeOpacity={0.8} />
-              <Area type="monotone" dataKey="calls" name="API calls" stroke={SERIES[0]} strokeWidth={2} fill={`url(#${gradientId})`} activeDot={activeDot} />
+              <Area isAnimationActive={animate} type="monotone" dataKey="calls" name="API calls" stroke={SERIES[0]} strokeWidth={2} fill={`url(#${gradientId})`} activeDot={activeDot} />
             </AreaChart>
           </ResponsiveContainer>
         </ChartFrame>
@@ -169,7 +171,7 @@ export function OverviewView({ tenant, goTo }: SaasViewProps) {
             const Icon = KIND_ICON[a.kind]
             return (
               <li key={a.id} className="flex items-start gap-3 py-2.5 first:pt-0 last:pb-0">
-                <span className="mt-0.5 flex size-7 shrink-0 items-center justify-center rounded-lg bg-white/[0.04] ring-1 ring-white/[0.06]">
+                <span className="mt-0.5 flex size-7 shrink-0 items-center justify-center rounded-lg bg-ink/[0.04] ring-1 ring-ink/[0.06]">
                   <Icon className="size-3.5 text-fg-3" aria-hidden />
                 </span>
                 <p className="min-w-0 flex-1 text-[13px] text-fg-2">

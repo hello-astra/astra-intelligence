@@ -2,14 +2,16 @@ import { cn } from '@/utils/cn'
 
 export type MeterTone = 'brand' | 'good' | 'warning' | 'critical' | 'violet' | 'cyan' | 'auto'
 
-// Fill + a lighter step of the same ramp for the track (state reads across the whole bar).
+// Fill + a translucent step of the same colour for the track (state reads across the whole bar).
+// Colours are theme variables, so meters follow each product palette and light/dark mode.
+const tone = (color: string, track = 16) => ({ fill: color, track: `color-mix(in oklab, ${color} ${track}%, transparent)` })
 const toneMap: Record<Exclude<MeterTone, 'auto'>, { fill: string; track: string }> = {
-  brand: { fill: '#4180f2', track: 'rgb(65 128 242 / 0.16)' },
-  good: { fill: '#0ca30c', track: 'rgb(12 163 12 / 0.18)' },
-  warning: { fill: '#fab219', track: 'rgb(250 178 25 / 0.16)' },
-  critical: { fill: '#d03b3b', track: 'rgb(208 59 59 / 0.2)' },
-  violet: { fill: '#9085e9', track: 'rgb(144 133 233 / 0.18)' },
-  cyan: { fill: '#22d3ee', track: 'rgb(34 211 238 / 0.14)' },
+  brand: tone('var(--color-series-1)'),
+  good: tone('var(--color-good)', 18),
+  warning: tone('var(--color-warning)'),
+  critical: tone('var(--color-critical)', 20),
+  violet: tone('var(--color-astra-violet)', 18),
+  cyan: tone('var(--color-astra-cyan)', 14),
 }
 
 interface MeterProps {

@@ -32,7 +32,7 @@ export function OrderCard({ orderId }: { orderId: string }) {
   if (!o) return null
   const step = STEP_INDEX[o.status]
   return (
-    <div className="mt-2 w-full max-w-sm rounded-xl border border-line bg-[#0c1325] p-3">
+    <div className="mt-2 w-full max-w-sm rounded-xl border border-line bg-popover p-3">
       <div className="flex items-center justify-between gap-2">
         <span className="flex items-center gap-1.5 font-mono text-xs text-fg">
           <Package className="size-3.5 text-astra-cyan" aria-hidden /> {o.id}
@@ -55,7 +55,7 @@ export function OrderCard({ orderId }: { orderId: string }) {
       {step >= 0 && (
         <div className="mt-3 flex items-center gap-1" aria-label={`Progress: ${STEPS[step]}`}>
           {STEPS.map((s, i) => (
-            <span key={s} className={cn('h-1 flex-1 rounded-full', i <= step ? 'bg-brand' : 'bg-white/10')} title={s} />
+            <span key={s} className={cn('h-1 flex-1 rounded-full', i <= step ? 'bg-brand' : 'bg-ink/10')} title={s} />
           ))}
         </div>
       )}
@@ -71,7 +71,7 @@ export function OrderCard({ orderId }: { orderId: string }) {
 export function LeadCard({ lead }: { lead: LeadState }) {
   const tone = lead.tier === 'Hot' ? 'red' : lead.tier === 'Warm' ? 'amber' : 'blue'
   return (
-    <div className="mt-2 w-full max-w-sm rounded-xl border border-line bg-[#0c1325] p-3">
+    <div className="mt-2 w-full max-w-sm rounded-xl border border-line bg-popover p-3">
       <div className="flex items-center justify-between">
         <span className="flex items-center gap-1.5 text-xs font-medium text-fg">
           <UserRoundCheck className="size-3.5 text-emerald-300" aria-hidden /> Qualified lead
@@ -116,8 +116,8 @@ export function MessageBubble({ message, lead, children }: { message: ChatMessag
   return (
     <div className={cn('flex gap-2.5', customer && 'flex-row-reverse')}>
       {message.role === 'bot' && (
-        <span className="mt-0.5 flex size-7 shrink-0 items-center justify-center rounded-full bg-[#38bdf8]/15 ring-1 ring-[#38bdf8]/30">
-          <Bot className="size-3.5 text-[#7dd3fc]" aria-hidden />
+        <span className="mt-0.5 flex size-7 shrink-0 items-center justify-center rounded-full bg-brand/15 ring-1 ring-brand/30">
+          <Bot className="size-3.5 text-brand-soft" aria-hidden />
         </span>
       )}
       {message.role === 'agent' && <Avatar name={AGENT_NAME} size={28} className="mt-0.5" />}
@@ -126,7 +126,7 @@ export function MessageBubble({ message, lead, children }: { message: ChatMessag
         <div
           className={cn(
             'rounded-2xl px-3.5 py-2.5 text-[13.5px] leading-relaxed',
-            customer ? 'rounded-br-md bg-brand-strong text-white' : message.role === 'agent' ? 'rounded-bl-md bg-astra-violet/15 text-fg-2 ring-1 ring-astra-violet/25' : 'rounded-bl-md bg-white/[0.06] text-fg-2',
+            customer ? 'rounded-br-md bg-brand-strong text-on-brand' : message.role === 'agent' ? 'rounded-bl-md bg-astra-violet/15 text-fg-2 ring-1 ring-astra-violet/25' : 'rounded-bl-md bg-ink/[0.06] text-fg-2',
           )}
         >
           {customer ? message.text : <RichText text={message.text} />}
@@ -151,10 +151,10 @@ export function MessageBubble({ message, lead, children }: { message: ChatMessag
 export function TypingIndicator({ who = 'Astra Assist' }: { who?: string }) {
   return (
     <div className="flex items-center gap-2.5" role="status" aria-label={`${who} is typing`}>
-      <span className="flex size-7 items-center justify-center rounded-full bg-[#38bdf8]/15 ring-1 ring-[#38bdf8]/30">
-        <Bot className="size-3.5 text-[#7dd3fc]" aria-hidden />
+      <span className="flex size-7 items-center justify-center rounded-full bg-brand/15 ring-1 ring-brand/30">
+        <Bot className="size-3.5 text-brand-soft" aria-hidden />
       </span>
-      <span className="flex gap-1 rounded-2xl rounded-bl-md bg-white/[0.06] px-3.5 py-3">
+      <span className="flex gap-1 rounded-2xl rounded-bl-md bg-ink/[0.06] px-3.5 py-3">
         {[0, 1, 2].map((i) => (
           <span key={i} className="animate-blink size-1.5 rounded-full bg-fg-3" style={{ animationDelay: `${i * 0.18}s` }} />
         ))}

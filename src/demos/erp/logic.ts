@@ -1,12 +1,15 @@
 import type { AttendanceStatus, Employee, ErpState, PayrollLine, PurchaseOrder, ShipmentStatus } from '@/types/erp'
 import { daysInMonth, fromMonthKey, isWeekend, toISODate } from '@/utils/dates'
 
+/** Translucent fill of a theme colour (CSS variables, so codes follow the product theme and mode). */
+const tintOf = (token: string, pct: number) => `color-mix(in oklab, var(${token}) ${pct}%, transparent)`
+
 export const ATTENDANCE_META: Record<AttendanceStatus, { label: string; short: string; color: string; text: string }> = {
-  present: { label: 'Present', short: 'P', color: 'rgb(12 163 12 / 0.22)', text: '#86efac' },
-  wfh: { label: 'Work from home', short: 'W', color: 'rgb(65 128 242 / 0.25)', text: '#9dbcff' },
-  half_day: { label: 'Half day', short: 'H', color: 'rgb(250 178 25 / 0.2)', text: '#fcd34d' },
-  leave: { label: 'Leave', short: 'L', color: 'rgb(144 133 233 / 0.25)', text: '#c4b5fd' },
-  absent: { label: 'Absent', short: 'A', color: 'rgb(208 59 59 / 0.28)', text: '#fca5a5' },
+  present: { label: 'Present', short: 'P', color: tintOf('--color-good', 22), text: 'var(--color-emerald-300)' },
+  wfh: { label: 'Work from home', short: 'W', color: tintOf('--color-brand', 24), text: 'var(--color-brand-soft)' },
+  half_day: { label: 'Half day', short: 'H', color: tintOf('--color-warning', 20), text: 'var(--color-amber-300)' },
+  leave: { label: 'Leave', short: 'L', color: tintOf('--color-accent', 24), text: 'var(--color-accent-soft)' },
+  absent: { label: 'Absent', short: 'A', color: tintOf('--color-critical', 26), text: 'var(--color-red-300)' },
 }
 
 export const ATTENDANCE_ORDER: AttendanceStatus[] = ['present', 'wfh', 'half_day', 'leave', 'absent']

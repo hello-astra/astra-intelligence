@@ -1,5 +1,4 @@
 import { useCallback, useMemo, useRef, useState, type ReactNode } from 'react'
-import { AnimatePresence, motion } from 'framer-motion'
 import { AlertTriangle, CheckCircle2, Info, X, XCircle } from 'lucide-react'
 import { cn } from '@/utils/cn'
 import { ToastContext, type ToastOptions, type ToastTone } from './toast-context'
@@ -43,19 +42,13 @@ export function ToastProvider({ children }: { children: ReactNode }) {
         aria-relevant="additions"
         className="pointer-events-none fixed top-16 left-0 z-[100] flex w-full max-w-sm flex-col gap-2 p-4 sm:top-auto sm:bottom-0 sm:p-6"
       >
-        <AnimatePresence initial={false}>
-          {toasts.map((t) => {
+        {toasts.map((t) => {
             const tone = toneStyles[t.tone ?? 'success']
             const Icon = tone.icon
             return (
-              <motion.div
+              <div
                 key={t.id}
-                layout
-                initial={{ opacity: 0, y: 16, scale: 0.97 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                exit={{ opacity: 0, x: -24, transition: { duration: 0.15 } }}
-                transition={{ type: 'spring', stiffness: 500, damping: 38 }}
-                className="glass-strong pointer-events-auto flex items-start gap-3 rounded-xl p-3.5 shadow-2xl shadow-black/50"
+                className="glass-strong animate-sheet pointer-events-auto flex items-start gap-3 rounded-xl p-3.5 shadow-2xl shadow-black/30"
                 role="status"
               >
                 <Icon className={cn('mt-0.5 size-[18px] shrink-0', tone.className)} aria-hidden />
@@ -66,15 +59,14 @@ export function ToastProvider({ children }: { children: ReactNode }) {
                 <button
                   type="button"
                   onClick={() => dismiss(t.id)}
-                  className="-mt-0.5 -mr-1 inline-flex size-6 items-center justify-center rounded-md text-fg-3 hover:bg-white/[0.08] hover:text-fg"
+                  className="-mt-0.5 -mr-1 inline-flex size-6 items-center justify-center rounded-md text-fg-3 hover:bg-ink/[0.08] hover:text-fg"
                   aria-label="Dismiss notification"
                 >
                   <X className="size-3.5" />
                 </button>
-              </motion.div>
+              </div>
             )
           })}
-        </AnimatePresence>
       </div>
     </ToastContext.Provider>
   )

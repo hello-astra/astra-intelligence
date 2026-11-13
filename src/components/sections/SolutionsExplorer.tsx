@@ -1,5 +1,4 @@
 import { useRef, useState, type KeyboardEvent } from 'react'
-import { AnimatePresence, motion } from 'framer-motion'
 import { ArrowRight, ArrowUpRight, CheckCircle2, FlaskConical, Target } from 'lucide-react'
 import { Container } from '@/components/common/Container'
 import { SectionHeading } from '@/components/common/SectionHeading'
@@ -8,6 +7,8 @@ import { ButtonLink } from '@/components/ui/Button'
 import { INDUSTRY_BY_ID } from '@/data/constants/industries'
 import { SOLUTIONS } from '@/data/constants/solutions'
 import { paths } from '@/routes/paths'
+import { prefetchPath } from '@/routes/route-modules'
+import { accentVars } from '@/theme/accents'
 import { cn } from '@/utils/cn'
 import { SolutionPreview } from './previews/SolutionPreview'
 
@@ -71,22 +72,16 @@ export function SolutionsExplorer() {
                   onKeyDown={onKeyDown}
                   className={cn(
                     'group relative flex shrink-0 items-center gap-3 rounded-xl px-3 py-2.5 text-left transition-colors lg:py-3',
-                    selected ? 'text-fg' : 'text-fg-3 hover:bg-white/[0.03] hover:text-fg-2',
+                    selected ? 'text-fg' : 'text-fg-3 hover:bg-ink/[0.03] hover:text-fg-2',
                   )}
                 >
-                  {selected && (
-                    <motion.span
-                      layoutId="solution-tab-bg"
-                      className="absolute inset-0 rounded-xl border border-white/[0.09] bg-white/[0.045]"
-                      transition={{ type: 'spring', stiffness: 400, damping: 36 }}
-                    />
-                  )}
+                  {selected && <span className="absolute inset-0 rounded-xl border border-ink/[0.09] bg-ink/[0.045]" />}
                   <span className="relative hidden w-6 font-mono text-[11px] text-fg-4 lg:block">{s.number}</span>
                   <span
-                    className="relative flex size-8 shrink-0 items-center justify-center rounded-lg ring-1 ring-white/10 transition-colors"
-                    style={{ background: selected ? `${s.accent}26` : 'rgb(255 255 255 / 0.03)' }}
+                    className={cn('relative flex size-8 shrink-0 items-center justify-center rounded-lg ring-1 ring-ink/10 transition-colors', !selected && 'bg-ink/[0.03]')}
+                    style={selected ? { ...accentVars(s), background: `${s.accent}26` } : undefined}
                   >
-                    <s.icon className="size-4" style={{ color: selected ? s.accent : undefined }} aria-hidden />
+                    <s.icon className={cn('size-4', selected && 'text-sol-accent')} aria-hidden />
                   </span>
                   <span className="relative text-sm font-medium whitespace-nowrap lg:whitespace-normal">{s.shortName}</span>
                   {selected && <ArrowRight className="relative ml-auto hidden size-4 text-fg-3 lg:block" aria-hidden />}
@@ -100,29 +95,23 @@ export function SolutionsExplorer() {
             role="tabpanel"
             id="solution-panel"
             aria-labelledby={`solution-tab-${active.slug}`}
-            className="relative min-h-[560px] overflow-hidden rounded-2xl border border-white/[0.08] bg-panel/80"
+            className="relative min-h-[560px] overflow-hidden rounded-2xl border border-ink/[0.08] bg-panel/80"
+            style={accentVars(active)}
           >
+            {/* A radial gradient is already soft — no blur filter needed (blur forces an expensive offscreen pass). */}
             <div
               aria-hidden
-              className="pointer-events-none absolute -top-40 -right-40 size-96 rounded-full opacity-60 blur-3xl transition-colors duration-700"
-              style={{ background: `radial-gradient(closest-side, ${active.accent}33, transparent)` }}
+              className="pointer-events-none absolute -top-48 -right-48 size-[28rem] rounded-full opacity-70"
+              style={{ background: `radial-gradient(closest-side, ${active.accent}2e, transparent)` }}
             />
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={active.slug}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -6 }}
-                transition={{ duration: 0.25 }}
-                className="relative grid gap-8 p-5 sm:p-7 xl:grid-cols-[1.05fr_1fr]"
-              >
+            <div key={active.slug} className="animate-enter relative grid gap-8 p-5 sm:p-7 xl:grid-cols-[1.05fr_1fr]">
                 <div className="flex min-w-0 flex-col">
                   <div className="flex items-center gap-3">
                     <span className="font-mono text-xs text-fg-4">{active.number} / 09</span>
-                    <span className="h-px flex-1 bg-gradient-to-r from-white/10 to-transparent" />
+                    <span className="h-px flex-1 bg-gradient-to-r from-ink/10 to-transparent" />
                   </div>
                   <h3 className="mt-4 text-2xl font-semibold tracking-tight text-fg">{active.name}</h3>
-                  <p className="mt-1 text-sm font-medium" style={{ color: active.accent }}>
+                  <p className="text-sol mt-1 text-sm font-medium">
                     {active.tagline}
                   </p>
                   <p className="mt-4 text-[15px] leading-relaxed text-fg-2">{active.description}</p>
@@ -153,7 +142,12 @@ export function SolutionsExplorer() {
                   </div>
 
                   <div className="mt-auto flex flex-wrap gap-2.5 pt-8">
-                    <ButtonLink to={paths.demo(active.slug)} leftIcon={<FlaskConical className="size-4" />}>
+                    <ButtonLink
+                      to={paths.demo(active.slug)}
+                      leftIcon={<FlaskConical className="size-4" />}
+                      onMouseEnter={() => prefetchPath(paths.demo(active.slug))}
+                      onFocus={() => prefetchPath(paths.demo(active.slug))}
+                    >
                       Explore Interactive Demo
                     </ButtonLink>
                     <ButtonLink to={paths.solution(active.slug)} variant="secondary" rightIcon={<ArrowUpRight className="size-4" />}>
@@ -178,7 +172,7 @@ export function SolutionsExplorer() {
                     <h4 className="text-xs font-semibold tracking-wide text-fg-3 uppercase">Industry use cases</h4>
                     <ul className="mt-3 grid gap-2 sm:grid-cols-2">
                       {active.useCases.map((u) => (
-                        <li key={u.title} className="rounded-lg border border-white/[0.06] bg-white/[0.02] p-3">
+                        <li key={u.title} className="rounded-lg border border-ink/[0.06] bg-ink/[0.02] p-3">
                           <p className="text-[11px] text-fg-3">{INDUSTRY_BY_ID[u.industry].name}</p>
                           <p className="mt-0.5 text-[13px] font-medium text-fg">{u.title}</p>
                         </li>
@@ -186,8 +180,7 @@ export function SolutionsExplorer() {
                     </ul>
                   </div>
                 </div>
-              </motion.div>
-            </AnimatePresence>
+            </div>
           </div>
         </div>
       </Container>

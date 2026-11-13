@@ -221,10 +221,10 @@ export const CATEGORY_PREFIX: Record<Product['category'], string> = {
   'Home & Living': 'HOM-',
 }
 
-/** Payment-status colors (reserved status palette). */
+/** Payment-status colors (reserved status palette, as theme variables). */
 export const PAYMENT_COLORS: Record<PaymentStatus, string> = {
-  paid: '#0ca30c',
-  pending: '#fab219',
-  failed: '#d03b3b',
-  refunded: '#5b6886',
+  paid: 'var(--color-good)',
+  pending: 'var(--color-warning)',
+  failed: 'var(--color-critical)',
+  refunded: 'var(--color-deemph)',
 }

@@ -36,7 +36,7 @@ export function Slider({
         step={step}
         value={value}
         onChange={(e) => onChange(Number(e.target.value))}
-        className="mt-2 w-full cursor-pointer accent-[#4f86ff]"
+        className="mt-2 w-full cursor-pointer accent-brand"
         aria-describedby={hint ? `${id}-hint` : undefined}
       />
       <div className="mt-0.5 flex justify-between text-[10px] text-fg-4">

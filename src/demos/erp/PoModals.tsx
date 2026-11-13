@@ -120,7 +120,7 @@ export function PoDetailModal({ poId, state, onClose, onChange }: { poId: string
             <div className="flex items-center gap-1" aria-label={`Shipment progress: ${SHIPMENT_LABEL[po.shipment.status]}`}>
               {SHIPMENT_STEPS.map((s, i) => (
                 <div key={s} className="flex flex-1 flex-col gap-1.5">
-                  <span className={cn('h-1.5 rounded-full', i <= currentStep ? (po.shipment.status === 'delayed' && i === currentStep ? 'bg-red-400' : 'bg-brand') : 'bg-white/10')} />
+                  <span className={cn('h-1.5 rounded-full', i <= currentStep ? (po.shipment.status === 'delayed' && i === currentStep ? 'bg-red-400' : 'bg-brand') : 'bg-ink/10')} />
                   <span className={cn('text-[10px]', i <= currentStep ? 'text-fg-2' : 'text-fg-4')}>{SHIPMENT_LABEL[s]}</span>
                 </div>
               ))}
@@ -129,7 +129,7 @@ export function PoDetailModal({ poId, state, onClose, onChange }: { poId: string
 
           <div className="overflow-hidden rounded-xl border border-line">
             <table className="w-full text-left">
-              <thead className="bg-white/[0.02] text-[11px] tracking-wide text-fg-3 uppercase">
+              <thead className="bg-ink/[0.02] text-[11px] tracking-wide text-fg-3 uppercase">
                 <tr>
                   <th className="px-3 py-2 font-medium">Item</th>
                   <th className="px-3 py-2 text-right font-medium">Qty</th>
@@ -150,7 +150,7 @@ export function PoDetailModal({ poId, state, onClose, onChange }: { poId: string
                 ))}
               </tbody>
             </table>
-            <div className="flex justify-between border-t border-line bg-white/[0.015] px-3 py-2.5 font-semibold text-fg">
+            <div className="flex justify-between border-t border-line bg-ink/[0.015] px-3 py-2.5 font-semibold text-fg">
               <span>Total (excl. GST)</span>
               <span className="tabular-nums">{formatINR(po.total)}</span>
             </div>
@@ -162,7 +162,7 @@ export function PoDetailModal({ poId, state, onClose, onChange }: { poId: string
               <ol className="mt-3 space-y-3 border-l border-line-strong pl-4">
                 {[...po.shipment.events].reverse().map((e, i) => (
                   <li key={`${e.at}-${i}`} className="relative">
-                    <span className={cn('absolute top-1.5 -left-[21px] size-2.5 rounded-full ring-4 ring-[#0b1122]', e.status === 'delayed' ? 'bg-red-400' : 'bg-brand')} aria-hidden />
+                    <span className={cn('absolute top-1.5 -left-[21px] size-2.5 rounded-full ring-4 ring-popover', e.status === 'delayed' ? 'bg-red-400' : 'bg-brand')} aria-hidden />
                     <p className="text-fg">{SHIPMENT_LABEL[e.status]}</p>
                     <p className="flex items-center gap-1 text-xs text-fg-3">
                       <MapPin className="size-3" aria-hidden /> {e.location} · {formatDateTime(e.at)}

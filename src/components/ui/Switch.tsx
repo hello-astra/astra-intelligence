@@ -26,7 +26,7 @@ export function Switch({ checked, onChange, label, hideLabel, disabled, classNam
         className={cn(
           'relative inline-flex shrink-0 items-center rounded-full transition-colors',
           size === 'sm' ? 'h-4 w-7' : 'h-5 w-9',
-          checked ? 'bg-brand-strong' : 'bg-white/[0.12]',
+          checked ? 'bg-brand-strong' : 'bg-ink/[0.12]',
         )}
       >
         <span

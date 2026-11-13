@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useDeferredValue, useMemo, useState } from 'react'
 import { ListTodo } from 'lucide-react'
 import { Avatar } from '@/components/ui/Avatar'
 import { EmptyState } from '@/components/ui/EmptyState'
@@ -17,8 +17,9 @@ export function ListView(ctx: CollabCtx) {
   const [statusFilter, setStatusFilter] = useState<TaskStatus | 'all' | 'open'>('open')
   const [sort, setSort] = useState<{ key: SortKey; dir: SortDirection }>({ key: 'dueDate', dir: 'asc' })
 
+  const deferredFilters = useDeferredValue(filters)
   const rows = useMemo(() => {
-    const list = visibleTasks(state, filters).filter((t) => (statusFilter === 'all' ? true : statusFilter === 'open' ? t.status !== 'done' : t.status === statusFilter))
+    const list = visibleTasks(state, deferredFilters).filter((t) => (statusFilter === 'all' ? true : statusFilter === 'open' ? t.status !== 'done' : t.status === statusFilter))
     const value = (t: Task): string | number =>
       sort.key === 'priority' ? PRIORITY_META[t.priority].rank : sort.key === 'status' ? STATUSES.indexOf(t.status) : sort.key === 'dueDate' ? (t.dueDate ?? '9999') : t[sort.key]
     return [...list].sort((a, b) => {
@@ -27,7 +28,7 @@ export function ListView(ctx: CollabCtx) {
       const cmp = typeof va === 'number' && typeof vb === 'number' ? va - vb : String(va).localeCompare(String(vb), undefined, { numeric: true })
       return sort.dir === 'asc' ? cmp : -cmp
     })
-  }, [state, filters, statusFilter, sort])
+  }, [state, deferredFilters, statusFilter, sort])
 
   const toggle = (key: SortKey) => setSort((s) => ({ key, dir: s.key === key && s.dir === 'asc' ? 'desc' : 'asc' }))
   const patch = (id: string, p: Partial<Task>) => setState((s) => updateTask(s, id, p))

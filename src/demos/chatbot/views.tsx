@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useMemo, useDeferredValue, useState } from 'react'
 import { Bot, Headset, MessagesSquare, Package, ShieldCheck, Smile, UserRoundCheck } from 'lucide-react'
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 import { Avatar } from '@/components/ui/Avatar'
@@ -14,7 +14,8 @@ import type { ConversationCategory, IntentId } from '@/services/ai/types'
 import type { ChatbotState, ConversationStatus } from '@/types/chatbot'
 import { formatINR, formatRelative } from '@/utils/format'
 import { ChartFrame } from '../shared/Chart'
-import { axisProps, BAR_SIZE, barCursor, gridProps, SERIES, STATUS } from '../shared/chartTheme'
+import { BAR_SIZE } from '../shared/chartTheme'
+import { useChartTheme } from '../shared/demo-theme'
 import { StatTile } from '../shared/StatTile'
 import { tooltipRenderer } from '../shared/tooltip'
 import { RichText } from './parts'
@@ -22,15 +23,17 @@ import { STATUS_META } from './status'
 
 export function ConversationsView({ state, open }: { state: ChatbotState; open: (id: string) => void }) {
   const [query, setQuery] = useState('')
+  // Typing stays instant; the filtered list re-renders at low priority (interruptible) behind it.
+  const deferredQuery = useDeferredValue(query)
   const [category, setCategory] = useState<ConversationCategory | 'all'>('all')
   const [status, setStatus] = useState<ConversationStatus | 'all'>('all')
   const rows = useMemo(() => {
-    const q = query.trim().toLowerCase()
+    const q = deferredQuery.trim().toLowerCase()
     return [...state.conversations]
       .filter((c) => (category === 'all' || c.category === category) && (status === 'all' || c.status === status))
       .filter((c) => !q || c.customer.toLowerCase().includes(q) || c.messages.some((m) => m.text.toLowerCase().includes(q)))
       .sort((a, b) => b.updatedAt.localeCompare(a.updatedAt))
-  }, [state.conversations, query, category, status])
+  }, [state.conversations, deferredQuery, category, status])
 
   return (
     <div className="space-y-4">
@@ -91,6 +94,7 @@ export function ConversationsView({ state, open }: { state: ChatbotState; open: 
 }
 
 export function ChatAnalyticsView({ state }: { state: ChatbotState }) {
+  const { axisProps, barCursor, gridProps, SERIES, STATUS, animate } = useChartTheme()
   const convs = state.conversations.filter((c) => c.messages.some((m) => m.role === 'customer'))
   const customerMsgs = convs.flatMap((c) => c.messages.filter((m) => m.role === 'customer'))
   const escalated = convs.filter((c) => c.status === 'escalated' || c.insights.escalationReason).length
@@ -134,7 +138,7 @@ export function ChatAnalyticsView({ state }: { state: ChatbotState }) {
               <XAxis type="number" {...axisProps} allowDecimals={false} />
               <YAxis type="category" dataKey="intent" {...axisProps} axisLine={false} width={150} />
               <Tooltip content={tooltipRenderer((v) => `${v} message${v === 1 ? '' : 's'}`)} cursor={barCursor} />
-              <Bar dataKey="count" name="Messages" fill={SERIES[0]} radius={[0, 4, 4, 0]} maxBarSize={BAR_SIZE} />
+              <Bar isAnimationActive={animate} dataKey="count" name="Messages" fill={SERIES[0]} radius={[0, 4, 4, 0]} maxBarSize={BAR_SIZE} />
             </BarChart>
           </ResponsiveContainer>
         </ChartFrame>

@@ -1,4 +1,4 @@
-import { useState, type ReactNode } from 'react'
+import { useDeferredValue, useState, type ReactNode } from 'react'
 import { BarChart3, Table2 } from 'lucide-react'
 import { Segmented } from '@/components/ui/Segmented'
 import { cn } from '@/utils/cn'
@@ -36,14 +36,14 @@ export function ChartTooltip({ active, payload, label, valueFormatter, labelForm
   if (rows.length === 0) return null
   const labelText = label === undefined || label === null ? '' : String(label)
   return (
-    <div className="min-w-[140px] rounded-lg border border-line-strong bg-[#0c1325]/95 px-3 py-2 shadow-xl shadow-black/40 backdrop-blur">
+    <div className="min-w-[140px] rounded-lg border border-line-strong bg-popover px-3 py-2 shadow-xl shadow-black/30">
       {labelText && <p className="mb-1.5 text-[11px] text-fg-3">{labelFormatter ? labelFormatter(labelText) : labelText}</p>}
       <ul className="space-y-1">
         {rows.map((p, i) => {
           const name = String(p.name ?? p.dataKey ?? '')
           const raw = p.value
           const value = Array.isArray(raw) ? raw.map(Number) : Number(raw)
-          const color = [p.color, p.stroke, p.fill].find((c) => c && c !== 'transparent' && c !== 'none') ?? '#4180f2'
+          const color = [p.color, p.stroke, p.fill].find((c) => c && c !== 'transparent' && c !== 'none') ?? 'var(--color-series-1)'
           const text = Array.isArray(value)
             ? value.map((v) => (valueFormatter ? valueFormatter(v, name) : v.toLocaleString('en-IN'))).join(' – ')
             : valueFormatter
@@ -119,6 +119,10 @@ interface ChartFrameProps {
 
 export function ChartFrame({ title, description, actions, legend, height = 260, children, table, className, footer, busy }: ChartFrameProps) {
   const [mode, setMode] = useState<'chart' | 'table'>('chart')
+  // The chart itself renders in a second, low-priority pass (React time-slices it and
+  // yields to input). Opening a demo or switching views paints the frame at once and
+  // stays responsive on slow CPUs; the placeholder has the chart's exact height.
+  const chartReady = useDeferredValue(true, false)
   return (
     <figure className={cn('min-w-0 rounded-xl border border-line bg-panel', className)}>
       <figcaption className="flex flex-wrap items-start justify-between gap-x-3 gap-y-2 px-4 pt-3.5">
@@ -146,7 +150,7 @@ export function ChartFrame({ title, description, actions, legend, height = 260, 
       <div className="px-2 pt-3 pb-3 sm:px-3">
         {mode === 'chart' || !table ? (
           <div style={{ height }} className={cn('w-full transition-opacity', busy && 'opacity-50')}>
-            {children}
+            {chartReady ? children : <div className="skeleton h-full w-full rounded-lg opacity-60" aria-hidden />}
           </div>
         ) : (
           <div className="overflow-auto px-1" style={{ maxHeight: Math.max(height, 220) }}>

@@ -2,9 +2,7 @@ import {
   Activity,
   BadgeCheck,
   Bell,
-  Bot,
   Boxes,
-  BrainCircuit,
   Building2,
   CalendarClock,
   ChartColumnBig,
@@ -23,10 +21,8 @@ import {
   Globe,
   Headset,
   Layers,
-  LayoutDashboard,
   ListChecks,
   MessagesSquare,
-  Network,
   Package,
   PanelsTopLeft,
   PiggyBank,
@@ -34,7 +30,6 @@ import {
   Receipt,
   ScanText,
   ShieldCheck,
-  ShoppingCart,
   Sparkles,
   SquareKanban,
   Tags,
@@ -46,20 +41,19 @@ import {
   Webhook,
   Workflow,
 } from 'lucide-react'
-import type { Solution, SolutionSlug } from '@/types/content'
+import type { Solution, SolutionSlug, SolutionSummary } from '@/types/content'
+import { SOLUTION_INDEX } from './solution-index'
 
-export const SOLUTIONS: Solution[] = [
+/** Long-form page content; identity fields (name, icon, colours…) come from ./solution-index.ts. */
+type SolutionContent = Pick<Solution, 'slug' | 'description' | 'whatItIs' | 'whyItMatters' | 'capabilities' | 'problemsSolved' | 'technologies' | 'useCases' | 'deliverables'> & {
+  demo: Pick<Solution['demo'], 'summary' | 'tryThis' | 'simulated'>
+}
+
+const CONTENT: SolutionContent[] = [
   {
     slug: 'saas-development',
-    demoId: 'saas',
-    number: '01',
-    name: 'Custom SaaS Development',
-    shortName: 'SaaS Development',
-    tagline: 'Multi-tenant platforms engineered to grow with your customers.',
     description:
       'Cloud-native SaaS products with tenant isolation, role-based access, subscription billing, usage metering and public APIs — built as a scalable foundation for your product.',
-    icon: Layers,
-    accent: '#4f86ff',
     whatItIs:
       'Custom SaaS development covers the full lifecycle of a subscription software product: multi-tenant architecture, authentication and authorization, plans and billing, usage metering, admin consoles and public APIs. We engineer the platform foundations so your team can focus on the features customers pay for.',
     whyItMatters: [
@@ -98,8 +92,6 @@ export const SOLUTIONS: Solution[] = [
       'CI/CD pipeline, cloud deployment and monitoring',
     ],
     demo: {
-      productName: 'Astra Console',
-      category: 'SaaS administration',
       summary: 'A multi-tenant admin console with organizations, users and roles, subscription plans, usage metering and API integrations.',
       tryThis: [
         'Switch between Acme Technologies, Nova Retail and Vertex Solutions',
@@ -112,15 +104,8 @@ export const SOLUTIONS: Solution[] = [
   },
   {
     slug: 'ecommerce-inventory',
-    demoId: 'ecommerce',
-    number: '02',
-    name: 'E-commerce & Inventory Management',
-    shortName: 'E-commerce & Inventory',
-    tagline: 'Storefronts and back-office systems that stay in sync.',
     description:
       'Online stores connected to real-time inventory, order workflows, customer records and payment status — so what you sell is always what you have.',
-    icon: ShoppingCart,
-    accent: '#22d3ee',
     whatItIs:
       'We build commerce platforms where the customer-facing storefront and the operational back office share one source of truth: catalog, stock levels, orders, customers and payments. Every order reserves inventory, updates analytics and moves through a defined fulfilment workflow.',
     whyItMatters: [
@@ -159,8 +144,6 @@ export const SOLUTIONS: Solution[] = [
       'Migration from existing catalogs and spreadsheets',
     ],
     demo: {
-      productName: 'Astra Commerce',
-      category: 'Commerce operations',
       summary: 'A storefront and admin back office sharing one dataset: catalog, inventory, orders, customers, payments and sales analytics.',
       tryThis: [
         'Place a simulated order from the storefront and watch stock and sales update',
@@ -173,15 +156,8 @@ export const SOLUTIONS: Solution[] = [
   },
   {
     slug: 'business-dashboards',
-    demoId: 'analytics',
-    number: '03',
-    name: 'Smart Business Dashboards',
-    shortName: 'Business Dashboards',
-    tagline: 'Decision-ready analytics across every part of your business.',
     description:
       'Interactive BI dashboards that unify sales, finance, customer and operational data into KPIs your teams can filter, explore and act on.',
-    icon: LayoutDashboard,
-    accent: '#8b74ff',
     whatItIs:
       'Smart dashboards connect your data sources — databases, spreadsheets, CRMs and ERPs — into a consistent data model and present it as interactive, filterable views. Leaders see KPIs at a glance, analysts drill into detail, and everyone works from the same numbers.',
     whyItMatters: [
@@ -220,8 +196,6 @@ export const SOLUTIONS: Solution[] = [
       'Documentation and handover',
     ],
     demo: {
-      productName: 'Astra Insights',
-      category: 'Business intelligence',
       summary: 'A BI dashboard over a sample retail dataset with date, region and category filters, switchable chart types, P&L and CSV export.',
       tryThis: [
         'Change the date range and filter by region or category',
@@ -234,15 +208,8 @@ export const SOLUTIONS: Solution[] = [
   },
   {
     slug: 'ai-chatbots',
-    demoId: 'chatbot',
-    number: '04',
-    name: 'AI Chatbots & Customer Agents',
-    shortName: 'AI Chatbots & Agents',
-    tagline: 'Conversational agents that resolve, qualify and escalate.',
     description:
       'AI assistants for support and sales that understand intent, answer from your knowledge base, qualify leads and hand off to people with full context.',
-    icon: Bot,
-    accent: '#38bdf8',
     whatItIs:
       'An AI customer agent is a conversational interface connected to your business knowledge and systems — order data, policies, product catalogs and CRM. It identifies what the customer wants, responds with grounded answers, captures leads and escalates to your team when a person is needed.',
     whyItMatters: [
@@ -281,8 +248,6 @@ export const SOLUTIONS: Solution[] = [
       'Guardrails, logging and evaluation',
     ],
     demo: {
-      productName: 'Astra Assist',
-      category: 'Customer support AI',
       summary: 'A support console with a simulated AI agent: intent detection, sentiment, order lookups, lead qualification and human escalation.',
       tryThis: [
         'Ask "Where is my order ORD-10482?"',
@@ -298,15 +263,8 @@ export const SOLUTIONS: Solution[] = [
   },
   {
     slug: 'predictive-analytics',
-    demoId: 'predictive',
-    number: '05',
-    name: 'AI-Powered Predictive Analytics',
-    shortName: 'Predictive Analytics',
-    tagline: 'Forecasts and early warnings grounded in your history.',
     description:
       'Statistical and machine-learning models that forecast revenue and demand, surface anomalies and turn patterns into planning recommendations.',
-    icon: BrainCircuit,
-    accent: '#a78bfa',
     whatItIs:
       'Predictive analytics uses historical data to estimate what is likely to happen next — sales, demand, cash flow, churn — with explicit uncertainty. We build the data pipelines, models and interfaces that turn forecasts into planning decisions, and we measure model accuracy honestly.',
     whyItMatters: [
@@ -345,8 +303,6 @@ export const SOLUTIONS: Solution[] = [
       'Retraining and monitoring pipeline',
     ],
     demo: {
-      productName: 'Astra Foresight',
-      category: 'Forecasting & insights',
       summary: 'Forecast sample business datasets with real statistical models (Holt-Winters, regression), backtests, anomaly detection and scenario inputs.',
       tryThis: [
         'Choose a dataset and forecast horizon',
@@ -362,15 +318,8 @@ export const SOLUTIONS: Solution[] = [
   },
   {
     slug: 'collaborative-workspace',
-    demoId: 'collaboration',
-    number: '06',
-    name: 'Collaborative Workspace Solutions',
-    shortName: 'Collaborative Workspaces',
-    tagline: 'Shared workspaces that keep teams, tasks and documents aligned.',
     description:
       'Custom project and collaboration platforms with Kanban workflows, assignments, deadlines, activity tracking and shared documents.',
-    icon: SquareKanban,
-    accent: '#2dd4bf',
     whatItIs:
       'Collaborative workspaces bring projects, tasks, people and documents into one structured environment designed around how your teams actually work — your stages, your approval rules and your reporting needs.',
     whyItMatters: [
@@ -409,8 +358,6 @@ export const SOLUTIONS: Solution[] = [
       'Data import from existing tools',
     ],
     demo: {
-      productName: 'Astra Workspace',
-      category: 'Project collaboration',
       summary: 'A project workspace with Kanban boards, task assignment, priorities, deadlines, team workload, activity and shared documents.',
       tryThis: [
         'Drag a task across the Kanban board',
@@ -423,15 +370,8 @@ export const SOLUTIONS: Solution[] = [
   },
   {
     slug: 'fintech-automation',
-    demoId: 'fintech',
-    number: '07',
-    name: 'FinTech & Expense Automation',
-    shortName: 'FinTech & Expenses',
-    tagline: 'Automated money workflows with complete visibility.',
     description:
       'Financial platforms that capture transactions, categorize spend automatically, enforce budgets and generate reports in real time.',
-    icon: Wallet,
-    accent: '#60a5fa',
     whatItIs:
       'FinTech and expense automation replaces manual bookkeeping steps — collecting transactions, categorizing spend, checking budgets, reconciling and reporting — with software that runs continuously and flags only what needs a human decision.',
     whyItMatters: [
@@ -470,8 +410,6 @@ export const SOLUTIONS: Solution[] = [
       'Security review and compliance-ready architecture',
     ],
     demo: {
-      productName: 'Astra Ledger',
-      category: 'Finance automation',
       summary: 'A finance dashboard in INR with transactions, AI-assisted categorization, budgets, savings and monthly reports.',
       tryThis: [
         'Add a transaction and edit its category',
@@ -487,15 +425,8 @@ export const SOLUTIONS: Solution[] = [
   },
   {
     slug: 'erp-automation',
-    demoId: 'erp',
-    number: '08',
-    name: 'ERP & Enterprise Automation',
-    shortName: 'ERP & Automation',
-    tagline: 'One operational backbone for people, purchasing and supply chain.',
     description:
       'Integrated ERP modules for HR, attendance, payroll, procurement, vendors and logistics — connected by automated workflows.',
-    icon: Network,
-    accent: '#818cf8',
     whatItIs:
       'Enterprise resource planning connects the core operations of an organization in a single system. We build modular ERPs — or extend existing ones — with automation that removes re-keying between HR, finance, procurement and supply chain.',
     whyItMatters: [
@@ -534,8 +465,6 @@ export const SOLUTIONS: Solution[] = [
       'Operational dashboards and reports',
     ],
     demo: {
-      productName: 'Astra ERP',
-      category: 'Enterprise operations',
       summary: 'An integrated ERP with employees, attendance, simulated payroll, departments, purchase orders, shipments and vendors.',
       tryThis: [
         'Add an employee and update their details',
@@ -548,15 +477,8 @@ export const SOLUTIONS: Solution[] = [
   },
   {
     slug: 'document-intelligence',
-    demoId: 'ocr',
-    number: '09',
-    name: 'OCR & Document Intelligence',
-    shortName: 'Document Intelligence',
-    tagline: 'Turn documents into structured, validated data.',
     description:
       'Document pipelines that read receipts, invoices and forms, extract the fields you need and validate them before they reach your systems.',
-    icon: ScanText,
-    accent: '#67e8f9',
     whatItIs:
       'Document intelligence combines optical character recognition with layout analysis and validation rules to convert scanned or photographed documents into structured data — merchant, dates, amounts, tax and line items — ready for your accounting or ERP system.',
     whyItMatters: [
@@ -595,8 +517,6 @@ export const SOLUTIONS: Solution[] = [
       'Accuracy measurement on your own documents',
     ],
     demo: {
-      productName: 'Astra DocIQ',
-      category: 'Document processing',
       summary: 'Process sample receipts and invoices: simulated scanning, field and line-item extraction, validation, corrections and CSV/JSON export.',
       tryThis: [
         'Process a sample receipt or invoice',
@@ -612,6 +532,15 @@ export const SOLUTIONS: Solution[] = [
   },
 ]
 
+const CONTENT_BY_SLUG = Object.fromEntries(CONTENT.map((c) => [c.slug, c])) as Record<SolutionSlug, SolutionContent>
+
+const withContent = (summary: SolutionSummary): Solution => {
+  const content = CONTENT_BY_SLUG[summary.slug]
+  return { ...summary, ...content, demo: { ...summary.demo, ...content.demo } }
+}
+
+export const SOLUTIONS: Solution[] = SOLUTION_INDEX.map(withContent)
+
 export const SOLUTION_BY_SLUG: Record<SolutionSlug, Solution> = Object.fromEntries(
   SOLUTIONS.map((s) => [s.slug, s]),
 ) as Record<SolutionSlug, Solution>
@@ -620,6 +549,4 @@ export function getSolution(slug: string | undefined): Solution | undefined {
   return SOLUTIONS.find((s) => s.slug === slug)
 }
 
-export function isSolutionSlug(value: string | null | undefined): value is SolutionSlug {
-  return SOLUTIONS.some((s) => s.slug === value)
-}
+export { isSolutionSlug } from './solution-index'

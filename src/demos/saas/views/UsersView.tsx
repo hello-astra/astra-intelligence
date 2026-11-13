@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState, type FormEvent } from 'react'
+import { useEffect, useMemo, useDeferredValue, useState, type FormEvent } from 'react'
 import { Check, Mail, MoreHorizontal, ShieldCheck, ShieldOff, UserMinus, UserPlus, UserRoundCheck, UserX, Users, X } from 'lucide-react'
 import { Avatar } from '@/components/ui/Avatar'
 import { Badge } from '@/components/ui/Badge'
@@ -28,6 +28,8 @@ const STATUS_BADGE = {
 export function UsersView({ tenant, updateTenant, goTo, intent, clearIntent }: SaasViewProps) {
   const toast = useToast()
   const [query, setQuery] = useState('')
+  // Typing stays instant; the filtered list re-renders at low priority (interruptible) behind it.
+  const deferredQuery = useDeferredValue(query)
   const [roleFilter, setRoleFilter] = useState<Role | 'all'>('all')
   // Opens straight away when arriving from the overview's "Invite user" quick action.
   const [inviteOpen, setInviteOpen] = useState(() => intent === 'invite')
@@ -42,11 +44,11 @@ export function UsersView({ tenant, updateTenant, goTo, intent, clearIntent }: S
   const seatsFull = seats >= plan.seats
 
   const users = useMemo(() => {
-    const q = query.trim().toLowerCase()
+    const q = deferredQuery.trim().toLowerCase()
     return tenant.users.filter(
       (u) => (roleFilter === 'all' || u.role === roleFilter) && (!q || u.name.toLowerCase().includes(q) || u.email.toLowerCase().includes(q)),
     )
-  }, [tenant.users, query, roleFilter])
+  }, [tenant.users, deferredQuery, roleFilter])
 
   const patchUser = (id: string, patch: Partial<TenantUser>, activity: string, kind: 'user' | 'security' = 'user') => {
     updateTenant((t) => withActivity({ ...t, users: t.users.map((u) => (u.id === id ? { ...u, ...patch } : u)) }, activity, kind))
@@ -191,7 +193,7 @@ export function UsersView({ tenant, updateTenant, goTo, intent, clearIntent }: S
                       <Dropdown
                         ariaLabel={`Actions for ${u.name}`}
                         align="end"
-                        buttonClassName="inline-flex size-8 items-center justify-center rounded-lg text-fg-3 hover:bg-white/[0.06] hover:text-fg"
+                        buttonClassName="inline-flex size-8 items-center justify-center rounded-lg text-fg-3 hover:bg-ink/[0.06] hover:text-fg"
                         buttonContent={<MoreHorizontal className="size-4" />}
                         items={[
                           ...(u.status === 'invited'

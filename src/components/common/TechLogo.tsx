@@ -31,14 +31,15 @@ type LogoDef = { kind: 'brand'; path: string; color: string } | { kind: 'icon'; 
 
 // Brand marks from Simple Icons (CC0). Brands whose marks are not distributed
 // there (OpenAI, AWS) and generic concepts use neutral icons instead of copies.
+// White marks and concept icons use theme variables so they stay visible in light mode.
 const LOGOS: Record<TechId, LogoDef> = {
   react: { kind: 'brand', path: pathOf(reactSvg), color: '#61DAFB' },
-  nextjs: { kind: 'brand', path: pathOf(nextSvg), color: '#FFFFFF' },
+  nextjs: { kind: 'brand', path: pathOf(nextSvg), color: 'var(--color-fg)' },
   typescript: { kind: 'brand', path: pathOf(tsSvg), color: '#3178C6' },
   javascript: { kind: 'brand', path: pathOf(jsSvg), color: '#F7DF1E' },
   tailwind: { kind: 'brand', path: pathOf(tailwindSvg), color: '#06B6D4' },
   nodejs: { kind: 'brand', path: pathOf(nodeSvg), color: '#5FA04E' },
-  express: { kind: 'brand', path: pathOf(expressSvg), color: '#FFFFFF' },
+  express: { kind: 'brand', path: pathOf(expressSvg), color: 'var(--color-fg)' },
   python: { kind: 'brand', path: pathOf(pythonSvg), color: '#4B8BBE' },
   fastapi: { kind: 'brand', path: pathOf(fastapiSvg), color: '#009688' },
   django: { kind: 'brand', path: pathOf(djangoSvg), color: '#44B78B' },
@@ -46,20 +47,20 @@ const LOGOS: Record<TechId, LogoDef> = {
   postgresql: { kind: 'brand', path: pathOf(postgresSvg), color: '#6B8FE8' },
   mysql: { kind: 'brand', path: pathOf(mysqlSvg), color: '#5D8FC2' },
   redis: { kind: 'brand', path: pathOf(redisSvg), color: '#FF4438' },
-  openai: { kind: 'icon', icon: Sparkles, color: '#E8EDF7' },
-  llm: { kind: 'icon', icon: Bot, color: '#9DBCFF' },
-  ml: { kind: 'icon', icon: BrainCircuit, color: '#C4B5FD' },
-  predictive: { kind: 'icon', icon: ChartSpline, color: '#67E8F9' },
-  dataviz: { kind: 'icon', icon: ChartColumnBig, color: '#9DBCFF' },
-  ocr: { kind: 'icon', icon: ScanText, color: '#67E8F9' },
+  openai: { kind: 'icon', icon: Sparkles, color: 'var(--color-fg)' },
+  llm: { kind: 'icon', icon: Bot, color: 'var(--color-brand-soft)' },
+  ml: { kind: 'icon', icon: BrainCircuit, color: 'var(--color-astra-violet-soft)' },
+  predictive: { kind: 'icon', icon: ChartSpline, color: 'var(--color-astra-cyan-soft)' },
+  dataviz: { kind: 'icon', icon: ChartColumnBig, color: 'var(--color-brand-soft)' },
+  ocr: { kind: 'icon', icon: ScanText, color: 'var(--color-astra-cyan-soft)' },
   docker: { kind: 'brand', path: pathOf(dockerSvg), color: '#2496ED' },
   aws: { kind: 'icon', icon: Cloud, color: '#FF9900' },
-  vercel: { kind: 'brand', path: pathOf(vercelSvg), color: '#FFFFFF' },
+  vercel: { kind: 'brand', path: pathOf(vercelSvg), color: 'var(--color-fg)' },
   git: { kind: 'brand', path: pathOf(gitSvg), color: '#F05032' },
-  cicd: { kind: 'icon', icon: GitMerge, color: '#9DBCFF' },
-  kafka: { kind: 'brand', path: pathOf(kafkaSvg), color: '#FFFFFF' },
+  cicd: { kind: 'icon', icon: GitMerge, color: 'var(--color-brand-soft)' },
+  kafka: { kind: 'brand', path: pathOf(kafkaSvg), color: 'var(--color-fg)' },
   n8n: { kind: 'brand', path: pathOf(n8nSvg), color: '#EA4B71' },
-  rest: { kind: 'icon', icon: Braces, color: '#C4B5FD' },
+  rest: { kind: 'icon', icon: Braces, color: 'var(--color-astra-violet-soft)' },
 }
 
 interface TechLogoProps {
@@ -76,7 +77,7 @@ export function TechLogo({ id, size = 20, tone = 'brand', className, title }: Te
   const color = tone === 'brand' ? def.color : 'currentColor'
   if (def.kind === 'icon') {
     const Icon = def.icon
-    return <Icon size={size} color={color} strokeWidth={1.75} className={cn('shrink-0', className)} aria-hidden={!title} aria-label={title} />
+    return <Icon size={size} strokeWidth={1.75} className={cn('shrink-0', className)} style={{ color }} aria-hidden={!title} aria-label={title} />
   }
   return (
     <svg
@@ -88,7 +89,7 @@ export function TechLogo({ id, size = 20, tone = 'brand', className, title }: Te
       aria-label={title}
       aria-hidden={title ? undefined : true}
     >
-      <path d={def.path} fill={color} />
+      <path d={def.path} style={{ fill: color }} />
     </svg>
   )
 }

@@ -7,11 +7,12 @@ import { Table, TBody, TD, TH, THead, TR } from '@/components/ui/Table'
 import { Slider } from '@/components/ui/Slider'
 import { cn } from '@/utils/cn'
 import { ChartFrame } from '../../shared/Chart'
-import { activeDot, axisProps, CHART, DEEMPH, gridProps, lineCursor, SERIES, STATUS, yAxisProps } from '../../shared/chartTheme'
+import { useChartTheme } from '../../shared/demo-theme'
 import { tooltipRenderer } from '../../shared/tooltip'
 import { tickFormatter, type PredictiveCtx } from '../shared'
 
 export function AnomaliesView(ctx: PredictiveCtx) {
+  const { activeDot, axisProps, CHART, DEEMPH, gridProps, lineCursor, SERIES, STATUS, yAxisProps } = useChartTheme()
   const { result, config, setConfig, format } = ctx
   const ds = result.dataset
   const data = useMemo(() => ds.points.map((p, i) => ({ i, label: p.label, actual: p.value, expected: Math.round(result.expected[i]) })), [ds, result.expected])

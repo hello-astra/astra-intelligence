@@ -1,10 +1,9 @@
 import { useId, useMemo, useState, type FormEvent } from 'react'
-import { AnimatePresence, motion } from 'framer-motion'
 import { AlertTriangle, ArrowRight, CalendarCheck, CheckCircle2, Info, Mail, RotateCcw } from 'lucide-react'
 import { Button, ButtonAnchor } from '@/components/ui/Button'
 import { Checkbox, Field, Input, Select, Textarea } from '@/components/ui/Form'
 import { SITE } from '@/data/constants/site'
-import { SOLUTIONS, isSolutionSlug } from '@/data/constants/solutions'
+import { SOLUTION_INDEX as SOLUTIONS, isSolutionSlug } from '@/data/constants/solution-index'
 import { buildEnquiryMailto, contactMode, submitEnquiry, type Enquiry, type SubmitResult } from '@/services/contactService'
 import { cn } from '@/utils/cn'
 
@@ -152,14 +151,10 @@ export function ContactForm({ defaultService, consultation = false, className }:
 
   return (
     <div className={cn('relative', className)}>
-      <AnimatePresence mode="wait" initial={false}>
-        {status === 'success' && result && lastEnquiry ? (
-          <motion.div
+      {status === 'success' && result && lastEnquiry ? (
+          <div
             key="success"
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0 }}
-            className="flex flex-col items-start"
+            className="animate-enter flex flex-col items-start"
             role="status"
             aria-live="polite"
           >
@@ -197,13 +192,10 @@ export function ContactForm({ defaultService, consultation = false, className }:
             <Button variant="ghost" size="sm" className="mt-6" leftIcon={<RotateCcw className="size-3.5" />} onClick={reset}>
               Send another enquiry
             </Button>
-          </motion.div>
+          </div>
         ) : (
-          <motion.form
+          <form
             key="form"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
             noValidate
             onSubmit={onSubmit}
             aria-describedby={`${id}-mode`}
@@ -369,9 +361,8 @@ export function ContactForm({ defaultService, consultation = false, className }:
                 {status === 'submitting' ? 'Sending…' : 'Let’s Build Something Intelligent'}
               </Button>
             </div>
-          </motion.form>
+          </form>
         )}
-      </AnimatePresence>
     </div>
   )
 }

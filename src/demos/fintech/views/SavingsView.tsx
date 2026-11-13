@@ -12,17 +12,20 @@ import { diffInDays, fromISODate, fromMonthKey, isoDateFromToday, startOfDay } f
 import { formatDate, formatINR, formatINRCompact, formatINRTick, formatMonthShort } from '@/utils/format'
 import { uid } from '@/utils/id'
 import { ChartFrame } from '../../shared/Chart'
-import { axisProps, BAR_SIZE, barCursor, CHART, gridProps, yAxisProps } from '../../shared/chartTheme'
+import { BAR_SIZE } from '../../shared/chartTheme'
+import { useChartTheme } from '../../shared/demo-theme'
 import { StatTile } from '../../shared/StatTile'
 import { tooltipRenderer } from '../../shared/tooltip'
 import type { LedgerCtx } from '../context'
 import { lastMonths, monthTotals } from '../logic'
 
 // Diverging pair for polarity (surplus vs deficit).
-const POSITIVE = '#3987e5'
-const NEGATIVE = '#e66767'
 
 export function SavingsView({ state, setState }: LedgerCtx) {
+  const { axisProps, barCursor, CHART, gridProps, yAxisProps, SERIES, STATUS, animate } = useChartTheme()
+  // Surplus in the product colour, deficit in the reserved 'critical' status colour.
+  const POSITIVE = SERIES[0]
+  const NEGATIVE = STATUS.critical
   const toast = useToast()
   const [amounts, setAmounts] = useState<Record<string, string>>({})
   const [newGoal, setNewGoal] = useState(false)
@@ -124,7 +127,7 @@ export function SavingsView({ state, setState }: LedgerCtx) {
               <YAxis {...yAxisProps} tickFormatter={formatINRTick} />
               <Tooltip content={tooltipRenderer((v) => formatINR(v))} cursor={barCursor} />
               <ReferenceLine y={0} stroke={CHART.axis} />
-              <Bar dataKey="net" name="Net cash flow" maxBarSize={BAR_SIZE} radius={[4, 4, 0, 0]}>
+              <Bar isAnimationActive={animate} dataKey="net" name="Net cash flow" maxBarSize={BAR_SIZE} radius={[4, 4, 0, 0]}>
                 {net.map((m) => (
                   <Cell key={m.month} fill={m.net >= 0 ? POSITIVE : NEGATIVE} />
                 ))}

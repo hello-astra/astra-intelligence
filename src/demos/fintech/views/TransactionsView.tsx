@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useMemo, useDeferredValue, useState } from 'react'
 import { Download, Plus, Receipt, Sparkles } from 'lucide-react'
 import { Badge } from '@/components/ui/Badge'
 import { Button } from '@/components/ui/Button'
@@ -19,6 +19,8 @@ const PAGE = 60
 
 export function TransactionsView({ state, setState, openTransaction }: LedgerCtx) {
   const [query, setQuery] = useState('')
+  // Typing stays instant; the filtered list re-renders at low priority (interruptible) behind it.
+  const deferredQuery = useDeferredValue(query)
   const [month, setMonth] = useState<string>('all')
   const [type, setType] = useState<TxnType | 'all'>('all')
   const [category, setCategory] = useState<Category | 'all'>('all')
@@ -27,7 +29,7 @@ export function TransactionsView({ state, setState, openTransaction }: LedgerCtx
   const months = lastMonths(6).reverse()
 
   const rows = useMemo(() => {
-    const q = query.trim().toLowerCase()
+    const q = deferredQuery.trim().toLowerCase()
     return state.transactions.filter(
       (t) =>
         (month === 'all' || t.date.startsWith(month)) &&
@@ -36,7 +38,7 @@ export function TransactionsView({ state, setState, openTransaction }: LedgerCtx
         (method === 'all' || t.method === method) &&
         (!q || t.description.toLowerCase().includes(q) || t.merchant.toLowerCase().includes(q) || (t.notes ?? '').toLowerCase().includes(q)),
     )
-  }, [state.transactions, query, month, type, category, method])
+  }, [state.transactions, deferredQuery, month, type, category, method])
 
   const totalIn = rows.filter((t) => t.type === 'income').reduce((s, t) => s + t.amount, 0)
   const totalOut = rows.filter((t) => t.type === 'expense').reduce((s, t) => s + t.amount, 0)

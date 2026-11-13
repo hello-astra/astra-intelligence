@@ -1,6 +1,7 @@
-import { useEffect, useRef, useState, type ReactNode } from 'react'
+import { startTransition, useEffect, useOptimistic, useRef, useState, type CSSProperties, type ReactNode } from 'react'
 import { FlaskConical, Info, MousePointerClick, RotateCcw, ShieldCheck } from 'lucide-react'
 import { TechChip } from '@/components/common/TechChip'
+import { ThemeToggle } from '@/components/common/ThemeToggle'
 import { Button } from '@/components/ui/Button'
 import { Modal } from '@/components/ui/Modal'
 import { Tooltip } from '@/components/ui/Tooltip'
@@ -8,6 +9,8 @@ import { useToast } from '@/components/ui/toast-context'
 import type { Solution } from '@/types/content'
 import { cn } from '@/utils/cn'
 import { useDemoFrame, type DemoView } from './demo-context'
+import { useDemoTheme } from './demo-theme'
+import { ThemePicker } from './ThemePicker'
 
 interface DemoShellProps<V extends string> {
   solution: Solution
@@ -63,13 +66,21 @@ export function DemoShell<V extends string>({
   const [confirmReset, setConfirmReset] = useState(false)
   const contentRef = useRef<HTMLDivElement>(null)
   const rootRef = useRef<HTMLDivElement>(null)
+  // 'contrast' templates render the sidebar as its own dark scope, even in light mode.
+  const sidebar = useDemoTheme()?.theme.sidebar
 
   useEffect(() => {
     contentRef.current?.scrollTo({ top: 0 })
   }, [activeView])
 
+  // The highlighted tab moves immediately (optimistic); the new view renders in a
+  // transition, so the click paints at once even when a large table has to render.
+  const [shownView, setShownView] = useOptimistic(activeView)
   const changeView = (view: V) => {
-    onViewChange(view)
+    startTransition(() => {
+      setShownView(view)
+      onViewChange(view)
+    })
     // On small screens the shell is not internally scrolled — bring the content into view.
     if (window.innerWidth < 1024 && rootRef.current) {
       const top = rootRef.current.getBoundingClientRect().top + window.scrollY - 72
@@ -89,28 +100,29 @@ export function DemoShell<V extends string>({
     <div
       ref={rootRef}
       className={cn(
-        'relative flex flex-col overflow-hidden rounded-2xl border border-white/[0.09] bg-base text-left shadow-[0_40px_120px_-50px_rgb(0_0_0/0.9)]',
+        'relative flex flex-col overflow-hidden rounded-2xl border border-ink/[0.09] bg-base text-left shadow-[0_40px_120px_-50px_rgb(0_0_0/0.75)] light:shadow-[0_30px_80px_-40px_rgb(15_30_60/0.3)]',
         variant === 'full' ? 'lg:h-[calc(100dvh-148px)] lg:min-h-[640px]' : 'lg:h-[780px]',
       )}
       data-demo={solution.demoId}
     >
+      {/* Product accent line */}
+      <div aria-hidden className="h-0.5 shrink-0 bg-gradient-to-r from-brand via-accent to-transparent" />
       {/* Top bar */}
-      <div className="flex flex-wrap items-center gap-x-3 gap-y-2 border-b border-line bg-[#080d1a] px-3 py-2.5 sm:px-4">
+      <div className="flex flex-wrap items-center gap-x-3 gap-y-2 border-b border-line bg-chrome px-3 py-2.5 sm:px-4">
         <div className="flex min-w-0 items-center gap-2.5">
-          <span
-            className="flex size-8 shrink-0 items-center justify-center rounded-lg ring-1 ring-white/10"
-            style={{ background: `linear-gradient(135deg, ${solution.accent}40, ${solution.accent}12)` }}
-          >
-            <Icon className="size-4" style={{ color: solution.accent }} aria-hidden />
+          <span className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-brand/30 to-brand/5 ring-1 ring-brand/25">
+            <Icon className="size-4 text-brand-soft" aria-hidden />
           </span>
           <div className="min-w-0 leading-tight">
-            <p className="truncate text-sm font-semibold text-fg">{solution.demo.productName}</p>
+            <h2 className="truncate text-sm font-semibold text-fg">{solution.demo.productName}</h2>
             <p className="truncate text-[11px] text-fg-3">{solution.demo.category}</p>
           </div>
         </div>
         <div className="order-3 flex w-full min-w-0 items-center gap-2 sm:order-none sm:w-auto sm:flex-1 sm:justify-end">{toolbar}</div>
         <div className="ml-auto flex items-center gap-1.5 sm:ml-0">
           <DemoEnvironmentBadge onClick={() => setInfoOpen(true)} />
+          <ThemePicker />
+          <ThemeToggle size="sm" />
           <Button variant="ghost" size="sm" onClick={() => setInfoOpen(true)} aria-label="About this demo" className="px-2">
             <Info className="size-4" />
             <span className="hidden xl:inline">About</span>
@@ -126,11 +138,13 @@ export function DemoShell<V extends string>({
         {/* Navigation */}
         <nav
           aria-label={`${solution.demo.productName} sections`}
-          className="flex shrink-0 flex-col border-b border-line bg-[#080d1a]/60 lg:w-52 lg:border-r lg:border-b-0"
+          data-theme={sidebar?.mode}
+          style={sidebar?.vars as CSSProperties | undefined}
+          className="flex shrink-0 flex-col border-b border-line bg-chrome text-fg lg:w-52 lg:border-r lg:border-b-0"
         >
           <ul className="scrollbar-none flex gap-1 overflow-x-auto p-2 lg:flex-col lg:overflow-visible lg:p-3">
             {views.map((view) => {
-              const active = view.id === activeView
+              const active = view.id === shownView
               const ViewIcon = view.icon
               return (
                 <li key={view.id} className="shrink-0">
@@ -139,14 +153,16 @@ export function DemoShell<V extends string>({
                     onClick={() => changeView(view.id)}
                     aria-current={active ? 'page' : undefined}
                     className={cn(
-                      'flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2 text-[13px] font-medium whitespace-nowrap transition-colors',
-                      active ? 'bg-white/[0.07] text-fg' : 'text-fg-3 hover:bg-white/[0.04] hover:text-fg-2',
+                      'relative flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2 text-[13px] font-medium whitespace-nowrap transition-colors',
+                      active ? 'bg-brand/[0.14] text-fg ring-1 ring-brand/20 ring-inset' : 'text-fg-3 hover:bg-ink/[0.05] hover:text-fg-2',
                     )}
                   >
                     <ViewIcon className={cn('size-4 shrink-0', active && 'text-brand-soft')} aria-hidden />
                     {view.label}
                     {view.badge !== undefined && view.badge !== 0 && (
-                      <span className="ml-auto rounded-full bg-white/[0.08] px-1.5 py-px text-[10px] text-fg-2 tabular-nums">{view.badge}</span>
+                      <span className={cn('ml-auto rounded-full px-1.5 py-px text-[10px] tabular-nums', active ? 'bg-brand-strong text-on-brand' : 'bg-ink/[0.08] text-fg-2')}>
+                        {view.badge}
+                      </span>
                     )}
                   </button>
                 </li>

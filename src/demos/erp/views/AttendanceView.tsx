@@ -74,7 +74,7 @@ export function AttendanceView({ state, setState }: ErpCtx) {
             {ATTENDANCE_META[s].label} · {n}
           </span>
         ))}
-        <span className="inline-flex items-center rounded-lg bg-white/[0.04] px-2.5 py-1.5 text-xs text-fg-3">Not marked · {unmarked}</span>
+        <span className="inline-flex items-center rounded-lg bg-ink/[0.04] px-2.5 py-1.5 text-xs text-fg-3">Not marked · {unmarked}</span>
         <span className="ml-auto self-center text-xs text-fg-3">Today’s figures for the selected department</span>
       </div>
 
@@ -99,7 +99,7 @@ export function AttendanceView({ state, setState }: ErpCtx) {
             </thead>
             <tbody className="divide-y divide-line/60">
               {people.map((p) => (
-                <tr key={p.id} className="hover:bg-white/[0.015]">
+                <tr key={p.id} className="hover:bg-ink/[0.015]">
                   <th scope="row" className="sticky left-0 z-10 bg-panel px-3 py-1.5 text-left font-normal">
                     <span className="block text-[13px] text-fg">{p.name}</span>
                     <span className="block text-[10px] text-fg-4">{p.designation}</span>

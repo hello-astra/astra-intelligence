@@ -1,16 +1,19 @@
 import { BrowserRouter } from 'react-router'
-import { MotionConfig } from 'framer-motion'
+import { AppErrorBoundary } from '@/components/layout/ErrorBoundary'
 import { ToastProvider } from '@/components/ui/Toast'
 import { AppRoutes } from '@/routes/AppRoutes'
+import { ColorModeProvider } from '@/theme/ColorModeProvider'
 
 export default function App() {
   return (
-    <MotionConfig reducedMotion="user">
-      <ToastProvider>
-        <BrowserRouter>
-          <AppRoutes />
-        </BrowserRouter>
-      </ToastProvider>
-    </MotionConfig>
+    <AppErrorBoundary>
+      <ColorModeProvider>
+        <ToastProvider>
+          <BrowserRouter>
+            <AppRoutes />
+          </BrowserRouter>
+        </ToastProvider>
+      </ColorModeProvider>
+    </AppErrorBoundary>
   )
 }

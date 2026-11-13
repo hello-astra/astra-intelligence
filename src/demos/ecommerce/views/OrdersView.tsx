@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useMemo, useDeferredValue, useState } from 'react'
 import { Download, ReceiptText } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
 import { EmptyState } from '@/components/ui/EmptyState'
@@ -17,6 +17,8 @@ const TABS: (OrderStatus | 'all')[] = ['all', 'pending', 'processing', 'shipped'
 export function OrdersView({ state, openOrder }: CommerceViewProps) {
   const [tab, setTab] = useState<OrderStatus | 'all'>('all')
   const [query, setQuery] = useState('')
+  // Typing stays instant; the filtered list re-renders at low priority (interruptible) behind it.
+  const deferredQuery = useDeferredValue(query)
   const customers = useMemo(() => new Map(state.customers.map((c) => [c.id, c])), [state.customers])
 
   const counts = useMemo(() => {
@@ -26,14 +28,14 @@ export function OrdersView({ state, openOrder }: CommerceViewProps) {
   }, [state.orders])
 
   const orders = useMemo(() => {
-    const q = query.trim().toLowerCase()
+    const q = deferredQuery.trim().toLowerCase()
     return state.orders.filter((o) => {
       if (tab !== 'all' && o.status !== tab) return false
       if (!q) return true
       const name = customers.get(o.customerId)?.name.toLowerCase() ?? 'guest'
       return o.id.toLowerCase().includes(q) || name.includes(q)
     })
-  }, [state.orders, tab, query, customers])
+  }, [state.orders, tab, deferredQuery, customers])
 
   const exportCsv = () =>
     downloadCSV(`orders-${dateStamp()}`, orders, [

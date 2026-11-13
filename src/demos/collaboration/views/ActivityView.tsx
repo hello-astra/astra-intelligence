@@ -121,7 +121,7 @@ export function ActivityView({ state, openTask }: CollabCtx) {
                   <ul className="mt-1.5 space-y-1.5">
                     {items.map((t) => (
                       <li key={t.id}>
-                        <button type="button" onClick={() => openTask(t.id)} className="flex w-full items-center gap-2 rounded-lg px-2 py-1.5 text-left hover:bg-white/[0.03]">
+                        <button type="button" onClick={() => openTask(t.id)} className="flex w-full items-center gap-2 rounded-lg px-2 py-1.5 text-left hover:bg-ink/[0.03]">
                           <Badge tone={PRIORITY_META[t.priority].tone} size="xs">
                             {PRIORITY_META[t.priority].label}
                           </Badge>

@@ -2,19 +2,16 @@
   "name": "astra-intelligence",
   "private": true,
   "version": "1.0.0",
-  "description": "Astra Intelligence — corporate website and Interactive Solutions Lab with nine working product demonstrations.",
+  "description": "Astra Intelligence \u2014 corporate website and Interactive Solutions Lab with nine working product demonstrations.",
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build": "tsc -b && vite build && node scripts/prerender-shell.mjs",
     "typecheck": "tsc -b",
     "lint": "oxlint",
     "preview": "vite preview"
   },
   "dependencies": {
-    "@fontsource-variable/geist": "^5.3.0",
-    "@fontsource-variable/geist-mono": "^5.3.0",
-    "framer-motion": "^14.7.1",
     "lucide-react": "^1.63.0",
     "react": "^19.3.1",
     "react-dom": "^19.3.1",

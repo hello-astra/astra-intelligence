@@ -8,12 +8,14 @@ import { Table, TBody, TD, TH, THead, TR } from '@/components/ui/Table'
 import { addDays, startOfDay } from '@/utils/dates'
 import { formatCompact, formatDateShort, formatNumber, formatTick } from '@/utils/format'
 import { ChartFrame } from '../../shared/Chart'
-import { activeDot, axisProps, BAR_SIZE, barCursor, gridProps, SERIES, yAxisProps } from '../../shared/chartTheme'
+import { BAR_SIZE } from '../../shared/chartTheme'
+import { useChartTheme } from '../../shared/demo-theme'
 import { tooltipRenderer } from '../../shared/tooltip'
 import type { SaasViewProps } from '../context'
 import { PERIOD_DAYS, periodCalls, planOf, seatsUsed } from '../logic'
 
 export function UsageView({ tenant }: SaasViewProps) {
+  const { activeDot, axisProps, barCursor, gridProps, SERIES, yAxisProps, animate } = useChartTheme()
   const plan = planOf(tenant)
   const calls = periodCalls(tenant)
   const seats = seatsUsed(tenant)
@@ -113,8 +115,8 @@ export function UsageView({ tenant }: SaasViewProps) {
             <XAxis dataKey="date" {...axisProps} minTickGap={28} />
             <YAxis {...yAxisProps} tickFormatter={formatTick} />
             <Tooltip content={tooltipRenderer((v) => v.toLocaleString('en-US'))} cursor={barCursor} />
-            <Bar dataKey="calls" name="Daily calls" fill={SERIES[0]} fillOpacity={0.85} radius={[4, 4, 0, 0]} maxBarSize={BAR_SIZE} />
-            <Line type="monotone" dataKey="avg" name="7-day average" stroke={SERIES[1]} strokeWidth={2} dot={false} activeDot={activeDot} />
+            <Bar isAnimationActive={animate} dataKey="calls" name="Daily calls" fill={SERIES[0]} fillOpacity={0.85} radius={[4, 4, 0, 0]} maxBarSize={BAR_SIZE} />
+            <Line isAnimationActive={animate} type="monotone" dataKey="avg" name="7-day average" stroke={SERIES[1]} strokeWidth={2} dot={false} activeDot={activeDot} />
           </ComposedChart>
         </ResponsiveContainer>
       </ChartFrame>

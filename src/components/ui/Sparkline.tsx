@@ -16,12 +16,12 @@ interface SparklineProps {
   ariaLabel?: string
 }
 
-/** Lightweight SVG sparkline (no chart library) for previews and stat tiles. */
+/** Lightweight SVG sparkline (no chart library) for previews and stat tiles. Colours may be CSS variables. */
 export function Sparkline({
   data,
   width = 120,
   height = 32,
-  color = '#4180f2',
+  color = 'var(--color-series-1)',
   area = true,
   dashedFrom,
   endDot = true,
@@ -59,24 +59,24 @@ export function Sparkline({
     >
       <defs>
         <linearGradient id={`${id}-fill`} x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor={color} stopOpacity="0.28" />
-          <stop offset="100%" stopColor={color} stopOpacity="0" />
+          <stop offset="0%" style={{ stopColor: color }} stopOpacity="0.28" />
+          <stop offset="100%" style={{ stopColor: color }} stopOpacity="0" />
         </linearGradient>
       </defs>
       {area && <path d={areaPath} fill={`url(#${id}-fill)`} />}
-      <path d={toPath(solid)} fill="none" stroke={color} strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round" />
+      <path d={toPath(solid)} fill="none" style={{ stroke: color }} strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round" />
       {dashed.length > 1 && (
         <path
           d={toPath(dashed)}
           fill="none"
-          stroke={color}
+          style={{ stroke: color }}
           strokeWidth={strokeWidth}
           strokeDasharray="3 3"
           strokeLinecap="round"
           opacity={0.85}
         />
       )}
-      {endDot && <circle cx={last[0]} cy={last[1]} r={2.6} fill={color} stroke="#0a0f1d" strokeWidth={1.5} />}
+      {endDot && <circle cx={last[0]} cy={last[1]} r={2.6} style={{ fill: color, stroke: 'var(--color-panel)' }} strokeWidth={1.5} />}
     </svg>
   )
 }

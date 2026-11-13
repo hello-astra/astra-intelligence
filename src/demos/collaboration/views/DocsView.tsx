@@ -79,7 +79,7 @@ export function DocsView({ state, setState }: CollabCtx) {
                       setEditing(false)
                     }}
                     aria-current={selected?.id === d.id ? 'true' : undefined}
-                    className={cn('flex w-full items-start gap-2.5 px-3.5 py-3 text-left transition-colors', selected?.id === d.id ? 'bg-white/[0.05]' : 'hover:bg-white/[0.02]')}
+                    className={cn('flex w-full items-start gap-2.5 px-3.5 py-3 text-left transition-colors', selected?.id === d.id ? 'bg-ink/[0.05]' : 'hover:bg-ink/[0.02]')}
                   >
                     <FileText className="mt-0.5 size-4 shrink-0 text-fg-3" aria-hidden />
                     <span className="min-w-0 flex-1">

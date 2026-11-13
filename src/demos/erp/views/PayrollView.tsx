@@ -103,7 +103,7 @@ export function PayrollView({ state, setState }: ErpCtx) {
               const activeStep = !processed && i === step
               return (
                 <li key={label} className={cn('flex items-start gap-2 rounded-lg border p-2.5 text-xs', done ? 'border-emerald-500/25 bg-emerald-500/[0.06]' : activeStep ? 'border-brand/40 bg-brand/[0.06]' : 'border-line')}>
-                  <span className={cn('flex size-5 shrink-0 items-center justify-center rounded-full', done ? 'bg-emerald-500/20 text-emerald-300' : 'bg-white/[0.06] text-fg-3')}>
+                  <span className={cn('flex size-5 shrink-0 items-center justify-center rounded-full', done ? 'bg-emerald-500/20 text-emerald-300' : 'bg-ink/[0.06] text-fg-3')}>
                     {done ? <Check className="size-3" /> : activeStep ? <Spinner className="size-3" /> : i + 1}
                   </span>
                   <span className={done || activeStep ? 'text-fg-2' : 'text-fg-4'}>{label}</span>

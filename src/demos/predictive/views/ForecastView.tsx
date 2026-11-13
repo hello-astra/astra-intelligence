@@ -9,7 +9,7 @@ import { Spinner } from '@/components/ui/Spinner'
 import { Switch } from '@/components/ui/Switch'
 import { cn } from '@/utils/cn'
 import { ChartFrame, type LegendItem } from '../../shared/Chart'
-import { activeDot, axisProps, CHART, DEEMPH, gridProps, lineCursor, SERIES, STATUS, yAxisProps } from '../../shared/chartTheme'
+import { useChartTheme } from '../../shared/demo-theme'
 import { StatTile } from '../../shared/StatTile'
 import { tooltipRenderer } from '../../shared/tooltip'
 import { isNeutral, MODEL_LABELS, MODEL_SHORT, type ForecastConfig, type ModelId } from '../models'
@@ -79,6 +79,9 @@ export function ConfigBar({ config, setConfig, datasets, generate, running, stag
 }
 
 export function ForecastChart({ ctx, height = 320, showFit }: { ctx: PredictiveCtx; height?: number; showFit: boolean }) {
+  const { activeDot, axisProps, CHART, DEEMPH, gridProps, lineCursor, SERIES, STATUS, yAxisProps } = useChartTheme()
+  // Forecasts take the third series colour: distinct from the actuals and never the red used for anomalies.
+  const FORECAST = SERIES[2]
   const { result, format, running, stale } = ctx
   const ds = result.dataset
   const n = ds.points.length
@@ -86,8 +89,8 @@ export function ForecastChart({ ctx, height = 320, showFit }: { ctx: PredictiveC
   const scenario = data.some((r) => r.scenario !== null && r.actual === null)
   const legend: LegendItem[] = [
     { label: 'Historical (actual)', color: SERIES[0], kind: 'line' },
-    { label: 'Forecast', color: SERIES[6], kind: 'dashed' },
-    { label: `${result.confidence}% prediction interval`, color: SERIES[6], kind: 'band' },
+    { label: 'Forecast', color: FORECAST, kind: 'dashed' },
+    { label: `${result.confidence}% prediction interval`, color: FORECAST, kind: 'band' },
     ...(scenario ? [{ label: 'Scenario (assumptions)', color: SERIES[1], kind: 'dashed' as const }] : []),
     ...(showFit ? [{ label: 'Model fit', color: DEEMPH, kind: 'dashed' as const }] : []),
     ...(result.anomalies.length ? [{ label: 'Anomaly', color: STATUS.critical, kind: 'dot' as const }] : []),
@@ -118,12 +121,12 @@ export function ForecastChart({ ctx, height = 320, showFit }: { ctx: PredictiveC
           <XAxis dataKey="i" type="number" domain={[0, data.length - 1]} {...axisProps} tickFormatter={labelOf} allowDecimals={false} tickCount={8} />
           <YAxis {...yAxisProps} tickFormatter={tickFormatter(ds)} />
           <Tooltip content={tooltipRenderer((v) => format(v), (l) => labelOf(Number(l)))} cursor={lineCursor} />
-          <ReferenceArea x1={n - 1} x2={data.length - 1} fill="#9085e9" fillOpacity={0.05} ifOverflow="hidden" />
+          <ReferenceArea x1={n - 1} x2={data.length - 1} fill={FORECAST} fillOpacity={0.06} ifOverflow="hidden" />
           <ReferenceLine x={n - 1} stroke={CHART.axis} label={{ value: 'Forecast →', position: 'insideTopLeft', fill: CHART.tick, fontSize: 11 }} />
-          <Area dataKey="band" name={`${result.confidence}% interval`} stroke="none" fill={SERIES[6]} fillOpacity={0.2} isAnimationActive={false} />
+          <Area dataKey="band" name={`${result.confidence}% interval`} stroke="none" fill={FORECAST} fillOpacity={0.2} isAnimationActive={false} />
           {showFit && <Line dataKey="fitted" name="Model fit" stroke={DEEMPH} strokeWidth={1.5} strokeDasharray="3 3" dot={false} isAnimationActive={false} />}
           <Line dataKey="actual" name="Actual" stroke={SERIES[0]} strokeWidth={2} dot={false} activeDot={activeDot} isAnimationActive={false} />
-          <Line dataKey="forecast" name="Forecast" stroke={SERIES[6]} strokeWidth={2} strokeDasharray="6 4" dot={false} activeDot={activeDot} isAnimationActive={false} />
+          <Line dataKey="forecast" name="Forecast" stroke={FORECAST} strokeWidth={2} strokeDasharray="6 4" dot={false} activeDot={activeDot} isAnimationActive={false} />
           {scenario && <Line dataKey="scenario" name="Scenario" stroke={SERIES[1]} strokeWidth={2} strokeDasharray="6 4" dot={false} activeDot={activeDot} isAnimationActive={false} />}
           {result.anomalies.map((a) => (
             <ReferenceDot key={a.index} x={a.index} y={a.actual} r={5} fill={STATUS.critical} stroke={CHART.surface} strokeWidth={2} ifOverflow="extendDomain" />

@@ -51,7 +51,7 @@ export function ProductIcon({ product, size = 40, className }: { product: Pick<P
   const Icon = ICONS[product.icon] ?? Box
   return (
     <span
-      className={cn('inline-flex shrink-0 items-center justify-center rounded-xl ring-1 ring-white/10', className)}
+      className={cn('inline-flex shrink-0 items-center justify-center rounded-xl ring-1 ring-ink/10', className)}
       style={{ width: size, height: size, background: `linear-gradient(140deg, ${product.color}3d, ${product.color}10)` }}
       aria-hidden
     >

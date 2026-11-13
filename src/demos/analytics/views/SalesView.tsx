@@ -7,12 +7,14 @@ import { CATEGORIES } from '@/data/mock/analytics'
 import { cn } from '@/utils/cn'
 import { formatINR, formatINRCompact, formatINRTick, formatSignedPercent } from '@/utils/format'
 import { ChartFrame } from '../../shared/Chart'
-import { axisProps, BAR_SIZE, barCursor, CHART, DEEMPH, gridProps, SERIES, yAxisProps } from '../../shared/chartTheme'
+import { BAR_SIZE } from '../../shared/chartTheme'
+import { useChartTheme } from '../../shared/demo-theme'
 import { tooltipRenderer } from '../../shared/tooltip'
 import type { AnalyticsCtx } from '../context'
 import { bucketize, byCategory, byWeekday, change, selectSeries } from '../engine'
 
 export function SalesView({ ds, filters, range, list, gran, openDrilldown }: AnalyticsCtx) {
+  const { axisProps, barCursor, CHART, DEEMPH, gridProps, SERIES, yAxisProps, animate } = useChartTheme()
   const categories = useMemo(() => byCategory(ds, filters.regions, range).sort((a, b) => b.current.revenue - a.current.revenue), [ds, filters.regions, range])
   const total = categories.reduce((s, c) => s + c.current.revenue, 0) || 1
   const weekday = useMemo(() => byWeekday(ds, list, range), [ds, list, range])
@@ -92,7 +94,7 @@ export function SalesView({ ds, filters, range, list, gran, openDrilldown }: Ana
               <XAxis dataKey="day" {...axisProps} />
               <YAxis {...yAxisProps} tickFormatter={formatINRTick} />
               <Tooltip content={tooltipRenderer((v) => formatINR(v))} cursor={barCursor} />
-              <Bar dataKey="revenue" name="Avg daily revenue" radius={[4, 4, 0, 0]} maxBarSize={BAR_SIZE} fill={SERIES[0]} />
+              <Bar isAnimationActive={animate} dataKey="revenue" name="Avg daily revenue" radius={[4, 4, 0, 0]} maxBarSize={BAR_SIZE} fill={SERIES[0]} />
             </BarChart>
           </ResponsiveContainer>
         </ChartFrame>
@@ -111,7 +113,7 @@ export function SalesView({ ds, filters, range, list, gran, openDrilldown }: Ana
               <YAxis {...yAxisProps} tickFormatter={formatINRTick} />
               <Tooltip content={tooltipRenderer((v) => formatINRCompact(v))} cursor={barCursor} />
               {CATEGORIES.map((c, i) => (
-                <Bar
+                <Bar isAnimationActive={animate}
                   key={c}
                   dataKey={c}
                   stackId="mix"

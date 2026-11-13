@@ -6,14 +6,17 @@ import { Button } from '@/components/ui/Button'
 import { Panel } from '@/components/ui/Panel'
 import { Table, TBody, TD, TH, THead, TR } from '@/components/ui/Table'
 import { ChartFrame } from '../../shared/Chart'
-import { activeDot, axisProps, gridProps, lineCursor, SERIES, yAxisProps } from '../../shared/chartTheme'
+import { useChartTheme } from '../../shared/demo-theme'
 import { tooltipRenderer } from '../../shared/tooltip'
 import { MODEL_LABELS, MODEL_SHORT, type ModelId } from '../models'
 import { tickFormatter, type PredictiveCtx } from '../shared'
 
-const COLORS: Record<ModelId, string> = { 'holt-winters': SERIES[1], regression: SERIES[2], 'seasonal-naive': SERIES[3] }
+/** Model colours follow the product palette (slot 0 is reserved for the actuals). */
+const modelColors = (series: readonly string[]): Record<ModelId, string> => ({ 'holt-winters': series[1], regression: series[2], 'seasonal-naive': series[3] })
 
 export function ModelsView({ result, format, generate, config, running }: PredictiveCtx) {
+  const { activeDot, axisProps, gridProps, lineCursor, SERIES, yAxisProps, animate } = useChartTheme()
+  const COLORS = modelColors(SERIES)
   const ds = result.dataset
   const h = result.metrics[0].holdout
   const rows = useMemo(() => {
@@ -107,9 +110,9 @@ export function ModelsView({ result, format, generate, config, running }: Predic
             <XAxis dataKey="label" {...axisProps} minTickGap={16} />
             <YAxis {...yAxisProps} tickFormatter={tickFormatter(ds)} domain={['auto', 'auto']} />
             <Tooltip content={tooltipRenderer((v) => format(v))} cursor={lineCursor} />
-            <Line dataKey="actual" name="Actual" stroke={SERIES[0]} strokeWidth={2.5} dot={{ r: 3, fill: SERIES[0], strokeWidth: 0 }} activeDot={activeDot} />
+            <Line isAnimationActive={animate} dataKey="actual" name="Actual" stroke={SERIES[0]} strokeWidth={2.5} dot={{ r: 3, fill: SERIES[0], strokeWidth: 0 }} activeDot={activeDot} />
             {result.metrics.map((m) => (
-              <Line key={m.model} dataKey={m.model} name={MODEL_SHORT[m.model]} stroke={COLORS[m.model]} strokeWidth={2} strokeDasharray="5 4" dot={false} activeDot={activeDot} />
+              <Line isAnimationActive={animate} key={m.model} dataKey={m.model} name={MODEL_SHORT[m.model]} stroke={COLORS[m.model]} strokeWidth={2} strokeDasharray="5 4" dot={false} activeDot={activeDot} />
             ))}
           </LineChart>
         </ResponsiveContainer>

@@ -212,7 +212,7 @@ function Comments({ state, taskId, onChange }: { state: CollabState; taskId: str
           return (
             <li key={c.id} className="flex gap-2.5">
               <Avatar name={author?.name ?? 'Member'} size={26} />
-              <div className="min-w-0 flex-1 rounded-lg bg-white/[0.03] px-3 py-2">
+              <div className="min-w-0 flex-1 rounded-lg bg-ink/[0.03] px-3 py-2">
                 <p className="text-[11px] text-fg-3">
                   <span className="font-medium text-fg-2">{author?.name}</span> · {formatRelative(c.at)}
                 </p>

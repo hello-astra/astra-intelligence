@@ -22,7 +22,7 @@ export function CTASection({
     <section className="relative py-16 sm:py-20" aria-label="Get in touch">
       <Container>
         <Reveal>
-          <div className="relative overflow-hidden rounded-3xl border border-white/[0.1] px-6 py-12 text-center sm:px-12 sm:py-16">
+          <div className="relative overflow-hidden rounded-3xl border border-ink/[0.1] px-6 py-12 text-center sm:px-12 sm:py-16">
             <div aria-hidden className="absolute inset-0 bg-[radial-gradient(120%_120%_at_50%_0%,rgb(47_102_232/0.35),rgb(124_92_255/0.14)_45%,transparent_75%)]" />
             <div aria-hidden className="bg-grid mask-fade-b absolute inset-0 opacity-60" />
             <div className="relative mx-auto max-w-2xl">

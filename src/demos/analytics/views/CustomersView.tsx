@@ -3,13 +3,15 @@ import { Repeat, UserPlus, Users } from 'lucide-react'
 import { Bar, BarChart, CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 import { formatTick } from '@/utils/format'
 import { ChartFrame } from '../../shared/Chart'
-import { activeDot, axisProps, BAR_SIZE, barCursor, CHART, gridProps, lineCursor, SERIES, yAxisProps } from '../../shared/chartTheme'
+import { BAR_SIZE } from '../../shared/chartTheme'
+import { useChartTheme } from '../../shared/demo-theme'
 import { StatTile } from '../../shared/StatTile'
 import { tooltipRenderer } from '../../shared/tooltip'
 import type { AnalyticsCtx } from '../context'
 import { change } from '../engine'
 
 export function CustomersView({ current, previous, buckets, filters, gran }: AnalyticsCtx) {
+  const { activeDot, axisProps, barCursor, CHART, gridProps, lineCursor, SERIES, yAxisProps, animate } = useChartTheme()
   const rows = useMemo(
     () =>
       buckets.map((b) => ({
@@ -55,8 +57,8 @@ export function CustomersView({ current, previous, buckets, filters, gran }: Ana
             <XAxis dataKey="label" {...axisProps} minTickGap={16} />
             <YAxis {...yAxisProps} tickFormatter={formatTick} />
             <Tooltip content={tooltipRenderer((v) => v.toLocaleString('en-IN'))} cursor={barCursor} />
-            <Bar dataKey="newCustomers" name="New customers" stackId="c" fill={SERIES[0]} stroke={CHART.surface} strokeWidth={1} maxBarSize={BAR_SIZE + 8} />
-            <Bar dataKey="returning" name="Returning customers" stackId="c" fill={SERIES[1]} stroke={CHART.surface} strokeWidth={1} radius={[4, 4, 0, 0]} maxBarSize={BAR_SIZE + 8} />
+            <Bar isAnimationActive={animate} dataKey="newCustomers" name="New customers" stackId="c" fill={SERIES[0]} stroke={CHART.surface} strokeWidth={1} maxBarSize={BAR_SIZE + 8} />
+            <Bar isAnimationActive={animate} dataKey="returning" name="Returning customers" stackId="c" fill={SERIES[1]} stroke={CHART.surface} strokeWidth={1} radius={[4, 4, 0, 0]} maxBarSize={BAR_SIZE + 8} />
           </BarChart>
         </ResponsiveContainer>
       </ChartFrame>
@@ -73,7 +75,7 @@ export function CustomersView({ current, previous, buckets, filters, gran }: Ana
             <XAxis dataKey="label" {...axisProps} minTickGap={16} />
             <YAxis {...yAxisProps} domain={['auto', 'auto']} tickFormatter={(v: number) => `${Math.round(v)}%`} />
             <Tooltip content={tooltipRenderer((v) => `${v.toFixed(1)}%`)} cursor={lineCursor} />
-            <Line type="monotone" dataKey="newShare" name="New-customer share" stroke={SERIES[0]} strokeWidth={2} dot={false} activeDot={activeDot} />
+            <Line isAnimationActive={animate} type="monotone" dataKey="newShare" name="New-customer share" stroke={SERIES[0]} strokeWidth={2} dot={false} activeDot={activeDot} />
           </LineChart>
         </ResponsiveContainer>
       </ChartFrame>
