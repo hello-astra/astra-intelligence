@@ -126,7 +126,8 @@ export function Navbar() {
       />
       <div ref={menuRef} onMouseLeave={scheduleClose}>
         <nav aria-label="Primary" className="mx-auto flex h-16 max-w-7xl items-center gap-6 px-4 sm:px-6 lg:px-8">
-          <Link to={paths.home} className="rounded-lg" aria-label="Astra Intelligence — home">
+          {/* flex, not inline: an inline link baseline-aligns the logo and leaves descender space under it, lifting the wordmark above the nav labels. */}
+          <Link to={paths.home} className="flex shrink-0 items-center rounded-lg" aria-label="Astra Intelligence — home">
             <Logo />
           </Link>
 
