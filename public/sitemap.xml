@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <!-- Core pages -->
+  <url><loc>https://www.astra-intelligence.in/</loc></url>
+  <url><loc>https://www.astra-intelligence.in/solutions</loc></url>
+  <url><loc>https://www.astra-intelligence.in/lab</loc></url>
+  <url><loc>https://www.astra-intelligence.in/industries</loc></url>
+  <url><loc>https://www.astra-intelligence.in/about</loc></url>
+  <url><loc>https://www.astra-intelligence.in/contact</loc></url>
+
+  <!-- Solution detail pages -->
+  <url><loc>https://www.astra-intelligence.in/solutions/saas-development</loc></url>
+  <url><loc>https://www.astra-intelligence.in/solutions/ecommerce-inventory</loc></url>
+  <url><loc>https://www.astra-intelligence.in/solutions/business-dashboards</loc></url>
+  <url><loc>https://www.astra-intelligence.in/solutions/ai-chatbots</loc></url>
+  <url><loc>https://www.astra-intelligence.in/solutions/predictive-analytics</loc></url>
+  <url><loc>https://www.astra-intelligence.in/solutions/collaborative-workspace</loc></url>
+  <url><loc>https://www.astra-intelligence.in/solutions/fintech-automation</loc></url>
+  <url><loc>https://www.astra-intelligence.in/solutions/erp-automation</loc></url>
+  <url><loc>https://www.astra-intelligence.in/solutions/document-intelligence</loc></url>
+
+  <!-- Solutions Lab interactive demos -->
+  <url><loc>https://www.astra-intelligence.in/lab/saas-development</loc></url>
+  <url><loc>https://www.astra-intelligence.in/lab/ecommerce-inventory</loc></url>
+  <url><loc>https://www.astra-intelligence.in/lab/business-dashboards</loc></url>
+  <url><loc>https://www.astra-intelligence.in/lab/ai-chatbots</loc></url>
+  <url><loc>https://www.astra-intelligence.in/lab/predictive-analytics</loc></url>
+  <url><loc>https://www.astra-intelligence.in/lab/collaborative-workspace</loc></url>
+  <url><loc>https://www.astra-intelligence.in/lab/fintech-automation</loc></url>
+  <url><loc>https://www.astra-intelligence.in/lab/erp-automation</loc></url>
+  <url><loc>https://www.astra-intelligence.in/lab/document-intelligence</loc></url>
+</urlset>

@@ -1,0 +1,7 @@
+# https://www.astra-intelligence.in/robots.txt
+User-agent: *
+Allow: /
+# Backend endpoints (contact form) — nothing here for search engines to index.
+Disallow: /api/
+
+Sitemap: https://www.astra-intelligence.in/sitemap.xml
